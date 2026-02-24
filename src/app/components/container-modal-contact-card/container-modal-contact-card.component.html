@@ -1,0 +1,48 @@
+@if (containerModalCardService.isContactFormOpen()) {
+<div class="contact-modal-overlay" (click)="containerModalCardService.closeContactForm()">
+    <div class="contact-modal-container" (click)="$event.stopPropagation()">
+        @if (!isSubmitted()) {
+        <header class="contact-header">
+            <h5>Contactar</h5>
+            <button class="btn-close" (click)="containerModalCardService.closeContactForm()">&times;</button>
+        </header>
+
+        <form [formGroup]="contactForm" (ngSubmit)="sendForm()" class="contact-form">
+            <div class="form-group">
+                <label>Nombre completo *</label>
+                <input type="text" formControlName="nombre" placeholder="Tu nombre">
+            </div>
+
+            <div class="form-group">
+                <label>Correo electrónico *</label>
+                <input type="email" formControlName="email" placeholder="ejemplo@correo.com">
+            </div>
+
+            <div class="form-group">
+                <label>Teléfono (Opcional)</label>
+                <input type="tel" formControlName="telefono" placeholder="Número de contacto">
+            </div>
+
+            <div class="form-group">
+                <label>Mensaje</label>
+                <textarea formControlName="mensaje" rows="4"></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" [disabled]="contactForm.invalid" class="btn-send">
+                    Enviar mensaje
+                </button>
+            </div>
+        </form>
+        } @else {
+        <div class="success-message fade-in">
+            <div class="check-container">
+                <div class="check-icon"></div>
+            </div>
+            <h3>¡Solicitud enviada con éxito!</h3>
+            <div class="auto-close-bar"></div>
+        </div>
+        }
+    </div>
+</div>
+}

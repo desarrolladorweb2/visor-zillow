@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ContainerModalCardService } from '../../core/services/container-modal-card.service';
 import { CommonModule } from '@angular/common';
 
@@ -9,29 +9,42 @@ import { CommonModule } from '@angular/common';
   styleUrl: './container-modal-card.component.less'
 })
 export class ContainerModalCardComponent {
-
   public containerModalCardService = inject(ContainerModalCardService);
 
-  // Variable para saber qué foto de la galería estamos viendo
-  activeIdx = signal(0);
+  showFullGallery = signal(false);
+  activePhotoIdx = signal(0);
 
-  // Función para ir a la siguiente imagen
-  nextImg() {
-    const images = this.containerModalCardService.selectedProperty()?.images || [];
-    if (this.activeIdx() < images.length - 1) {
-      this.activeIdx.update((v: any) => v + 1);
-    } else {
-      this.activeIdx.set(0); // Vuelve al principio
-    }
+  // Imágenes para el collage (máximo 5)
+  collageImages = computed(() => {
+    return this.containerModalCardService.selectedProperty()?.images?.slice(0, 5) || [];
+  });
+
+  totalPhotos = computed(() => {
+    return this.containerModalCardService.selectedProperty()?.images?.length || 0;
+  });
+
+  closeModal() {
+    this.showFullGallery.set(false);
+    this.containerModalCardService.close();
   }
 
-  // Función para ir a la imagen anterior
-  prevImg() {
-    const images = this.containerModalCardService.selectedProperty()?.images || [];
-    if (this.activeIdx() > 0) {
-      this.activeIdx.update((v: any) => v - 1);
-    } else {
-      this.activeIdx.set(images.length - 1); // Va al final
-    }
+  openGallery(index: number = 0) {
+    this.activePhotoIdx.set(index);
+    this.showFullGallery.set(true);
+  }
+
+  // Métodos del carrusel pantalla completa
+  nextPhoto() {
+    const total = this.totalPhotos();
+    this.activePhotoIdx.update(i => (i + 1) % total);
+  }
+
+  prevPhoto() {
+    const total = this.totalPhotos();
+    this.activePhotoIdx.update(i => (i - 1 + total) % total);
+  }
+
+  openContact() {
+    this.containerModalCardService.openContactForm();
   }
 }

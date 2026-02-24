@@ -1,47 +1,136 @@
-.modal-overlay {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(0, 0, 0, 0.85);
-  display: flex; align-items: center; justify-content: center;
-  z-index: 2000; // Por encima del mapa y sidebar
+@primary-blue: #0672b9;
+
+.custom-backdrop {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: -1;
 }
 
-.modal-container {
-  background: white;
-  width: 90%; max-width: 1200px;
-  height: 85vh;
-  border-radius: 12px;
-  position: relative;
-  display: flex; flex-direction: column;
+.modal-content {
+    border-radius: 12px;
+    background: white;
+    max-height: 90vh;
+    overflow: hidden;
 }
 
-.modal-body {
-  display: grid;
-  grid-template-columns: 1.5fr 1fr; // Galería grande, info pequeña
-  height: 100%;
-  overflow: hidden;
+.modal-scroll-container {
+    overflow-y: auto;
+    max-height: 90vh;
+}
 
-  .gallery-section {
-    background: #000;
-    display: flex; flex-direction: column;
-    
-    .main-image-container {
-      flex: 1; position: relative;
-      display: flex; align-items: center; justify-content: center;
-      img { max-height: 100%; max-width: 100%; object-fit: contain; }
+// COLLAGE: Altura controlada para que la tabla sea visible abajo
+.collage-wrapper {
+    width: 100%;
+    height: 450px; // Altura fija del collage
+    padding: 8px;
+
+    .collage-grid {
+        display: flex;
+        gap: 8px;
+        height: 100%;
+
+        .main-photo {
+            flex: 2;
+            position: relative;
+            cursor: pointer;
+            img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px 0 0 12px; }
+            .status-tag {
+                position: absolute; top: 15px; left: 15px;
+                background: white; padding: 4px 12px; border-radius: 20px;
+                font-size: 12px; font-weight: bold; color: #d93025;
+            }
+        }
+
+        .side-photos {
+            flex: 1.2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 8px;
+
+            .side-item {
+                position: relative;
+                cursor: pointer;
+                img { width: 100%; height: 100%; object-fit: cover; }
+                &:nth-child(2) img { border-top-right-radius: 12px; }
+                &:nth-child(4) img { border-bottom-right-radius: 12px; }
+
+                .btn-see-all-overlay {
+                    position: absolute; bottom: 10px; right: 10px;
+                    background: white; border: none; padding: 6px 12px;
+                    border-radius: 6px; font-size: 13px; font-weight: 600;
+                    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                }
+            }
+        }
+    }
+}
+
+// SECCIÓN DE INFORMACIÓN: Debajo de la galería
+.info-section-wrapper {
+    padding: 30px 40px;
+    background: white;
+
+    .info-flex-container {
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
     }
 
-    .thumbnails-grid {
-      height: 100px; display: flex; gap: 5px; padding: 10px;
-      overflow-x: auto; background: #111;
-      img { height: 80px; cursor: pointer; opacity: 0.6; &.active { opacity: 1; border: 2px solid #006aff; } }
+    .table-column {
+        flex: 1.5;
+        .property-data-table {
+            width: 100%;
+            border-collapse: collapse;
+            td {
+                padding: 15px 0;
+                font-size: 15px;
+                border-bottom: 1px solid #eee;
+            }
+            .label { color: @primary-blue; width: 30%; font-weight: 500; }
+            .value { color: #333; }
+            .price-text { font-weight: 800; color: @primary-blue; font-size: 1.2rem; }
+        }
     }
-  }
 
-  .info-section {
-    padding: 30px; overflow-y: auto;
-    h2 { font-size: 2rem; font-weight: 800; }
-    .specs-grid { display: flex; gap: 20px; font-size: 1.2rem; margin: 20px 0; }
-  }
+    .button-column {
+        flex: 0.8;
+        .btn-contact-main {
+            width: 100%;
+            background-color: @primary-blue;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            &:hover { background: darken(@primary-blue, 10%); }
+        }
+    }
+}
+
+// Botón cerrar modal
+.btn-close-overlay {
+    position: absolute; top: 20px; right: 20px;
+    z-index: 100; background: white; border: none;
+    width: 35px; height: 35px; border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    font-size: 20px; display: flex; align-items: center; justify-content: center;
+}
+
+// VISOR PANTALLA COMPLETA
+.full-screen-gallery {
+    position: fixed; inset: 0; background: black; z-index: 3000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+
+    .gallery-content {
+        width: 100%; height: 80%; display: flex; align-items: center; justify-content: space-between;
+        padding: 0 50px;
+        img { max-height: 100%; max-width: 85%; object-fit: contain; }
+        .nav-arrow { color: white; font-size: 40px; background: none; border: none; cursor: pointer; }
+    }
+    .gallery-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; background: none; border: none; }
+    .gallery-counter { color: white; margin-top: 20px; font-weight: bold; }
 }

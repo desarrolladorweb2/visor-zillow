@@ -7,8 +7,10 @@ export class ContainerModalCardService {
 
   selectedProperty = signal<any | null>(null);
   isOpen = signal(false);
+  isContactFormOpen = signal(false);
 
   open(property: any) {
+    console.log('property', property);
     this.selectedProperty.set(property);
     this.isOpen.set(true);
     document.body.style.overflow = 'hidden'; // Bloquea scroll del fondo
@@ -18,5 +20,14 @@ export class ContainerModalCardService {
     this.isOpen.set(false);
     this.selectedProperty.set(null);
     document.body.style.overflow = 'auto';
+  }
+
+  // modal de formulario de contacto
+  openContactForm() {
+    this.isContactFormOpen.set(true);
+  }
+
+  closeContactForm() {
+    this.isContactFormOpen.set(false);
   }
 }

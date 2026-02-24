@@ -1,39 +1,95 @@
 @if (containerModalCardService.isOpen()) {
-<div class="modal-overlay" (click)="containerModalCardService.close()">
-    <div class="modal-container" (click)="$event.stopPropagation()">
-        <button class="close-btn" (click)="containerModalCardService.close()">&times;</button>
+<div class="modal fade show d-block" tabindex="-1">
+    <div class="custom-backdrop" (click)="closeModal()"></div>
 
-        <div class="modal-body">
-            <div class="gallery-section">
-                <div class="main-image-container">
-                    <img [src]="containerModalCardService.selectedProperty().images[activeIdx()]" class="fade-in">
-                    <button class="nav-btn prev" (click)="prevImg()">&#10094;</button>
-                    <button class="nav-btn next" (click)="nextImg()">&#10095;</button>
-                </div>
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0">
 
-                <div class="thumbnails-grid">
-                    @for (img of containerModalCardService.selectedProperty().images; track $index) {
-                    <img [src]="img" [class.active]="$index === activeIdx()" (click)="activeIdx.set($index)">
-                    }
-                </div>
-            </div>
+            <button type="button" class="btn-close-overlay" (click)="closeModal()">
+                <span>&times;</span>
+            </button>
 
-            <div class="info-section">
-                <h2>C${{ containerModalCardService.selectedProperty().price | number }}</h2>
-                <p class="address">{{ containerModalCardService.selectedProperty().address }}</p>
-                <hr>
-                <div class="specs-grid">
-                    <span><strong>{{ containerModalCardService.selectedProperty().beds }}</strong> bds</span>
-                    <span><strong>{{ containerModalCardService.selectedProperty().baths }}</strong> ba</span>
-                    <span><strong>{{ containerModalCardService.selectedProperty().sqft }}</strong> sqft</span>
-                </div>
-                <div class="description">
-                    <h3>Detalles del Predio</h3>
-                    <p>Tipo: {{ containerModalCardService.selectedProperty().property_type }}</p>
-                    <p>Agencia: {{ containerModalCardService.selectedProperty().agency }}</p>
+            <div class="modal-body p-0">
+                <div class="modal-scroll-container">
+
+                    <div class="collage-wrapper">
+                        <div class="collage-grid">
+                            <div class="main-photo" (click)="openGallery(0)">
+                                <img [src]="collageImages()[0]">
+                                <!-- <span class="status-tag">● For sale</span> -->
+                            </div>
+                            <div class="side-photos">
+                                @for (img of collageImages().slice(1, 5); track $index) {
+                                <div class="side-item" (click)="openGallery($index + 1)">
+                                    <img [src]="img">
+                                    @if ($index === 3 && totalPhotos() > 5) {
+                                    <button class="btn-see-all-overlay"
+                                        (click)="$event.stopPropagation(); openGallery(0)">
+                                        <i class="bi bi-grid-3x3-gap"></i> Visualizar todas las {{ totalPhotos() }}
+                                        fotos
+                                    </button>
+                                    }
+                                </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-section-wrapper">
+                        <div class="info-flex-container">
+
+                            <div class="table-column">
+                                <table class="property-data-table">
+                                    <tbody>
+                                        <tr>
+                                            <td class="label">Dirección</td>
+                                            <td class="value">{{ containerModalCardService.selectedProperty()?.direccion
+                                                }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label">Ubicación</td>
+                                            <td class="value">{{ containerModalCardService.selectedProperty()?.municipio
+                                                / containerModalCardService.selectedProperty()?.departamento
+                                                || 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label">Estrato</td>
+                                            <td class="value">{{ containerModalCardService.selectedProperty()?.estrato
+                                                || 'N/A' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label">Avalúo</td>
+                                            <td class="value price-text">
+                                                {{ containerModalCardService.selectedProperty()?.valor_inmueble |
+                                                currency:'COP':'$':'1.0-0' }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="button-column">
+                                <button class="btn-contact-main" (click)="openContact()">Contactar</button>
+                            </div>
+
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@if (showFullGallery()) {
+<div class="full-screen-gallery animate-fade">
+    <button class="gallery-close" (click)="showFullGallery.set(false)">&times;</button>
+    <div class="gallery-content">
+        <button class="nav-arrow left" (click)="prevPhoto()">&#10094;</button>
+        <img [src]="containerModalCardService.selectedProperty()?.images?.[activePhotoIdx()]">
+        <button class="nav-arrow right" (click)="nextPhoto()">&#10095;</button>
+    </div>
+    <div class="gallery-counter">{{ activePhotoIdx() + 1 }} / {{ totalPhotos() }}</div>
+</div>
+}
 }
