@@ -1,0 +1,116 @@
+@import '../../../../styles/variables.less';
+
+footer {
+    position: absolute; /* Mantén esto para desktop */
+    bottom: 0;
+    width: 100%;
+    height: 4dvh;
+    background-color: var(--graphiteUI);
+    padding: 0 5px;
+    margin: 0;
+    z-index: 1;
+}
+p {
+    margin: 0px;
+}
+
+.range-scale-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+footer .d-flex {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    flex-wrap: nowrap;
+}
+
+.container-scale,
+.container-src {
+    background-color: var(--navyCode);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    padding: 0.3rem 1.3rem;
+    height: 1rem;
+}
+
+.container-src {
+    margin-left: 1vw;
+}
+
+.dynamic-text,
+.select-src,
+.text-src,
+.option-src {
+    color: #fff;
+    font-size: 11px;
+    text-align: center;
+    margin: 0;
+    font-family: sans-serif;
+}
+
+.range-scale {
+    color: var(--navyCode);
+    font-size: 12px;
+    font-weight: bold;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+.logo-company {
+    height: 2rem;
+    max-width: 100%;
+}
+
+@media (max-width: 768px) {
+    footer {
+        position: fixed; /* Cambia a fixed para móviles */
+        height: auto;
+        padding: 0.5rem;
+    }
+    body {
+        padding-bottom: 60px; /* Ajusta según la altura de tu footer */
+    }
+
+    footer .d-flex {
+        justify-content: center;
+        align-items: center;
+        padding: 0 0rem;
+    }
+
+    .range-scale-center {
+        left: 50%;
+        transform: none;
+    }
+
+    .container-scale,
+    .container-src {
+        padding: 0.1rem 1rem;
+    }
+
+    .range-scale {
+        margin-right: 0 !important;
+        font-size: 11px;
+    }
+
+    .logo-company {
+        height: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .range-scale-center {
+        left: 70%;
+        transform: none;
+    }
+}
+
+::ng-deep .mat-mdc-select-value {
+  font-size: 11px !important;
+  color: var(--pureUX) !important;
+}

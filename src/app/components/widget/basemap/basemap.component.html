@@ -1,0 +1,92 @@
+<div class="mapa-wrapper">
+    <button
+      (click)="toggleMenu()"
+      [class.active-hover]="menuOpen"
+      class="mapa-base-button"
+    >
+      <div class="mapa-card">
+        <div class="hover-card">
+          <span class="hover-title">Mapa Base </span>
+        </div>
+        <img
+            class="img-basemap img-basemap-opacity"
+            [src]="'assets/img/' + getPredefinedMap()?.mapa + '.png'"
+            [alt]="getPredefinedMap()?.label"
+        />
+  
+        <div class="overlay-label" *ngIf="selectedBaseOption">
+          {{ getOptionLabel(selectedBaseOption) }}
+        </div>
+      </div>
+    </button>
+  
+    <div class="submenu" *ngIf="menuOpen">
+      <button
+        class="scroll-button mb-4"
+        (click)="scrollUp()"
+        [disabled]="startIndex === 0"
+      >
+        <img src="assets/img/carousel_up_arrow.png" alt="arriba" />
+      </button>
+  
+      <ul *ngIf="visibleMaps.length > 0">
+        <li *ngFor="let img of visibleMaps" class="submenu-item">
+          <button tabindex="0">
+            <div
+              class="mapa-card"
+              [class.clickable]="!img.maxar"
+              (click)="!img.maxar ? doOption('free', img) : null"
+              (keydown)="!img.maxar ? doOption('free', img) : null"
+            >
+              <div class="hover-card">
+                <span class="hover-title">{{ img.label }}</span>
+              </div>
+              <img
+                class="img-basemap"
+                [src]="'assets/img/' + img.mapa + '.png'"
+                [alt]="img.mapa"
+              />
+              <div
+                *ngIf="highlightedMapId === img.id"
+                class="black-overlay"
+              ></div>
+            </div>
+          </button>
+
+          <div class="options-card" *ngIf="img.maxar">
+            <button 
+              (click)="doOption('stream15', img)" 
+              [class.grayed-out]="!(isDisponible)">
+              Streaming 15 cm
+            </button>
+            <button 
+              (click)="doOption('stream30', img)" 
+              [class.grayed-out]="!(isDisponible)">
+              Streaming 30 cm
+            </button>
+            <button 
+              (click)="doOption('mosaico', img)" 
+              [class.grayed-out]="!(isDisponible)">
+              Mosaico Estándar
+            </button>
+            <button 
+              (click)="doOption('infrarrojo', img)" 
+              [class.grayed-out]="!(isDisponible)">
+              Mosaico Infrarrojo
+            </button>            
+          </div>          
+
+
+        </li>
+      </ul>
+  
+      <button
+        class="scroll-button"
+        (click)="scrollDown()"
+        [disabled]="startIndex + visibleCount >= mapDefault.length - 1"
+      >
+        <img src="assets/img/carousel_down_arrow.png" alt="abajo" />
+      </button>
+    </div>
+  </div>
+  

@@ -1,0 +1,35 @@
+<div class="card card-windows">
+  <div class="card-header card-header-windows d-flex justify-content-center">
+    Capas Geográficas
+  </div>
+
+  <div class="card-body">
+    <div class="content-seacher option-info-user">
+      <div
+        *ngFor="let layer of layers; let i = index"
+        class="layer-item mb-2 p-2 rounded"
+      >
+        <div class="d-flex justify-content-between align-items-center">
+          <label class="form-check-label fw-bold text-secondary d-flex align-items-center">
+            <input
+              class="form-check-input me-2"
+              type="checkbox"
+              [(ngModel)]="layer.visible"
+              (ngModelChange)="toggleLayer(i, $event)"
+            />
+            {{ layer.labelName }}
+          </label>
+        </div>
+
+        <!-- Slider de opacidad SOLO si está visible -->
+        <div *ngIf="layer.visible" class="mt-4">
+          <ngx-slider
+            [(value)]="layer.opacity"
+            [options]="sliderOptions"
+            (valueChange)="changeOpacity(i)"
+          ></ngx-slider>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,107 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "../src/styles/variables.less";
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: "Century Gothic", sans-serif;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  border-color: rgb(148, 148, 148) !important;
+}
+
+.icon {
+  cursor: pointer;
+}
+
+.card-title {
+  background-color: @secondary-color !important;
+  color: #fff;
+  font-size: 16px !important;
+}
+
+.custom-cluster {
+  width: 40px;
+  height: 40px;
+  background-color: #66cc66;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  color: #000;
+  position: relative;
+  box-shadow: 0 0 10px rgba(102, 204, 102, 0.5);
+}
+
+.custom-cluster::after {
+  content: "";
+  width: 60px;
+  height: 60px;
+  background-color: rgba(102, 204, 102, 0.3);
+  border-radius: 50%;
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  z-index: -1;
+}
+
+.ngx-slider .ngx-slider-pointer {
+  width: 25px !important;
+  height: 25px !important;
+  background-color: @dark-gray!important;
+  top: -12px !important;
+}
+
+.ngx-slider .ngx-slider-pointer:after {
+  top: 10px;
+  left: 10px !important;
+  background-color: @dark-gray !important;
+}
+
+.ngx-slider .ngx-slider-selection {
+  background-color: @dark-gray !important;
+}
+
+.ngx-slider .ngx-slider-bubble {
+  font-size: 13px !important;
+  color: @dark-gray !important;
+  font-weight: bolder;
+}
+
+:root {
+  --navyCode: #173558;
+  --skyFlow: #0672b9;
+  --pureUX: #ffffff;
+  --graphiteUI: #dddddd;
+  --oceanBit: #114a79;
+  --blueCore: #0d588f;
+  --aquaLogic: #0084cd;
+  --fogUX: #b0bec6;
+  --graphiteUIOpacity: #f6f6f6;
+  --obligatory: #ff3131;
+  --sm: 14px;
+  --md: 16px;
+  --lg: 18px;
+  --pureUX: #ffffff;
+}
+
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+  display: none !important;
+}
+
+// .leaflet-touch .leaflet-control-layers, 
+// .leaflet-touch .leaflet-bar{
+//   margin-left: 73px!important;
+//   margin-bottom: 51px !important;
+// }

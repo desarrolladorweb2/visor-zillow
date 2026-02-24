@@ -1,0 +1,257 @@
+ul li {
+    list-style: none;
+    padding: 0px;
+    cursor: pointer;
+  }
+  
+  li {
+    gap: 0.5rem;
+  }
+  
+  ul {
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.3rem;
+  }
+  
+  .mapa-base-button {
+    padding: 0px;
+    border-radius: 15px;
+    margin: 0px;
+    border: 4px solid var(--graphiteUI);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  button {
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    border: none;
+  }
+  
+  .mapa-card {
+    position: relative;
+    display: inline-block;
+    z-index: 10;
+  }
+  
+  .hover-card {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translate(-50%, -23%);
+    width: calc(100% + 7px);
+    height: calc(100% + 25px);
+    background-color: var(--pureUX);
+    border-radius: 14px;
+    z-index: 19;
+    box-sizing: border-box;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    border: -7px solid var(--pureUX);
+    overflow: hidden; // para que todo esté contenido
+  }
+  
+  .hover-title {
+    position: absolute;
+    top: 3px;
+    padding: 0 8px;
+    font-weight: bold;
+    font-size: 10px;
+    color: var(--skyFlow);
+    z-index: 20;
+    border-radius: 10px;
+  }
+  
+  .img-basemap {
+    position: relative;
+    z-index: 19;
+    border-radius: 11px;
+    border: none;
+    display: block;
+    width: 11dvh !important;
+  }
+  
+  button:hover {
+    border-color: transparent;
+  }
+  
+  button.grayed-out {
+    filter: grayscale(1);
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .img-basemap-opacity:hover {
+    opacity: 0.8;
+  }
+  
+  .mapa-wrapper {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .submenu {
+    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+  }
+  
+  .scroll-button {
+    border: none;
+    cursor: pointer;
+  
+    &:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+  
+    img {
+      width: 1rem;
+    }
+  }
+  
+  .submenu-item {
+    position: relative;
+    z-index: 1;
+  
+    .options-card {
+      display: none;
+      position: absolute;
+      left: -105px;
+      top: 35%;
+      transform: translateY(-50%);
+      border-radius: 8px;
+      padding: 0rem;
+      flex-direction: column;
+  
+      button {
+        background: var(--pureUX);
+        border: none;
+        padding: 4px 8px;
+        text-align: left;
+        font-size: 11px;
+        border-radius: 30px 0px 0px 30px;
+        cursor: pointer;
+        margin-bottom: 2px;
+        color: var(--navyCode);
+  
+        &:hover {
+          background: var(--skyFlow);
+          color: var(--pureUX);
+        }
+      }
+    }
+  
+    &:hover .options-card {
+      display: flex;
+    }
+  }
+  
+  .active-hover {
+    border: 4px solid var(--pureUX);
+    border-top-width: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .mapa-wrapper > button:hover .hover-card,
+  .mapa-wrapper > button.active-hover .hover-card {
+    display: flex;
+  }
+  
+  .mapa-wrapper .submenu .hover-card {
+    display: flex;
+  }
+  
+  .overlay-label {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--pureUX);
+    font-weight: bold;
+    font-size: 0.7rem;
+    z-index: 21;
+    text-align: center;
+    pointer-events: none;
+  }
+  
+  .mapa-base-button:hover .overlay-label {
+    display: block;
+  }
+  
+  .black-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); // Opacidad negra
+    border-radius: 11px;
+    z-index: 25;
+    pointer-events: none;
+  }
+  
+  
+  /* Rango medio: tablets y pantallas pequeñas (1130px o menos) */
+  @media (max-width: 1600px) {
+    .options-card {
+      left: auto;
+      right: -5px;
+      top: 100%;
+      transform: translateY(5px);
+      width: 140px;
+    }
+  
+    .options-card button {
+      font-size: 10px;
+      text-align: center;
+      padding: 2px;
+    }
+  }
+  
+  /* Tablets pequeñas (<= 992px) */
+  @media (max-width: 992px) {
+    .options-card {
+      width: 100%;
+      max-width: none;
+      right: 0;
+      left: 0;
+      top: 100%;
+      transform: translateY(5px);
+      border-radius: 6px;
+    }
+  
+    .options-card button {
+      width: 100%;
+      border-radius: 0;
+      font-size: 10px;
+      padding: 6px;
+    }
+  }
+  
+  /* Móviles (<= 600px) */
+  @media (max-width: 600px) {
+    .options-card {
+      padding: 0.1rem;
+    }
+  
+    .options-card button {
+      font-size: 9px;
+      padding: 5px 4px;
+    }
+  }
+  

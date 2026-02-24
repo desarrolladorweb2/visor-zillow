@@ -1,0 +1,39 @@
+@if (containerModalCardService.isOpen()) {
+<div class="modal-overlay" (click)="containerModalCardService.close()">
+    <div class="modal-container" (click)="$event.stopPropagation()">
+        <button class="close-btn" (click)="containerModalCardService.close()">&times;</button>
+
+        <div class="modal-body">
+            <div class="gallery-section">
+                <div class="main-image-container">
+                    <img [src]="containerModalCardService.selectedProperty().images[activeIdx()]" class="fade-in">
+                    <button class="nav-btn prev" (click)="prevImg()">&#10094;</button>
+                    <button class="nav-btn next" (click)="nextImg()">&#10095;</button>
+                </div>
+
+                <div class="thumbnails-grid">
+                    @for (img of containerModalCardService.selectedProperty().images; track $index) {
+                    <img [src]="img" [class.active]="$index === activeIdx()" (click)="activeIdx.set($index)">
+                    }
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2>C${{ containerModalCardService.selectedProperty().price | number }}</h2>
+                <p class="address">{{ containerModalCardService.selectedProperty().address }}</p>
+                <hr>
+                <div class="specs-grid">
+                    <span><strong>{{ containerModalCardService.selectedProperty().beds }}</strong> bds</span>
+                    <span><strong>{{ containerModalCardService.selectedProperty().baths }}</strong> ba</span>
+                    <span><strong>{{ containerModalCardService.selectedProperty().sqft }}</strong> sqft</span>
+                </div>
+                <div class="description">
+                    <h3>Detalles del Predio</h3>
+                    <p>Tipo: {{ containerModalCardService.selectedProperty().property_type }}</p>
+                    <p>Agencia: {{ containerModalCardService.selectedProperty().agency }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}

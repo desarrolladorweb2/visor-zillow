@@ -1,0 +1,72 @@
+@import "../../../../styles/variables.less";
+
+.mapa-toolbar {
+  bottom: 10vh;
+  left: 97%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  padding: 9px 16px;
+  border-radius: 25px;
+  width: 0em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+ul {
+  list-style: none;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0px;
+}
+
+.icon-tool {
+  height: 23px;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+.range-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.slidecontainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 130px;
+  padding: 0px;
+  margin: -16px;
+}
+
+input[type="range"] {
+  transform: rotate(-90deg);
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: grab;
+  height: 30px;
+  width: 90px;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  background-color: @light-gray;
+  border-radius: 2rem;
+  height: 0.5rem;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -4px;
+  background-color: @primary-color;
+  transition: background .3s ease-in-out;
+  border-radius: 50%;
+  height: 1rem;
+  width: 1rem;
+}

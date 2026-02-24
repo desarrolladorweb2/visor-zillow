@@ -1,0 +1,69 @@
+<ng-container *ngIf="modalType === 0">
+    <div
+      class="dialog-container"
+      [ngStyle]="{
+        'left.px': !isSmallScreen && valueX != 0 ? valueX : 'auto',
+        'top.px': !isSmallScreen && valueY != 0 ? valueY : 'auto',
+      }"
+    >
+      <app-movable-card [showFooter]="true" [paramWidth]="25" [initialY]="250">
+        <div class="card-title">
+          <div class="d-flex justify-content-end align-items-center">
+            <div *ngIf="!hideClose">
+              <img
+                class="icon cursor-pointer me-2"
+                src="/real/assets/icons/dialog_close.svg"
+                alt="close"
+                (click)="cancel()"
+                (keydown.enter)="cancel()"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center align-items-center max-vh-100">
+          <div class="text-center">
+            <h2>{{ title }}</h2>
+            <p>{{ message }}</p>
+            <div *ngIf="!hideActions">
+              <button (click)="confirm()" class="btn btn-submit">
+                {{ nameButton }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </app-movable-card>
+    </div>
+  </ng-container>
+  
+  <ng-container *ngIf="modalType === 1">
+    <div class="dialog-container-oval">
+      <app-movable-card
+        [showFooter]="true"
+        [paramWidth]="32"
+        [initialY]="100"
+      >
+        <div
+          class="d-flex justify-content-between align-items-center w-100 px-4 py-1 text-center-oval"
+        >
+          <!-- Izquierda: ícono -->
+          <img
+            class="icon-oval"
+            [src]="'/real/assets/icons/' + icon + '.svg'"
+            alt="advertencia"
+          />
+  
+          <!-- Centro: mensaje -->
+          <p [innerHTML]="message" class="mb-0 flex-fill text-center"></p>
+  
+          <!-- Derecha: botón -->
+          <ng-container *ngIf="!hideActions" class="d-flex align-items-center">
+            <div class="vertical-line mx-2"></div>
+            <button (click)="confirm()" class="btn btn-submit-oval">
+              {{ nameButton }}
+            </button>
+          </ng-container>
+        </div>
+      </app-movable-card>
+    </div>
+  </ng-container>
+  

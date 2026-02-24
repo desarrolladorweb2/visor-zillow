@@ -1,0 +1,194 @@
+<app-movable-card
+  [initialX]="-140"
+  [initialY]="isVisibleContent ? posY : posY_"
+  [paramWidth]="18"
+  [headerClass]="'card-header text-white'"
+  [showFooter]="false"
+>
+  <div class="card-title">
+    <div class="d-flex justify-content-between align-items-center me-2">
+      <div>
+        <img
+          class="icon-header"
+          src="assets/icon/contact_card_construccion.svg"
+          alt=""
+        />
+        <b class="title-header">ID - {{ data.id }}</b>
+      </div>
+      <div>
+        <img
+          class="pointer-defaul icon-header button-header me-1"
+          [src]="
+            isVisibleContent
+              ? 'assets/icon/contact_card_minimize.svg'
+              : 'assets/icon/contact_card_maximize.svg'
+          "
+          alt=""
+          (click)="minimize()"
+          (keydown)="minimize()"
+        />
+        <img
+          class="icon-header"
+          src="assets/icon/contact_card_close.svg"
+          alt=""
+          (click)="close()"
+          (keydown.enter)="close()"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="alert alert-danger m-2"
+    role="alert"
+    *ngIf="mensajeError !== ''"
+  >
+    {{ mensajeError }}
+  </div>
+
+  <div class="card-body" *ngIf="isVisibleContent && mensajeError === ''">
+    <ng-container [ngSwitch]="formType">
+      <ng-container *ngSwitchCase="'asset'">
+
+        <div class="position-relative d-flex">
+
+          <div class="data-column-content">      
+            <p>No Matricula: <small class="float-end">{{ infoAsset?.nmatricula }}</small></p>
+            <p>Clasificación: <small class="float-end">{{ infoAsset?.clasificacion }}</small></p>
+            <p>Tipo de Bien: <small class="float-end">{{ infoAsset?.tipoB }}</small></p>
+            <p>Tipo de Predio: <small class="float-end">{{ infoAsset?.tipoP }}</small></p>
+            <p>Dirección: <small class="float-end">{{ infoAsset?.direccion }}</small></p>
+            <p>Municipio: <small class="float-end">{{ infoAsset?.municipio }}</small></p>
+            <p>Departamento: <small class="float-end">{{ infoAsset?.departamento }}</small></p>
+            <p>Área de Terreno: <small class="float-end">{{ infoAsset?.area_catrastal }}</small></p>
+            <p>Área Construida: <small class="float-end">{{ infoAsset?.area_construida }}</small></p>
+          </div>
+          <div class="sidebar-arrows-container">
+            <div class="sidebar-arrow open-arrow"
+              *ngIf="imageList.length > 0 && !showImages"
+              (click)="toggleImages()">
+              ❯
+            </div>
+
+            <div 
+            class="sidebar-arrow close-arrow"
+            *ngIf="showImages"
+            (click)="toggleImages()">
+            ❮
+          </div>            
+
+          </div>
+      
+          <div class="image-sidebar" *ngIf="imageList.length > 0" [class.open]="showImages">
+
+            <div class="carousel-container">
+              <button class="carousel-btn left" (click)="prevImage()">❮</button>
+              <img class="carousel-image" [src]="imageList[currentImage]" alt="Imagen"/>
+              <button class="carousel-btn right" (click)="nextImage()">❯</button>
+            </div>
+
+            <!-- <div class="carousel-dots text-center mt-2">
+              <span
+                *ngFor="let img of imageList; let i = index"
+                class="dot"
+                [class.active]="i === currentImage"
+                (click)="goToImage(i)"
+              ></span>
+            </div> -->
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- 🟢 FORMULARIO TERRENO -->
+      <ng-container *ngSwitchCase="'terreno'">
+        <p>NPN: <small>{{ infoTerreno?.npn }}</small></p>
+        <p>NUPRE: <small>{{ infoTerreno?.nupre }}</small></p>
+        <p>Manzana: <small>{{ infoTerreno?.manzana }}</small></p>
+        <p>Condición Predio: <small>{{ infoTerreno?.condicion }}</small></p>
+        <p>Dirección: <small>{{ infoTerreno?.direccion }}</small></p>
+        <p>Destinación Económica: <small>{{ infoTerreno?.destinacion }}</small></p>
+        <p>Número de Terreno: <small>{{ infoTerreno?.numero_terreno }}</small></p>
+        <p>Área Catastral: <small>{{ infoTerreno?.area_catrastal }}</small></p>
+        <p>Área Total Construcción: <small>{{ infoTerreno?.area_total_construida }}</small></p>
+      </ng-container>
+  
+      <!-- 🟣 FORMULARIO OFERTA CON PESTAÑAS DINÁMICAS -->
+      <ng-container *ngSwitchCase="'oferta'">
+        <ng-container *ngIf="infoTerreno && infoTerreno.length > 0; else noData">
+          <div class="d-flex justify-content-between align-items-center mb-2" style="padding: 0 10px;">
+  
+            <!-- Flecha izquierda -->
+            <button class="btn btn-light btn-sm" (click)="prevOferta()">←</button>
+          
+            <!-- Título principal -->
+            <div class="text-center flex-grow-1">
+              <!-- <b>Ofertas: {{ infoTerreno.length }}</b><br> -->
+              <b>Oferta {{ selectedOfertaIndex + 1 }}</b><br>              
+              <small>{{ infoTerreno?.[selectedOfertaIndex]?.key }}</small>
+            </div>
+          
+            <!-- Flecha derecha -->
+            <button class="btn btn-light btn-sm" (click)="nextOferta()">→</button>
+          
+          </div>
+          
+          <!-- Contenedor de la oferta, usando mat-tab-group pero sin headers visibles -->
+          <mat-tab-group [(selectedIndex)]="selectedOfertaIndex" class="hidden-tabs">
+            <mat-tab *ngFor="let item of infoTerreno">
+          
+              <div class="p-2">
+          
+                <p><b>NPN:</b> <br><small>{{ item?.numero_predial_nuevo }}</small></p>
+                <p><b>Código Homologado:</b> <small>{{ item?.codigo_homologado }}</small></p>
+                <p><b>Barrio:</b> <small>{{ item?.nombre_barrio }}</small></p>
+                <p><b>Dirección:</b> <small>{{ item?.direccion }}</small></p>
+                <p><b>Tipo Oferta:</b> <small>{{ item?.tipo_oferta }}</small></p>
+                <p><b>Valor Arriendo:</b> <small>{{ item?.valor_arriendo | currency:'COP' }}</small></p>
+                <p><b>Valor Oferta Venta:</b> <small>{{ item?.valor_oferta_venta | currency:'COP' }}</small></p>
+                <p><b>Porcentaje Negociación:</b> <small>{{ item?.porcentaje_negociacion }}</small></p>
+                <p><b>Valor Oferta Negociado:</b> <small>{{ item?.valor_oferta_negociado | currency:'COP' }}</small></p>
+                <p><b>Valor Total Terraza / Balcón / Patio:</b> <small>{{ item?.vr_total_terraza_balcon_y_o_patio | currency:'COP' }}</small></p>
+                <p><b>Valor Garajes:</b> <small>{{ item?.valor_garajes | currency:'COP' }}</small></p>
+                <p><b>Valor Depósitos:</b> <small>{{ item?.valor_depositos | currency:'COP' }}</small></p>
+                <p><b>Fecha Captura Oferta:</b> <small>{{ item?.fecha_captura_oferta | date }}</small></p>
+                <p><b>Tiempo Oferta Mercado:</b> <small>{{ item?.tiempo_oferta_mercado }}</small></p>
+                <p><b>Tipología:</b> <small>{{ item?.tipo_tipologia }}</small></p>
+                <p><b>Fuente:</b> <small>{{ item?.fuente }}</small></p>
+          
+              </div>
+          
+            </mat-tab>
+          </mat-tab-group>          
+        </ng-container>
+      
+        <ng-template #noData>
+          <p class="text-muted">No hay ofertas disponibles.</p>
+        </ng-template>
+      </ng-container>
+  
+      <!-- 🟠 FORMULARIO CONSTRUCCIÓN -->
+      <ng-container *ngSwitchCase="'construccion'">
+        <p>NPN: <small>{{ infoConstruccion?.npn }}</small></p>
+        <p>Identificador: <small>{{ infoConstruccion?.identificador }}</small></p>
+        <p>Código Terreno: <small>{{ infoConstruccion?.codigo_terreno }}</small></p>
+        <p>Tipo Unidad: <small>{{ infoConstruccion?.tipo_unidad }}</small></p>
+        <p>Uso: <small>{{ infoConstruccion?.uso }}</small></p>
+        <p>Área Construida: <small>{{ infoConstruccion?.area_construida }}</small></p>
+        <p>Baños: <small>{{ infoConstruccion?.banos }}</small></p>
+        <p>Habitaciones: <small>{{ infoConstruccion?.habitaciones }}</small></p>
+        <p>Pisos: <small>{{ infoConstruccion?.pisos }}</small></p>
+        <p>Año Construcción: <small>{{ infoConstruccion?.anio_construccion }}</small></p>
+        <p>Planta: <small>{{ infoConstruccion?.planta }}</small></p>
+        <p>Altura: <small>{{ infoConstruccion?.altura }}</small></p>
+      </ng-container>
+  
+      <!-- ⚪ Caso por defecto -->
+      <ng-container *ngSwitchDefault>
+        <p class="text-muted">Cargando información...</p>
+        <!-- <p class="text-muted">No hay ofertas disponibles.</p> -->
+      </ng-container>
+  
+    </ng-container>
+  </div>
+  
+</app-movable-card>

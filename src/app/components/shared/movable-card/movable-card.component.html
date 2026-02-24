@@ -1,0 +1,16 @@
+<div class="card"
+    [ngStyle]="{'left.px': position.x, 'top.px': position.y, 'cursor': isDragging ? 'grabbing' : 'grab', 'width.rem': paramWidth}">
+    <ng-container *ngIf="showHeader">
+        <div [ngClass]="headerClass" (mousedown)="onMouseDown($event)" style="cursor: grab;">
+            <ng-content select=".card-title"></ng-content>
+        </div>
+    </ng-container>
+    <div class="card-body">
+        <ng-content></ng-content>
+    </div>
+    <ng-container *ngIf="showFooter">
+        <div class="card-footer" style="cursor: pointer;">
+            <ng-content select=".card-footer"></ng-content>
+        </div>
+    </ng-container>
+</div>

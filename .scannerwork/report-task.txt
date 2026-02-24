@@ -1,0 +1,6 @@
+projectKey=observatorio
+serverUrl=http://localhost:9000
+serverVersion=25.11.0.114957
+dashboardUrl=http://localhost:9000/dashboard?id=observatorio
+ceTaskId=63817998-b4a5-4d4a-afb4-3b4e0e6b2067
+ceTaskUrl=http://localhost:9000/api/ce/task?id=63817998-b4a5-4d4a-afb4-3b4e0e6b2067

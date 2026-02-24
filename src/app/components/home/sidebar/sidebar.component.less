@@ -1,0 +1,283 @@
+@import '../../../../styles/variables.less';
+
+/* NUEVOS ESTILOS PARA EL SIDEBAR */
+.hamburger-button {
+  position: fixed;
+  top: 8.8dvh;
+  left: 15px;
+  z-index: 1000;
+  background: #ffff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  
+  img {
+    width: 24px;
+    height: 24px;
+    display: block;
+  }
+}
+
+.sidebar-wrapper {
+  position: fixed;
+  top: 9dvh;
+  left: -250px; /* Más estrecho para iconos + texto */
+  width: 180px; /* Ancho suficiente */
+  height: calc(100vh - 9dvh);
+  z-index: 10000;
+  transition: left 0.3s ease;
+  background: #ffff;
+  overflow-y: auto; /* Scroll si es necesario */
+  
+  &.active {
+    left: 0;
+  }
+}
+
+.d-flex {
+  height: auto; /* Altura automática */
+  overflow-y: auto;
+  background: #ffff;
+  width: 100%;
+  padding-top: 0; /* Elimina padding superior */
+}
+
+.sidebar-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width: 100%;
+}
+
+.top-section {
+  margin-top: 0; /* Sin margen superior */
+}
+
+.bottom-section {
+  margin-top: 10px; /* Espacio mínimo entre secciones */
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 12px; /* Espacio uniforme entre items */
+  cursor: pointer;
+  padding: 2px 0; /* Pequeño padding interno */
+}
+
+.icon-sidebar {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  background: transparent;
+  border-radius: 5px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+}
+
+.icon-sidebar_chatbot {
+  width: 30px;
+  height: 30px;
+  margin-right: 10px;
+  background: transparent;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+}
+
+.label-container {
+  flex-grow: 1;
+}
+
+.label-image {
+  font-size: 13px;
+  color: var(--aquaLogic);
+  white-space: nowrap;
+  text-align: left;
+  margin: 0;
+}
+
+/* Botones adicionales */
+.sidebar-button-list {
+  position: relative;
+  left: 0;
+  top: 5px;
+  width: 100%;
+  margin-top: 5px;
+  padding-left: 40px; /* Alineación con el texto principal */
+  
+  button {
+    width: 100%;
+    text-align: left;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar-wrapper {
+    width: 160px;
+  }
+  
+  .sidebar-item {
+    margin-bottom: 10px;
+  }
+  
+  .icon-sidebar,
+  .icon-sidebar_chatbot {
+    width: 26px;
+    height: 26px;
+    margin-right: 8px;
+  }
+  
+  .label-image {
+    font-size: 12px;
+  }
+  
+  .chat-bubble {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+}
+
+/* ESTILOS PARA SUBPESTAÑAS FLOTANTES */
+.floating-submenu {
+  position: fixed;
+  z-index: 1000;
+  background-color: white;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  padding: 8px;
+  min-width: 150px;
+}
+
+.submenu-item {
+  width: 100%;
+}
+
+.submenu-button {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: #f5f5f5;
+  }
+}
+
+.submenu-label {
+  font-size: 14px;
+  color: var(--aquaLogic);
+  margin: 0;
+}
+
+.submenu-button.selected .submenu-label {
+  color: var(--skyFlow);
+}
+
+
+
+// ESTILOS PARA EL BOTÓN DE ASISTENTE VIRTUAL (MARI)
+
+.mari-container {
+  position: fixed;
+  bottom: 50px;
+  left: 15px;
+  z-index: 1000;
+}
+
+/* Botón de Mati - Posicionado en la esquina inferior izquierda */
+.mari-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.mari-button:hover {
+  transform: scale(1.05);
+  background-color: var(--primary-dark);
+}
+
+.mari-button img {
+  width: 50px;
+  height: 50px;
+}
+
+/* Asegurar que los botones se oculten cuando el sidebar esté abierto */
+.sidebar-wrapper.active ~ .hamburger-button,
+.sidebar-wrapper.active ~ .mari-container {
+  display: none;
+}
+
+/* Estilos para el chat bubble (ajustados para nueva posición) */
+.chat-bubble {
+  position: absolute;
+  left: 60px; /* Ajustado para aparecer a la derecha del botón de Mati */
+  bottom: 10px; /* Alineado verticalmente con el botón de Mati */
+  background-color: var(--skyFlow);
+  color: #ffff;
+  padding: 8px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  text-align: center;
+  border: 1px solid #ffff;
+  z-index: 999;
+  white-space: nowrap;
+  font-weight: bolder;
+  width: max-content;
+}
+
+/* Triángulo ajustado para la nueva posición (apuntando hacia la izquierda) */
+.chat-bubble::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -10px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 8px 10px 8px 0;
+  border-color: transparent #ffff transparent transparent;
+}
+
+.chat-bubble::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -8px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 7px 9px 7px 0;
+  border-color: transparent var(--skyFlow) transparent transparent;
+}
+

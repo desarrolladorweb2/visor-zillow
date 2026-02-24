@@ -1,0 +1,69 @@
+<div class="main-layout">
+    <header class="navbar-wrapper">
+        <app-navbar></app-navbar>
+    </header>
+
+    <div class="content-body">
+        <aside class="sidebar-wrapper">
+            <app-sidebar [idVisor]="id ?? ''"></app-sidebar>
+        </aside>
+
+        <main class="viewer-container">
+
+            <section class="map-section">
+                <app-map-main [idVisor]="id ?? ''" class="map-component"></app-map-main>
+            </section>
+
+            <router-outlet></router-outlet>
+
+            <div class="results-panel">
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <select class="filter-select" (change)="updateFilter('precio', $event)">
+                            <option value="">Rango de Precio</option>
+                            <option value="0-500">Hasta $500k</option>
+                            <option value="500-1000">$500k - $1M</option>
+                            <option value="1000+">Más de $1M</option>
+                        </select>
+
+                        <select class="filter-select" (change)="updateFilter('tipoBien', $event)">
+                            <option value="">Tipo de Bien</option>
+                            <option value="casa">Casa</option>
+                            <option value="apto">Apartamento</option>
+                        </select>
+
+                        <select class="filter-select" (change)="updateFilter('clasificacion', $event)">
+                            <option value="">Clasificación</option>
+                            <option value="nuevo">Nuevo</option>
+                            <option value="usado">Usado</option>
+                        </select>
+
+                        <select class="filter-select" (change)="updateFilter('depto', $event)">
+                            <option value="">Departamento</option>
+                        </select>
+
+                        <select class="filter-select" (change)="updateFilter('municipio', $event)">
+                            <option value="">Municipio</option>
+                        </select>
+                    </div>
+
+                    <div class="results-count">
+                        {{ property().metadata.total_results | number }} resultados
+                    </div>
+                </div>
+
+                <div class="results-grid">
+                    @for (item of property().results; track item.id) {
+                    <app-container-card [property]="item"></app-container-card>
+                    }
+                </div>
+            </div>
+
+        </main>
+        <app-container-modal-card></app-container-modal-card>
+    </div>
+
+    <footer class="footer-wrapper">
+        <app-footer></app-footer>
+    </footer>
+</div>

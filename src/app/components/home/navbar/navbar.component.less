@@ -1,0 +1,108 @@
+@import '../../../../styles/variables.less';
+
+.navbar {
+    background-color: #fff !important;
+    height: 9dvh;
+}
+
+.logo {
+    height: 6dvh;
+    cursor: pointer;
+
+    @media (max-width: 1183px) {
+        height: 5dvh;
+    }
+
+    @media (max-width: 770px) {
+        height: 1.8rem;
+    }
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.2rem;
+    height: auto;
+}
+
+.search-container {
+  position: relative;
+  width: 40vw; /* ancho base en desktop */
+  max-width: 600px; /* límite máximo */
+  min-width: 280px; /* para que no se rompa en pantallas muy pequeñas */
+
+  @media (max-width: 1183px) {
+    width: 45vw;
+    left: -1vw !important;
+  }
+
+  @media (max-width: 900px) {
+    width: 60vw;
+    left: 0; /* reseteo si no quieres corrimiento */
+  }
+
+  @media (max-width: 770px) {
+    width: 40vw;
+  }
+
+  @media (max-width: 480px) {
+    width: 34vw; /* ocupa casi todo el ancho */
+  }
+}
+
+.search {
+    width: 100%;
+    height: 4dvh;
+    padding-left: 2.5rem;
+    border-radius: 17px;
+    background-color: var(--graphiteUI);
+    border-color: rgb(202, 202, 202);
+    text-align: center;
+    font-size: 0.7rem;
+
+    @media (max-width: 770px) {
+        height: 1.2rem;
+        position: relative;
+        left: 27px;
+        width: 100%;
+    }
+}
+
+.search:focus {
+    outline: none;
+}
+
+.container-smallScreen {
+    background-color: var(--pureUX);
+    border-radius: 60px;
+    height: 2rem;
+    padding: 0px;
+    margin: 0px;
+}
+
+.icon-ia {
+    width: 120px;
+
+    @media (max-width: 912px) {
+        height: 2.5rem;
+        position: relative;
+        left: -36px;
+        width: 10dvh;
+    }
+
+    @media (max-width: 770px) {
+        height: 2rem;
+        position: relative;
+        left: 18px;
+        width: 10dvh;
+    }
+
+    @media (max-width: 480px) {
+        height: 1.8rem;
+        position: relative;
+        left: 14px;
+        width: 10dvh;
+    }
+}

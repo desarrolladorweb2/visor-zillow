@@ -1,0 +1,91 @@
+:host {
+  display: block;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+#map-container {
+  position: relative; // esto es clave
+  display: flex;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+  flex: 1;
+  z-index: 0;
+  border-top-left-radius: 20px;
+  position: relative;
+}
+
+/* Botón de toggle */
+.toggle-stats-btn {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: white;
+}
+
+/* Toolbars */
+app-toolbar,
+app-toolbar-map-vertical,
+app-basemap {
+  position: absolute;
+  transition: right 0.3s ease, left 0.3s ease, bottom 0.3s ease;
+  z-index: 20;
+}
+
+/* Panel de estadísticas */
+.statistics-container {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 70%;
+  height: 100%;
+  transform: translateX(100%);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  z-index: 15;
+  will-change: transform;
+
+  &.show,
+  &:not(.show) {
+    // Permite escuchar con animationend
+    animation-duration: 0.3s;
+    animation-name: statsToggle;
+    animation-fill-mode: forwards;
+  }
+}
+
+.statistics-container.show {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+@keyframes statsToggle {
+  from {
+    /* no-op */
+  }
+  to {
+    /* no-op */
+  }
+}
+
+/* Toolbars */
+app-toolbar,
+app-toolbar-map-vertical {
+  position: absolute;
+  transition: right 0.3s ease, left 0.3s ease, bottom 0.3s ease;
+  z-index: 20;
+}

@@ -1,0 +1,33 @@
+<div class="mapa-toolbar d-flex flex-column align-items-center">
+  <ul>
+    <li>
+      <img src="assets/icon/toolbar_vertical_compass.svg" class="icon-tool" alt="" (click)="locateUserClick()" (keydown)="locateUserClick()">
+      <img src="assets/icon/toolbar_vertical_locate.svg" class="icon-tool" alt="" (click)="onMarkPointClick()" (keydown)="onMarkPointClick()">
+      <img src="assets/icon/toolbar_vertical_home.svg" class="icon-tool" alt="" (click)="resetMap()" (keydown)="resetMap()">
+    </li>
+    <img
+      class="icon-tool"
+      src="assets/icon/toolbar_vertical_maximize.svg"
+      alt="maximize"
+      (click)="zoomInClick()"
+      (keydown)="zoomInClick()"
+    />
+    <div class="slidecontainer">
+      <input
+        type="range"
+        min="3"
+        max="18"
+        class="range"
+        [ngModel]="zoomLevel"
+        (input)="onRangeChange($event)"
+      />
+    </div>
+    <img
+      class="icon-tool"
+      src="assets/icon/toolbar_vertical_minimize.svg"
+      alt="minimize"
+      (click)="zoomOutClick()"
+      (keydown)="zoomOutClick()"
+    />
+  </ul>
+</div>

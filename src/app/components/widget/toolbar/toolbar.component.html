@@ -1,0 +1,13 @@
+<div class="mapa-toolbar d-flex align-items-center">
+    <div *ngFor="let img of imagesDefault">
+        <img class="icon-tool" [src]="'assets/icon/' + img.image + '_' + img.type + '.svg'" (click)="onChangeImage(img.id, img.type)" (keydown)="onChangeImage(img.id, img.type)" [alt]="img.type">
+    
+      </div>
+      <div class="submenu" *ngIf="medicionActiva">
+           <div class="info-medicion">
+               <p>Área: <small>{{ area | number:'1.0-2' }} m²</small></p>
+               <p>Perímetro: <small>{{ perimeter | number:'1.0-2' }} m</small></p>
+               <p>Distancia: <small>{{ medida | number:'1.0-2' }} m</small></p>
+           </div>
+     </div>
+</div>

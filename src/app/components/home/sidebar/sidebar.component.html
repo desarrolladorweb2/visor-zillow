@@ -1,0 +1,56 @@
+<!-- Botón hamburguesa - Solo visible cuando sidebar está cerrado -->
+<button *ngIf="!sidebarOpen" class="hamburger-button" (click)="toggleSidebar()">
+  <img src="assets/icon/menuicon.svg" alt="Menú" />
+</button>
+
+<!-- <div *ngIf="!sidebarOpen" class="mari-container">
+  <div
+    class="mari-button"
+    (mouseenter)="showMessageMariBubble = true"
+    (mouseleave)="showMessageMariBubble = false"
+    (click)="toggleBubble()"
+    (keydown)="toggleBubble()"
+  >
+    <img src="assets/icon/female_assistant.svg" alt="Asistente Virtual" />
+
+    <div class="chat-bubble" *ngIf="showMessageMariBubble">
+      Hola! Soy MARI,<br />tienes una <br />consulta?
+    </div>
+  </div>
+</div> -->
+
+<!-- Sidebar envuelto en nuevo contenedor -->
+<div class="sidebar-wrapper" [class.active]="sidebarOpen" #sidebarContainer>
+  <div class="d-flex flex-column align-items-start p-2">
+    <!-- Parte superior del sidebar -->
+    <div class="top-section">
+      <ul class="sidebar-list">
+        <li *ngFor="let img of imagesDefault" class="item-position">
+          <div
+            class="sidebar-item"
+            (click)="onChangeImage(img.id)"
+            (keydown)="onChangeImage(img.id)"
+          >
+            <img
+              class="icon-sidebar"
+              [src]="
+                'assets/icon/' +
+                img.image +
+                '_' +
+                (activeIndex == img.id ? 'ligth' : 'dark') +
+                '.svg'
+              "
+              [alt]="img.label"
+            />
+
+            <div class="label-container">
+              <p class="label-image">
+                {{ img.label }}
+              </p>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

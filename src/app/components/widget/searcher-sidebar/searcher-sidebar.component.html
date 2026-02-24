@@ -1,0 +1,76 @@
+<div class="card card-windows">
+  <div class="card-header card-header-windows d-flex justify-content-center">
+    Búsqueda
+  </div>
+  <div class="card-body">
+    <div class="content-seacher">
+      <!-- Campo dinámico según la opción seleccionada -->
+      <div *ngIf="selectedOption !== DEFAULT_LABEL">
+        <input
+          class="form-control search-windows"
+          type="text"
+          [(ngModel)]="infoInput"
+          placeholder="No. Matricula"
+          (input)="onInputChange($event)"
+        />
+      </div>
+    </div>
+    <div class="content-select mt-2 content-seacher">
+      <div class="search-container-option">
+        <div
+          class="select-option"
+          (click)="clickSearcher()"
+          (keydown)="clickSearcher()"
+        >
+          {{ selectedOption }}
+          <img
+            class="search-icon"
+            [src]="'assets/icon/' + displayIcon"
+            alt="icono desplegar"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="form-select-option" *ngIf="isVisible">
+      <div
+        class="search-container-option"
+        *ngFor="let option of optionSearch"
+        (click)="selectOption(option.ofibien_id, option.ofibienarearemi)"
+        (keydown)="selectOption(option.ofibien_id, option.ofibienarearemi)"
+      >
+        <p class="option option-hover">
+          <img
+            class="logo search-icon"
+            src="assets/icon/circle_light.svg"
+            alt="administrador"
+          />
+          {{ option.ofibienarearemi }}
+        </p>
+      </div>
+    </div>
+    <div *ngIf="showError" class="alert-error" role="alert">
+      El NPN debe tener 30 caracteres.
+    </div>
+
+    <div *ngIf="showErrorNoFound" class="alert-error" role="alert">
+      No se encontrarón resultados.
+    </div>    
+
+    <div class="d-flex justify-content-around mt-2 mb-4">
+      <button
+        class="btn btn-card btn-card-windows"
+        type="submit"
+        form="formSearchId"
+        (click)="searchInformation()"
+      >
+        Buscar
+      </button>
+      <button
+        class="btn btn-card btn-card-windows"
+        (click)="clearInformation()"
+      >
+        Limpiar
+      </button>
+    </div>
+  </div>
+</div>

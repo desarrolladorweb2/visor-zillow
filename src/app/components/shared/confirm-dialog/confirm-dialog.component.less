@@ -1,0 +1,169 @@
+::ng-deep .card-header {
+    height: 2.1rem !important;
+  }
+  
+  .dialog-container {
+    position: fixed;
+    top: 100px;
+    left: 245px;
+    transform: translate(-50%);
+    background-color: transparent;
+    padding: 0;
+    z-index: 1000;
+    margin: 0;
+    border-radius: 55px !important;
+    width: 20rem;
+  }
+  
+  .dialog-container p {
+    color: var(--skyFlow) !important;
+  }
+  
+  .dialog-container-oval {
+    position: fixed;
+    top: 100px;
+    left: 245px;
+    transform: translate(-50%);
+    background-color: transparent;
+    padding: 0;
+    z-index: 1000;
+    margin: 0;
+    border-radius: 100px !important;
+    width: 20rem;
+  }
+  
+  .text-center-oval p {
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.7rem;
+  }
+  
+  .icon {
+    height: 1.6rem;
+    padding-top: 5px;
+  }
+  
+  .icon-oval {
+    height: 1.4rem;
+  }
+  
+  .cursor-pointer {
+    cursor: pointer !important;
+  }
+  
+  .btn-submit {
+    margin-top: 10px;
+    background-color: var(--skyFlow);
+    border: none;
+    color: var(--pureUX);
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    padding: 5px 30px;
+  
+    @media (max-width: 480px) {
+      font-size: 12px;
+      padding: 5px 20px;
+    }
+  }
+  
+  .btn-submit:hover {
+    background-color: var(--aquaLogic);
+    color: var(--pureUX);
+  }
+  
+  .btn-submit-oval {
+    background-color: transparent;
+    border: none;
+    color: var(--skyFlow);
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: none;
+    cursor: pointer;
+  }
+  
+  .vertical-line {
+    width: 2px;
+    height: 1.5rem;
+    background-color: var(--skyFlow);
+  }
+  
+  p {
+    font-weight: bolder;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    .dialog-container,
+    .dialog-container-oval {
+      width: 90vw !important;
+      left: 50% !important;
+      top: 20px !important;
+      transform: translateX(-50%) !important;
+      border-radius: 2rem !important;
+    }
+  
+    ::ng-deep .card-header {
+      height: 1.8rem !important;
+    }
+  
+    .text-center-oval p {
+      font-size: 0.6rem !important;
+      word-break: break-word;
+      margin-bottom: 0 !important;
+    }
+  
+    .icon,
+    .icon-oval {
+      height: 1.2rem !important;
+      padding-top: 2px !important;
+    }
+  
+    .btn-submit,
+    .btn-submit-oval {
+      font-size: 11px !important;
+      padding: 4px 10px !important;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  
+    .vertical-line {
+      height: 1rem !important;
+    }
+  
+    .text-center {
+      padding: 0 0.5rem;
+    }
+  
+    h2 {
+      font-size: 1.1rem !important;
+    }
+  
+    p {
+      font-size: 0.75rem !important;
+      word-wrap: break-word;
+      max-width: 100%;
+    }
+  
+    .text-center-oval {
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: 0.5rem;
+      padding: 0.5rem !important;
+      text-align: center;
+    }
+  
+    .dialog-container-oval .btn-submit-oval {
+      margin-top: 0.25rem;
+    }
+  
+    .dialog-container-oval .vertical-line {
+      display: none;
+    }
+  }

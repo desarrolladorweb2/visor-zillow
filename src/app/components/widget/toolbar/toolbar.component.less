@@ -1,0 +1,48 @@
+.mapa-toolbar {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff;
+  padding: 0px 18px;
+  border-radius: 25px;
+  height: 2.2rem;
+}
+
+.icon-tool {
+  height: 33px;
+  margin-right: 4px;
+  cursor: pointer;
+}
+
+.submenu {
+  position: absolute;
+  bottom: 40px; /* sube el menú sobre el ícono */
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  z-index: 2000;
+}
+
+.info-medicion {
+  display: flex;
+  flex-direction: row; /* pone los <p> en fila */
+  gap: 12px;
+}
+
+.info-medicion p {
+  color: var(--navyCode);
+  margin: 0;
+  white-space: nowrap;
+}
+
+p small {
+  font-size: 0.9em;
+  color: var(--skyFlow);
+}

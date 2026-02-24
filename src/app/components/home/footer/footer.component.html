@@ -1,0 +1,25 @@
+<footer class="text-light text-center">
+    <div class="d-flex justify-content-between align-items-center h-100">
+
+        <div class="d-flex justify-content-around align-items-center">
+            <div class="container-scale">
+                <p class="dynamic-text">{{ zoomLevel }}</p>
+            </div>
+            <div class="container-src" style="margin-left: 1vw;">
+                <mat-select [value]="1" class="select-src" [disabled]="true">
+                    <mat-option class="option-src" *ngFor="let src of srcs" [value]="src.id">
+                        <p class="text-src">{{src.name}}</p>
+                    </mat-option>
+                </mat-select>
+            </div>
+            <div class="container-scale" style="margin-left: 1vw;">
+                <p class="dynamic-text">Zoom {{ zoomLevelMobile }}</p>
+            </div>
+        </div>
+
+        <div class="align-middle range-scale-center" *ngIf="cursorCoords?.[0]">
+            <p class="range-scale">{{ cursorCoords?.[0]?.toFixed(5)}}, {{ cursorCoords?.[1]?.toFixed(5)}}</p>
+        </div>
+    </div>
+</footer>
+

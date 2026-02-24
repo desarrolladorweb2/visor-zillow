@@ -1,0 +1,31 @@
+<div id="map-container">
+  <div id="map"></div>
+
+  <app-statistics
+    #stats
+    [class.show]="showStatistics"
+    class="statistics-container"
+    (afterToggle)="onStatsToggled()"
+  ></app-statistics>
+
+  <app-basemap (hideToolbarVertical)="onHideToolbarVertical($event)"[style.right.px]="toolbarRightPx + 16" [style.top.px]="toolbarOffset2 + 20">
+  </app-basemap>
+
+  <app-toolbar
+  [style.left.px]="toolbarLeftPx"
+  [style.bottom.px]="statisticsHeight + toolbarOffset"
+  ></app-toolbar>
+
+  <app-toolbar-map-vertical
+  [style.right.px]="toolbarRightPx"
+  [style.bottom.px]="statisticsHeight + toolbarOffset"
+    [zoomLevel]="zoomLevel"
+    (resetMapEvent)="resetMap()"
+    (zoomInEvent)="zoomIn()"
+    (zoomOutEvent)="zoomOut()"
+    (rangeChangeEvent)="onRangeChange($event)"
+    (locateUserEvent)="locateUser()"
+    (markPointEvent)="toggleMarkMode()"
+    *ngIf="showToolbarVertical"
+  ></app-toolbar-map-vertical>
+</div>

@@ -1,0 +1,239 @@
+@import "../../../../styles/variables.less";
+
+div {
+  font-size: 12px;
+}
+
+.card-title {
+  height: 0.4rem;
+  margin-bottom: 12px;
+}
+
+.card-body {
+  color: @dark-blue;
+  position: relative;
+  background: url("../../../../assets/icon/contact_card_geografica.svg")no-repeat center center;
+  background-size: contain;
+
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 0 !important;
+
+}
+
+.title-header {
+  font-size: 0.9rem;
+  margin-left: 10px;
+}
+
+.icon-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.icon-header {
+  height: 1.3rem;
+  align-items: center;
+  cursor: pointer !important;
+}
+
+.icon-user {
+  height: 8rem;
+}
+
+.icon-edit {
+  position: absolute;
+  bottom: 12px;
+  right: -7px;
+  width: 5rem;
+  height: 3rem;
+}
+
+p {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--navyCode);
+  margin: 0px;
+}
+
+p small {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+:host ::ng-deep .hidden-tabs .mat-mdc-tab-header,
+:host ::ng-deep .hidden-tabs .mdc-tab-scroller,
+:host ::ng-deep .hidden-tabs .mat-mdc-tab-header-pagination,
+:host ::ng-deep .hidden-tabs .mat-mdc-tab-header-pagination-before,
+:host ::ng-deep .hidden-tabs .mat-mdc-tab-header-pagination-after,
+:host ::ng-deep .hidden-tabs .mat-mdc-tab-list,
+:host ::ng-deep .hidden-tabs .mat-mdc-tab-labels,
+:host ::ng-deep .hidden-tabs .mat-mdc-tab-label-container,
+:host ::ng-deep .hidden-tabs .mdc-tab-indicator,
+:host ::ng-deep .hidden-tabs .mdc-tab-indicator__content {
+  display: none !important;
+  height: 0 !important;
+  visibility: hidden !important;
+  overflow: hidden !important;
+}
+
+:host ::ng-deep .hidden-tabs .mat-mdc-tab-body-wrapper {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+.position-relative {
+  position: relative;
+}
+
+/* Panel lateral */
+.image-sidebar {
+  position: absolute;
+  top: 0;
+  right: -300px; /* oculto inicialmente */
+  width: 260px;
+  //height: 16vh;
+  background: white;
+  //border-left: 1px solid #ddd;
+  padding-left: 15px;
+  transition: right 0.3s ease-in-out;
+  z-index: 50;
+  overflow-y: auto;
+  //box-shadow: -2px 0 6px rgba(0,0,0,0.15);
+  
+}
+
+/* Cuando esté abierto */
+.image-sidebar.open {
+  right: 0;
+}
+
+.preview-img {
+  width: 100%;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0);
+  border: none;
+  font-size: 1rem;
+  padding: 2px 5px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s ease-in-out;
+  z-index: 10;
+}
+
+.carousel-btn:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+.carousel-btn.left {
+  left: 5px;
+}
+
+.carousel-btn.right {
+  right: 5px;
+}
+
+/* Indicadores (dots) */
+.carousel-dots {
+  margin-top: 8px;
+}
+
+.dot {
+  height: 8px;
+  width: 8px;
+  margin: 0 3px;
+  display: inline-block;
+  background-color: #bbb;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.dot.active {
+  background-color: #333;
+  transform: scale(1.2);
+}
+
+.sidebar-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 80;
+
+  color: #1f54daea;
+  //background: white; /* Añadimos fondo blanco para contraste */
+  //padding: 6px 8px; 
+  //border-radius: 50%; /* Hacemos que sea un botón circular */
+  //border: 1px solid #ccc;
+  //box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+
+  transition: all .2s ease-in-out;
+}
+
+.sidebar-arrow:hover {
+  color: #031161;
+  //background: #f0f0f0;
+}
+
+/* Flecha para abrir (lado derecho del contenedor principal) */
+.open-arrow {
+  right: 5%;        /* queda sobre el borde */
+}
+
+/* Flecha para cerrar (lado izquierdo del sidebar) */
+.close-arrow {
+  right: 270px;        /* sale ligeramente para verse mejor */
+  transform: translate(50%, -50%);
+}
+
+/* Para evitar que el contenedor tape la flecha */
+.position-relative {
+  position: relative;
+}
+
+.sidebar-arrows-container {
+  position: absolute; /* Para que no afecte el flujo del contenido */
+  top: 0;
+  right: -10px;
+  height: 100%; /* Ocupa toda la altura del card-body */
+  pointer-events: none; /* Permite hacer clic a través de él, PERO... */
+  z-index: 60;
+}
+
+.sidebar-arrows-container .sidebar-arrow {
+  pointer-events: all;
+}
+
+.image-sidebar .close-arrow { 
+  //position: absolute; /* Sobrescribimos a absolute respecto a image-sidebar */
+  left: 0;
+  transform: translate(-50%, -50%);
+}
+
+.data-column-content {
+  width: 95%;
+}

@@ -1,0 +1,47 @@
+<div class="card card-windows">
+    <div class="card-header card-header-windows d-flex justify-content-center">
+      Cargar Archivo
+    </div>
+    <div class="card-body">
+        <h3>SELECCIONA UN ARCHIVO COMPATIBLE</h3>
+        <p>SHAPEFILE (COMPRIMIDO EN .ZIP)<br>
+           <!-- GPX<br>
+           GEO JSON<br>
+           CSV -->
+        </p>
+        <!-- Zona de arrastre -->
+        <div class="dropzone"
+            [ngClass]="{'dragover': isDragOver, 'file-loaded': fileName, 'noCompatibe': flagNoCompatible}"
+            (drop)="onDrop($event)"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (click)="fileInput.click()"
+            (keydown)="fileInput.click()"
+            >
+
+            <ng-container *ngIf="!fileName && !flagNoCompatible">
+                Arrastra aquí tu archivo
+                <br>o<br>
+                Selecciona desde el equipo
+            </ng-container>
+
+            <ng-container *ngIf="!fileName && flagNoCompatible">
+                <b>Formato no compatible</b><br>
+                Arrastra aquí tu archivo
+                <br>o<br>
+                Selecciona desde el equipo
+            </ng-container>            
+
+            <ng-container *ngIf="fileName && !flagNoCompatible">
+            {{ fileName }}
+            </ng-container>
+
+            <input type="file" #fileInput (change)="onFileSelected($event)" [disabled]="fileName" hidden>
+        </div>
+        <!-- Botones -->
+        <div class="d-flex justify-content-around mt-2 mb-4">
+            <button class="btn btn-card btn-card-windows" (click)="onClear()">Limpiar</button>
+            <button class="btn btn-card btn-card-windows" [disabled]="!fileName" (click)="onSave()">Guardar</button>
+          </div>         
+    </div>
+</div>
