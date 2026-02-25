@@ -1,3 +1,5 @@
+@primary-blue: #0672b9;
+
 .contact-modal-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -17,7 +19,7 @@
   .contact-header {
     display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 20px;
-    h5 { margin: 0; font-weight: 700; color: #006aff; }
+    h5 { margin: 0; font-weight: 700; color: @primary-blue; }
   }
 }
 
@@ -27,13 +29,17 @@
     label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: #555; }
     input, textarea {
       width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px;
-      font-size: 14px; &:focus { border-color: #006aff; outline: none; }
+      font-size: 14px; &:focus { border-color: @primary-blue; outline: none; }
     }
   }
 }
 
 .btn-send {
-  width: 100%; background: #006aff; color: white; border: none;
+  width: 100%; background: @primary-blue; color: white; border: none;
   padding: 12px; border-radius: 8px; font-weight: bold;
   &:disabled { background: #ccc; cursor: not-allowed; }
+}
+
+.mensaje-enviado {
+  color: @primary-blue;
 }

@@ -28,7 +28,7 @@ export class ContainerModalContactCardComponent implements OnInit {
       const property = this.containerModalCardService.selectedProperty();
       if (property && this.contactForm) {
         this.contactForm.patchValue({
-          mensaje: `Hola, estoy interesado en la propiedad ubicada en ${property.address}. Por favor, contáctenme.`
+          mensaje: ``
         });
       }
     });
@@ -43,7 +43,7 @@ export class ContainerModalContactCardComponent implements OnInit {
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       telefono: [''],
-      mensaje: ['', [Validators.required]]
+      mensaje: ['']
     });
   }
 
@@ -70,6 +70,7 @@ export class ContainerModalContactCardComponent implements OnInit {
             this.containerModalCardService.closeContactForm();
             this.isSubmitted.set(false); // Reseteamos para la próxima vez
             this.contactForm.reset();
+            this.containerModalCardService.close();
           }, 3000);
         },
         error: (err) => {

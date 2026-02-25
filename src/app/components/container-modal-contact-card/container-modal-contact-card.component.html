@@ -24,7 +24,7 @@
             </div>
 
             <div class="form-group">
-                <label>Mensaje</label>
+                <label>Mensaje (Opcional)</label>
                 <textarea formControlName="mensaje" rows="4"></textarea>
             </div>
 
@@ -36,10 +36,7 @@
         </form>
         } @else {
         <div class="success-message fade-in">
-            <div class="check-container">
-                <div class="check-icon"></div>
-            </div>
-            <h3>¡Solicitud enviada con éxito!</h3>
+            <h3 class="mensaje-enviado">¡Solicitud enviada con éxito!</h3>
             <div class="auto-close-bar"></div>
         </div>
         }

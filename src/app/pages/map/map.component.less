@@ -13,7 +13,8 @@
 .main-layout {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  // height: 100%;
+  height: 100dvh;
   width: 100%;
 
   .content-body {
@@ -21,6 +22,8 @@
     flex-direction: row;
     flex: 1; // Toma todo el espacio entre navbar y footer
     overflow: hidden; // Vital para que los hijos gestionen su propio scroll
+
+    padding-bottom: 4dvh;
   }
 }
 
@@ -90,7 +93,7 @@
   background: white;
   z-index: 20;
   padding: 12px;
-  border-bottom: 1px solid #e0e0e0;
+  border: 1px solid #e0e0e0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
   border-radius: 15px;
 
@@ -113,14 +116,14 @@
     min-width: 120px;
 
     &:hover {
-      border-color: #006aff; // Azul estilo Zillow
+      border-color: #0672b9; // Azul estilo Zillow
     }
   }
 
   .results-count {
     font-size: 14px;
     font-weight: 700;
-    color: #2a2a2a;
+    color: #153658;
   }
 }
 
@@ -136,10 +139,11 @@
   transition: all 0.3s ease;
   border-radius: 8px; /* Ajusta según el diseño de tu app-container-card */
   border: 2px solid transparent;
+  cursor: pointer;
 
   &.highlighted-card {
-    border-color: #007bff; /* Color primario de tu marca */
-    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    border-color: #0672b9; /* Color primario de tu marca */
+    box-shadow: 0 4px 15px rgba(1, 124, 255, 0.3);
     transform: scale(1.02);
     z-index: 10;
   }

@@ -11,6 +11,7 @@ import {
   NgZone,
   Output,
   EventEmitter,
+  Input
 } from '@angular/core';
 import 'leaflet.markercluster';
 import 'leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.src.js';
@@ -34,8 +35,6 @@ import { ChangeBasemapService } from '../../../core/services/widget/change-basem
 import 'proj4';
 import 'proj4leaflet';
 import { LayersService } from '../../../core/services/home/map/layers.service';
-
-import { Input } from '@angular/core';
 import { EstadoService } from '../../../core/services/observables.service';
 
 @Component({
@@ -75,8 +74,8 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
   showStatistics = false;
   toolbarLeftPx = 0;
   toolbarRightPx = 0;
-  readonly statisticsHeight = 90;
-  readonly toolbarOffset = 10;
+  readonly statisticsHeight = 60;
+  readonly toolbarOffset = 0;
   readonly toolbarOffset2 = 20;
   private readonly baseMapUrl =
     'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
