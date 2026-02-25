@@ -1,0 +1,177 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { delay, Observable, of, tap } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class InfoInmuebleService {
+
+  private readonly useMock = true;
+  private allPropertiesCache: any = null;
+  private readonly apiUrl = 'https://tu-api-real.com/api/properties';
+
+  constructor(private readonly http: HttpClient) { }
+
+  getProperties(filters: any): Observable<any> {
+    if (this.allPropertiesCache) {
+      // Si ya tenemos los datos, los devolvemos sin delay
+      return of(this.allPropertiesCache);
+    }
+
+    if (this.useMock) {
+      console.log('--- Cargando Mock Data (5s delay) ---');
+      return of(this.getMockData()).pipe(
+        delay(3000),
+        tap(data => this.allPropertiesCache = data)
+      );
+    } else {
+      // Cuando lo pongas real, pasas los filtros como params
+      return this.http.get(this.apiUrl, { params: filters }).pipe(
+        tap(data => this.allPropertiesCache = data)
+      );
+    }
+  }
+
+  private getMockData() {
+    return {
+      "metadata": {
+        "total_results": 5,
+        "bbox": [-121.95, 49.12, -121.85, 49.20],
+        "zoom_level": 14
+      },
+      "results": [
+        {
+          "id": "R3092234",
+          "solicitado": false,
+          "valor_inmueble": 1000000000,
+          "tipo_bien": "Casa",
+          "area_terreno": 100,
+          "area_construida": 200,
+          "tipo_predio": "rural",
+          "clasificacion": "",
+          "departamento": "Valle del Cauca",
+          "municipio": "Cali",
+          "direccion": "carrera 28 # 3-333",
+          "barrio": "Santa Teresa",
+          "estrato": "2",
+          "coordinates": {
+            "lat": 3.45961,
+            "lng": -76.533085
+          },
+          "solicitado_por": "",
+          "images": [
+            "/assets/img/bien_id1_1.png",
+            "/assets/img/bien_id1_2.png",
+            "/assets/img/bien_id1_2.png",
+            "/assets/img/bien_id1_1.png",
+            "/assets/img/bien_id1_2.png",
+            "/assets/img/bien_id1_2.png",
+            "/assets/img/bien_id1_1.png",
+            "/assets/img/bien_id1_2.png",
+          ],
+        },
+        {
+          "id": "R3092235",
+          "solicitado": false,
+          "valor_inmueble": 400000,
+          "tipo_bien": "Hotel",
+          "area_terreno": 100,
+          "area_construida": 200,
+          "tipo_predio": "Urbano",
+          "clasificacion": "Inmueble",
+          "departamento": "Antioquia",
+          "municipio": "Medellin",
+          "direccion": "carrera 7A # 4-533",
+          "barrio": "Poblado",
+          "estrato": "2",
+          "coordinates": {
+            "lat": 6.259036,
+            "lng": -75.586827
+          },
+          "solicitado_por": "",
+          "images": [
+            "/assets/img/bien_id2_1.png",
+            "/assets/img/bien_id2_2.png",
+            "/assets/img/bien_id2_2.png",
+          ],
+        },
+        {
+          "id": "R3092236",
+          "solicitado": true,
+          "valor_inmueble": 1349900,
+          "tipo_bien": "Apartamento",
+          "area_terreno": 72,
+          "area_construida": 72,
+          "tipo_predio": "Urbano",
+          "clasificacion": "Inmueble",
+          "departamento": "Antioquia",
+          "municipio": "Medellin",
+          "direccion": "Calle 79 No 72A 64",
+          "barrio": "Laureles",
+          "estrato": "4",
+          "coordinates": {
+            "lat": 6.27882,
+            "lng": -75.58078
+          },
+          "solicitado_por": "Maria Juliana, Pepito Perez, Juan Perez",
+          "images": [
+            "/assets/img/bien_id3_1.png",
+            "/assets/img/bien_id3_2.png",
+            "/assets/img/bien_id3_1.png",
+          ],
+        },
+        {
+          "id": "R3092237",
+          "solicitado": false,
+          "valor_inmueble": 300000000,
+          "tipo_bien": "Terreno",
+          "area_terreno": 40050,
+          "area_construida": 0,
+          "tipo_predio": "Rural",
+          "clasificacion": "Inmueble",
+          "departamento": "Meta",
+          "municipio": "Villavicencio",
+          "direccion": "VILLA MORALIA",
+          "barrio": "VILLA MORALIA",
+          "estrato": "3",
+          "coordinates": {
+            "lat": 4.131045,
+            "lng": -73.566847
+          },
+          "solicitado_por": "",
+          "images": [
+            "/assets/img/bien_id5_1.png",
+            "/assets/img/bien_id5_2.png",
+            "/assets/img/bien_id5_3.png",
+          ],
+        },
+        {
+          "id": "R3092238",
+          "solicitado": false,
+          "valor_inmueble": 50000000,
+          "tipo_bien": "Hotel",
+          "area_terreno": 40050,
+          "area_construida": 0,
+          "tipo_predio": "Rural",
+          "clasificacion": "Inmueble",
+          "departamento": "Meta",
+          "municipio": "Villavicencio",
+          "direccion": "EL POTRILLO Y LA POTRILLA",
+          "barrio": "EL POTRILLO Y LA POTRILLA",
+          "estrato": "3",
+          "coordinates": {
+            "lat": 4.131045,
+            "lng": -73.566847
+          },
+          "solicitado_por": "",
+          "images": [
+            "/assets/img/bien_id1_1.png",
+            " /assets/img/bien_id1_2.png",
+          ],
+          "status_tag": "New Construction"
+        }
+      ]
+    }
+  }
+}

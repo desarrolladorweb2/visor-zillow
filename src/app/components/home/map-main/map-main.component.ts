@@ -9,6 +9,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   NgZone,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import 'leaflet.markercluster';
 import 'leaflet.coordinates/dist/Leaflet.Coordinates-0.1.5.src.js';
@@ -92,6 +94,11 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   );
 
+  // Para enviar datos de card
+  @Output() propertiesInView = new EventEmitter<any[]>();
+  private fullData: any[] = [];
+  // fin
+
   private readonly interactiveLayerMap = new Map<string, L.Layer>();
   private readonly selectedLayer: L.GeoJSON = L.geoJSON(null, {
     style: {
@@ -122,7 +129,7 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
     private readonly dialogService: DialogService,
     private readonly changeBasemapService: ChangeBasemapService,
     private readonly layersService: LayersService,
-    private estadoService: EstadoService
+    private readonly estadoService: EstadoService
   ) { }
 
   ngOnInit(): void {
@@ -318,6 +325,33 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
     this.destroy$.complete();
     if (this.map) this.map.remove();
   }
+
+
+  public setFullData(data: any[]) {
+    this.fullData = data;
+    this.filterByVisibleBounds(); // Filtro inicial
+  }
+
+  private filterByVisibleBounds() {
+    console.log('se ejecuta filtro')
+    if (!this.map || this.fullData.length === 0) return;
+    console.log('fullData =>', this.fullData)
+
+    const bounds = this.map.getBounds();
+
+    // Filtramos el array localmente
+    const filtered = this.fullData.filter(prop => {
+      if (!prop.coordinates) return false;
+      const latlng = L.latLng(prop.coordinates.lat, prop.coordinates.lng);
+      return bounds.contains(latlng); // <-- MAGIA: ¿Está dentro del cuadro?
+    });
+
+    console.log('filtered =>', filtered)
+
+    // Avisamos al componente padre para que actualice las CARDS
+    this.propertiesInView.emit(filtered);
+  }
+
 
   private loadWFSubicaciones(idVisor: string): void {
     const cfg = this.getConfigByIndex(idVisor);
@@ -891,6 +925,14 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
       this.map.on('mousemove', (e: L.LeafletMouseEvent) => {
         const point = this.crs9377.project(e.latlng); // x, y en metros (EPSG:9377)
         this.mapSvc.updateCursorCoords([point.x, point.y]);
+      });
+      this.ngZone.runOutsideAngular(() => {
+        this.map.on('moveend', () => {
+          this.ngZone.run(() => {
+            console.log('se mueve el mapa')
+            this.filterByVisibleBounds();
+          });
+        });
       });
     });
   }

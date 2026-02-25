@@ -35,7 +35,7 @@
 
 // }
 
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from '../../components/home/navbar/navbar.component';
@@ -47,6 +47,7 @@ import { ContainerCardComponent } from "../../components/container-card/containe
 import { CommonModule } from '@angular/common';
 import { ContainerModalCardComponent } from "../../components/container-modal-card/container-modal-card.component";
 import { ContainerModalContactCardComponent } from "../../components/container-modal-contact-card/container-modal-contact-card.component";
+import { InfoInmuebleService } from '../../core/services/info-inmueble.service';
 
 @Component({
   selector: 'app-map',
@@ -67,162 +68,58 @@ import { ContainerModalContactCardComponent } from "../../components/container-m
 export class MapComponent implements OnInit {
 
   id?: string;
+  isLoading = signal(false);
   filters = signal({
-    precio: '',
-    tipoBien: '',
+    valor_inmueble: '',
+    tipo_bien: '',
     clasificacion: '',
-    depto: '',
+    departamento: '',
     municipio: ''
   });
 
-  property = signal<any>({
-    "metadata": {
-      "total_results": 5,
-      "bbox": [-121.95, 49.12, -121.85, 49.20],
-      "zoom_level": 14
-    },
-    "results": [
-      {
-        "id": "R3092234",
-        "solicitado": false,
-        "valor_inmueble": 1349900,
-        "tipo_bien": "Casa",
-        "area_terreno": 100,
-        "area_construida": 200,
-        "tipo_predio": "rural",
-        "clasificacion": "",
-        "departamento": "Valle del Cauca",
-        "municipio": "Cali",
-        "direccion": "carrera 28 # 3-333",
-        "barrio": "Santa Teresa",
-        "estrato": "2",
-        "coordinates": {
-          "lat": 3.45961,
-          "lng": -76.533085
-        },
-        "solicitado_por": "",
-        "images": [
-          "/assets/img/bien_id1_1.png",
-          "/assets/img/bien_id1_2.png",
-          "/assets/img/bien_id1_2.png",
-          "/assets/img/bien_id1_1.png",
-          "/assets/img/bien_id1_2.png",
-          "/assets/img/bien_id1_2.png",
-          "/assets/img/bien_id1_1.png",
-          "/assets/img/bien_id1_2.png",
-        ],
-      },
-      {
-        "id": "R3092234",
-        "solicitado": false,
-        "valor_inmueble": 1349900,
-        "tipo_bien": "Hotel",
-        "area_terreno": 100,
-        "area_construida": 200,
-        "tipo_predio": "Urbano",
-        "clasificacion": "Inmueble",
-        "departamento": "Antioquia",
-        "municipio": "Medellin",
-        "direccion": "carrera 7A # 4-533",
-        "barrio": "Poblado",
-        "estrato": "2",
-        "coordinates": {
-          "lat": 6.259036,
-          "lng": -75.586827
-        },
-        "solicitado_por": "",
-        "images": [
-          "/assets/img/bien_id2_1.png",
-          "/assets/img/bien_id2_2.png",
-          "/assets/img/bien_id2_2.png",
-        ],
-      },
-      {
-        "id": "R3092234",
-        "solicitado": true,
-        "valor_inmueble": 1349900,
-        "tipo_bien": "Apartamento",
-        "area_terreno": 72,
-        "area_construida": 72,
-        "tipo_predio": "Urbano",
-        "clasificacion": "Inmueble",
-        "departamento": "Antioquia",
-        "municipio": "Medellin",
-        "direccion": "Calle 79 No 72A 64",
-        "barrio": "Laureles",
-        "estrato": "4",
-        "coordinates": {
-          "lat": 6.27882,
-          "lng": -75.58078
-        },
-        "solicitado_por": "Maria Juliana, Pepito Perez, Juan Perez",
-        "images": [
-          "/assets/img/bien_id3_1.png",
-          "/assets/img/bien_id3_2.png",
-          "/assets/img/bien_id3_1.png",
-        ],
-      },
-      {
-        "id": "R3092234",
-        "solicitado": false,
-        "valor_inmueble": 1349900,
-        "tipo_bien": "Terreno",
-        "area_terreno": 40050,
-        "area_construida": 0,
-        "tipo_predio": "Rural",
-        "clasificacion": "Inmueble",
-        "departamento": "Meta",
-        "municipio": "Villavicencio",
-        "direccion": "VILLA MORALIA",
-        "barrio": "VILLA MORALIA",
-        "estrato": "3",
-        "coordinates": {
-          "lat": 4.131045,
-          "lng": -73.566847
-        },
-        "solicitado_por": "",
-        "images": [
-          "/assets/img/bien_id5_1.png",
-          "/assets/img/bien_id5_2.png",
-          "/assets/img/bien_id5_3.png",
-        ],
-      },
-      {
-        "id": "R3092234",
-        "solicitado": false,
-        "valor_inmueble": 1349900,
-        "tipo_bien": "Hotel",
-        "area_terreno": 40050,
-        "area_construida": 0,
-        "tipo_predio": "Rural",
-        "clasificacion": "Inmueble",
-        "departamento": "Meta",
-        "municipio": "Villavicencio",
-        "direccion": "EL POTRILLO Y LA POTRILLA",
-        "barrio": "EL POTRILLO Y LA POTRILLA",
-        "estrato": "3",
-        "coordinates": {
-          "lat": 4.131045,
-          "lng": -73.566847
-        },
-        "solicitado_por": "",
-        "images": [
-          "/assets/img/bien_id1_1.png",
-          " /assets/img/bien_id1_2.png",
-        ],
-        "status_tag": "New Construction"
-      }
-    ]
-  });
+  property = signal<any>(null);
+  filteredProperties = signal<any[]>([]);
+  totalCount = signal(0);
+  @ViewChild('mapRef') mapComponent!: MapMainComponent;
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly geometryService: GeometryService
-  ) { }
+  private readonly infoInmuebleService = inject(InfoInmuebleService);
+  private readonly geometryService = inject(GeometryService);
 
   ngOnInit() {
     this.id = '1';
     this.geometryService.setIdVisor(this.id);
+    this.loadProperties();
+  }
+
+  loadProperties() {
+    this.isLoading.set(true);
+
+    this.infoInmuebleService.getProperties(this.filters()).subscribe({
+      next: (data) => {
+        // Guardamos el array completo en la data original
+        const arrayData = data.results || [];
+        this.property.set(arrayData);
+
+        // Lo mostramos en las cards la primera vez
+        this.filteredProperties.set(arrayData);
+        this.totalCount.set(arrayData.length);
+        this.isLoading.set(false);
+
+        if (this.mapComponent) {
+          this.mapComponent.setFullData(arrayData);
+        }
+      },
+      error: (err) => {
+        console.error('Error cargando propiedades', err);
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  // Se ejecuta cada vez que el mapa se mueve (o cuando llegan datos nuevos)
+  updateListFromMap(properties: any[]) {
+    this.filteredProperties.set(properties);
+    this.totalCount.set(properties.length);
   }
 
   updateFilter(key: string, event: any) {
@@ -237,10 +134,47 @@ export class MapComponent implements OnInit {
 
   applyFilters() {
     const currentFilters = this.filters();
-    console.log('Aplicando filtros:', currentFilters);
 
-    // Lógica para llamar a tu geometryService o API enviando estos valores
-    // this.geometryService.search(currentFilters);
+    // 1. Tomamos SIEMPRE la data original e intacta como punto de partida
+    // (Asegúrate de que property() tenga el array de resultados)
+    const allData = this.property() || [];
+
+    // 2. Filtramos la data original según lo que esté seleccionado
+    const logicFiltered = allData.filter((item: any) => {
+      return this.filterByPrice(item.valor_inmueble, currentFilters.valor_inmueble) &&
+        this.filterByString(item.tipo_bien, currentFilters.tipo_bien) &&
+        this.filterByString(item.clasificacion, currentFilters.clasificacion) &&
+        this.filterByString(item.departamento, currentFilters.departamento) &&
+        this.filterByString(item.municipio, currentFilters.municipio);
+    });
+
+    // 3. ACTUALIZAMOS LAS CARDS INMEDIATAMENTE
+    // Esto es lo que tú mencionas: si no lo ponemos aquí, no se ve en la pantalla.
+    this.filteredProperties.set(logicFiltered);
+    this.totalCount.set(logicFiltered.length);
+
+    // 4. Le pasamos esta nueva lista al mapa para que borre/dibuje los pines correctos
+    if (this.mapComponent) {
+      this.mapComponent.setFullData(logicFiltered);
+    }
+  }
+
+  // Funciones auxiliares de filtrado
+  private filterByPrice(itemPrice: number, filterValue: string): boolean {
+    if (!filterValue) return true; // Si no hay filtro, pasa
+
+    if (filterValue.includes('+')) {
+      const min = parseInt(filterValue.replace('+', ''));
+      return itemPrice >= min;
+    }
+
+    const [min, max] = filterValue.split('-').map(v => parseInt(v));
+    return itemPrice >= min && itemPrice <= max;
+  }
+
+  private filterByString(itemValue: string, filterValue: string): boolean {
+    if (!filterValue) return true; // Si el select está vacío (""), deja pasar el dato
+    return itemValue?.toLowerCase() === filterValue.toLowerCase();
   }
 }
 

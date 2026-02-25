@@ -11,25 +11,46 @@
         <main class="viewer-container">
 
             <section class="map-section">
-                <app-map-main [idVisor]="id ?? ''" class="map-component"></app-map-main>
+                <app-map-main #mapRef (propertiesInView)="updateListFromMap($event)" [idVisor]="id ?? ''"
+                    class="map-component"></app-map-main>
             </section>
 
             <router-outlet></router-outlet>
 
             <div class="results-panel">
+                @if (isLoading()) {
+                <div class="loading-spinner">
+                    <p>Buscando...</p>
+                </div>
+                @for (i of [1,2,3,4]; track i) {
+                <div class="skeleton-card">
+                    <div class="skeleton-img"></div>
+                    <div class="skeleton-content">
+                        <div class="skeleton-line price"></div>
+                        <div class="skeleton-line address"></div>
+                        <div class="skeleton-line detail"></div>
+                    </div>
+                </div>}
+                } @else {
                 <div class="filters-bar">
                     <div class="filter-group">
-                        <select class="filter-select" (change)="updateFilter('precio', $event)">
+                        <select class="filter-select" (change)="updateFilter('valor_inmueble', $event)">
                             <option value="">Rango de Precio</option>
-                            <option value="0-500">Hasta $500k</option>
-                            <option value="500-1000">$500k - $1M</option>
-                            <option value="1000+">Más de $1M</option>
+                            <option value="0-500000">Hasta $500k</option>
+                            <option value="500000-1000000">$500k - $1M</option>
+                            <option value="1000000-10000000">$1M-10M</option>
+                            <option value="10000000-50000000">$10M-50M</option>
+                            <option value="50000000-100000000">$50M-100M</option>
+                            <option value="100000000+">$100M+</option>
                         </select>
 
-                        <select class="filter-select" (change)="updateFilter('tipoBien', $event)">
+                        <select class="filter-select" (change)="updateFilter('tipo_bien', $event)">
                             <option value="">Tipo de Bien</option>
                             <option value="casa">Casa</option>
                             <option value="apto">Apartamento</option>
+                            <option value="hotel">Hotel</option>
+                            <option value="terreno">Terreno</option>
+                            <option value="oficina">Oficina</option>
                         </select>
 
                         <select class="filter-select" (change)="updateFilter('clasificacion', $event)">
@@ -38,25 +59,38 @@
                             <option value="usado">Usado</option>
                         </select>
 
-                        <select class="filter-select" (change)="updateFilter('depto', $event)">
+                        <select class="filter-select" (change)="updateFilter('departamento', $event)">
                             <option value="">Departamento</option>
+                            <option value="valle">Valle del Cauca</option>
+                            <option value="antioquia">Antioquia</option>
+                            <option value="meta">Meta</option>
+                            <option value="bolivar">Bolívar</option>
+                            <option value="cundinamarca">Cundinamarca</option>
+                            <option value="narino">Nariño</option>
                         </select>
 
                         <select class="filter-select" (change)="updateFilter('municipio', $event)">
                             <option value="">Municipio</option>
+                            <option value="cali">Cali</option>
+                            <option value="medellin">Medellin</option>
+                            <option value="villavicencio">Villavicencio</option>
+                            <option value="barranquilla">Barranquilla</option>
+                            <option value="bogota">Bogotá</option>
+                            <option value="pasto">Pasto</option>
                         </select>
                     </div>
 
                     <div class="results-count">
-                        {{ property().metadata.total_results | number }} resultados
+                        {{ filteredProperties().length | number }} resultados
                     </div>
                 </div>
-
                 <div class="results-grid">
-                    @for (item of property().results; track item.id) {
+                    @for (item of filteredProperties(); track item.id) {
                     <app-container-card [property]="item"></app-container-card>
                     }
                 </div>
+                }
+
             </div>
 
         </main>
