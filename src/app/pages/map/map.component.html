@@ -11,7 +11,8 @@
         <main class="viewer-container">
 
             <section class="map-section">
-                <app-map-main #mapRef (propertiesInView)="updateListFromMap($event)" [idVisor]="id ?? ''"
+                <app-map-main #mapRef (propertiesInView)="updateListFromMap($event)"
+                    (propertySelected)="onPropertySelected($event)" [idVisor]="id ?? ''"
                     class="map-component"></app-map-main>
             </section>
 
@@ -86,7 +87,9 @@
                 </div>
                 <div class="results-grid">
                     @for (item of filteredProperties(); track item.id) {
-                    <app-container-card [property]="item"></app-container-card>
+                    <div class="card-wrapper" [class.highlighted-card]="item.id === selectedPropertyId()">
+                        <app-container-card [property]="item"></app-container-card>
+                    </div>
                     }
                 </div>
                 }

@@ -131,6 +131,19 @@
   gap: 12px;
 }   
 
+// iluminar card seleccionada
+.card-wrapper {
+  transition: all 0.3s ease;
+  border-radius: 8px; /* Ajusta según el diseño de tu app-container-card */
+  border: 2px solid transparent;
+
+  &.highlighted-card {
+    border-color: #007bff; /* Color primario de tu marca */
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+    transform: scale(1.02);
+    z-index: 10;
+  }
+}
 
 // esqueleto mientras carga
 .skeleton-card {

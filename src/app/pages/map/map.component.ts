@@ -1,42 +1,4 @@
-// import { Component, Input, OnInit } from '@angular/core';
-// import { RouterOutlet } from '@angular/router';
-// import { NavbarComponent } from '../../components/home/navbar/navbar.component';
-// import { SidebarComponent } from '../../components/home/sidebar/sidebar.component';
-// import { FooterComponent } from '../../components/home/footer/footer.component';
-// import { MapMainComponent } from '../../components/home/map-main/map-main.component';
-// import { GeometryService } from '../../core/services/home/map/geometry.service';
-
-// @Component({
-//   selector: 'app-map',
-//   imports: [
-//     NavbarComponent,
-//     SidebarComponent,
-//     FooterComponent,
-//     RouterOutlet,
-//     MapMainComponent,
-//   ],
-//   templateUrl: './map.component.html',
-//   styleUrl: './map.component.less',
-// })
-// export class MapComponent implements OnInit {
-
-//   @Input() id?: string;
-
-//   constructor(private readonly geometryService: GeometryService) {
-
-//   }
-
-//   ngOnInit() {
-//     if (this.id) {
-//       this.geometryService.setIdVisor(this.id);
-//       console.log('id: ', this.id);
-//     }
-//   }
-
-// }
-
 import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
 import { NavbarComponent } from '../../components/home/navbar/navbar.component';
 import { SidebarComponent } from '../../components/home/sidebar/sidebar.component';
@@ -84,6 +46,7 @@ export class MapComponent implements OnInit {
 
   private readonly infoInmuebleService = inject(InfoInmuebleService);
   private readonly geometryService = inject(GeometryService);
+  selectedPropertyId = this.infoInmuebleService.selectedPropertyId;
 
   ngOnInit() {
     this.id = '1';
@@ -124,22 +87,39 @@ export class MapComponent implements OnInit {
 
   updateFilter(key: string, event: any) {
     const value = (event.target as HTMLSelectElement).value;
-
-    // Actualizamos el signal de filtros
     this.filters.update(prev => ({ ...prev, [key]: value }));
-
-    // Aquí disparas la recarga de datos con los nuevos filtros
     this.applyFilters();
   }
 
+  // Recibe el clic del mapa
+  onPropertySelected(id: string) {
+    // Encendemos la iluminación usando el servicio
+    this.infoInmuebleService.selectedPropertyId.set(id);
+
+    const currentList = [...this.filteredProperties()];
+    const index = currentList.findIndex((item: any) => item.id === id);
+
+    if (index > 0) {
+      // Movemos el elemento al principio del array
+      const [selectedItem] = currentList.splice(index, 1);
+      currentList.unshift(selectedItem);
+
+      this.filteredProperties.set(currentList);
+    }
+
+    // Hacemos scroll suave hacia arriba en el panel de resultados
+    const panel = document.querySelector('.results-grid');
+    if (panel) {
+      panel.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  /** FILTROS */
+
   applyFilters() {
     const currentFilters = this.filters();
-
-    // 1. Tomamos SIEMPRE la data original e intacta como punto de partida
-    // (Asegúrate de que property() tenga el array de resultados)
     const allData = this.property() || [];
 
-    // 2. Filtramos la data original según lo que esté seleccionado
     const logicFiltered = allData.filter((item: any) => {
       return this.filterByPrice(item.valor_inmueble, currentFilters.valor_inmueble) &&
         this.filterByString(item.tipo_bien, currentFilters.tipo_bien) &&
@@ -148,27 +128,24 @@ export class MapComponent implements OnInit {
         this.filterByString(item.municipio, currentFilters.municipio);
     });
 
-    // 3. ACTUALIZAMOS LAS CARDS INMEDIATAMENTE
-    // Esto es lo que tú mencionas: si no lo ponemos aquí, no se ve en la pantalla.
     this.filteredProperties.set(logicFiltered);
     this.totalCount.set(logicFiltered.length);
 
-    // 4. Le pasamos esta nueva lista al mapa para que borre/dibuje los pines correctos
     if (this.mapComponent) {
       this.mapComponent.setFullData(logicFiltered);
+      this.mapComponent.focusOnData(logicFiltered);
     }
   }
 
-  // Funciones auxiliares de filtrado
   private filterByPrice(itemPrice: number, filterValue: string): boolean {
-    if (!filterValue) return true; // Si no hay filtro, pasa
+    if (!filterValue) return true;
 
     if (filterValue.includes('+')) {
-      const min = parseInt(filterValue.replace('+', ''));
+      const min = Number(filterValue.replace('+', ''));
       return itemPrice >= min;
     }
 
-    const [min, max] = filterValue.split('-').map(v => parseInt(v));
+    const [min, max] = filterValue.split('-').map(v => Number(v));
     return itemPrice >= min && itemPrice <= max;
   }
 

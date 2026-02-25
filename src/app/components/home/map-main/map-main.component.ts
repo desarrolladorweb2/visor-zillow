@@ -96,6 +96,7 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Para enviar datos de card
   @Output() propertiesInView = new EventEmitter<any[]>();
+  @Output() propertySelected = new EventEmitter<string>();
   private fullData: any[] = [];
   // fin
 
@@ -133,8 +134,6 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    //console.log('Parámetro recibido:', this.idVisor);
-    //this.loadWFSterrenos(this.idVisor);
     this.loadWFSubicaciones(this.idVisor);
     this.changeBasemapService.basemap$.subscribe((basemap) => {
       this.baseMap = basemap.url ?? this.baseMapUrl;
@@ -285,10 +284,15 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
               }).addTo(this.map);
               const latlng = highlight_.getBounds().getCenter();
 
-              this.map.flyTo(latlng, 18, {
+              this.map.flyTo(latlng, 16, {
                 animate: true,
                 duration: 0.5
               });
+
+              // para poder iluminar la propiedad en la lista
+              this.propertySelected.emit(id);
+              // fin
+
 
               this.layersService.addLayerId(layerName, Number(id), highlight_);
               const selectedFeatureData = { id, layerName, counter, idVisor: this.idVisor, entidad: cfg?.entidad };
@@ -326,6 +330,7 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.map) this.map.remove();
   }
 
+  // inicio filtros de card
 
   public setFullData(data: any[]) {
     this.fullData = data;
@@ -343,7 +348,7 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
     const filtered = this.fullData.filter(prop => {
       if (!prop.coordinates) return false;
       const latlng = L.latLng(prop.coordinates.lat, prop.coordinates.lng);
-      return bounds.contains(latlng); // <-- MAGIA: ¿Está dentro del cuadro?
+      return bounds.contains(latlng);
     });
 
     console.log('filtered =>', filtered)
@@ -351,6 +356,28 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
     // Avisamos al componente padre para que actualice las CARDS
     this.propertiesInView.emit(filtered);
   }
+
+  public focusOnData(data: any[]): void {
+    if (!this.map || !data || data.length === 0) return;
+
+    // 1. Extraemos solo las coordenadas válidas de los elementos filtrados
+    const latlngs = data
+      .filter(prop => prop.coordinates && prop.coordinates.lat && prop.coordinates.lng)
+      .map(prop => L.latLng(prop.coordinates.lat, prop.coordinates.lng));
+
+    if (latlngs.length > 0) {
+      // 2. Creamos los límites (bounds) que encierran todos esos puntos
+      const bounds = L.latLngBounds(latlngs);
+
+      // 3. Volamos suavemente hacia esos límites con un poco de margen (padding)
+      this.map.flyToBounds(bounds, {
+        padding: [50, 50], // Margen en píxeles para que los pines no queden pegados al borde
+        duration: 1.5,
+        maxZoom: 12     // Duración de la animación en segundos
+      });
+    }
+  }
+  // fin filtros de card
 
 
   private loadWFSubicaciones(idVisor: string): void {
@@ -378,21 +405,18 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
             layer.on('click', () => {
 
               let id: string | undefined;
-              // if (cfg.workspace === 'Ofertas_Zipaquira' || cfg.workspace === 'Ofertas_Cajica'){
-              //   id = String(feature.id).split('.').pop();
-              // } else {
-              //   id =
-              //   feature.properties.predio_id ||
-              //   feature.properties.cr_construcciones_id
-              // }
 
               id = feature.properties.predio_id ||
                 feature.properties.id_dato_seccion ||
                 feature.properties.fichaconstrudetalle_id ||
                 feature.properties.ubicacion_id
-              //feature.properties.cr_unidadesconstruccion_id
-              //console.log('Feature: ', feature);
+
               if (!id) return;
+
+              // para poder iluminar la propiedad en la lista
+              console.log('seleccion id: ', id)
+              this.propertySelected.emit(id);
+              // fin
 
               const key = `${'ubicacion'}-${id}`;
 
@@ -440,7 +464,7 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
                 }).addTo(this.map);
                 const latlng = highlight_.getBounds().getCenter();
 
-                this.map.flyTo(latlng, 18, {
+                this.map.flyTo(latlng, 16, {
                   animate: true,
                   duration: 0.5
                 });
@@ -487,89 +511,6 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  private loadWFSterrenos(idVisor: string): void {
-    const cfg = this.getConfigByIndex(idVisor);
-    if (cfg) {
-
-      if (this.idVisor === '1' || this.idVisor === '3') {
-        this.centrarMapaEnPoligonos('POC_Realasset', cfg.centroide);
-      } else {
-        this.centrarMapaEnPoligonos('Geovisor-Cajica', cfg.centroide);
-      }
-      this.geometrySvc.getLayerWFS_(cfg.workspace, 'cr_terrenos').subscribe((features) => {
-        //console.log('Features =>', features)
-        if (!features) return;
-        const geoLayer = L.geoJSON(features, {
-          style: {
-            color: '#403d3d',
-            weight: 1,
-            fillColor: '#AAAAAA',
-            fillOpacity: 0.7,
-          },
-          onEachFeature: (feature, layer) => {
-            layer.on('click', () => {
-
-              let id: string | undefined;
-              // if (cfg.workspace === 'Ofertas_Zipaquira' || cfg.workspace === 'Ofertas_Cajica'){
-              //   id = String(feature.id).split('.').pop();
-              // } else {
-              //   id =
-              //   feature.properties.predio_id ||
-              //   feature.properties.cr_construcciones_id
-              // }
-
-              id = feature.properties.predio_id ||
-                feature.properties.id_dato_seccion ||
-                feature.properties.fichaconstrudetalle_id
-              //feature.properties.cr_unidadesconstruccion_id
-              console.log('Feature: ', feature);
-              if (!id) return;
-
-              const key = `${'cr_terrenos'}-${id}`;
-
-              if (this.layersService.hasLayerId('cr_terrenos', Number(id))) {
-                // Deseleccionar
-                this.layersService.removeLayerId('cr_terrenos', Number(id));
-                this.removeFromSelection(feature);
-                (layer as any).setStyle({
-                  color: '#403d3d',
-                  weight: 1,
-                  fillColor: '#AAAAAA',
-                  fillOpacity: 0.7,
-                });
-                this.dialogService.closeByKey(key);
-              } else {
-                // Seleccionar
-                this.layersService.addLayerId('cr_terrenos', Number(id));
-                this.addToSelection(feature);
-                (layer as any).setStyle({
-                  color: '#b91515ff',
-                  weight: 1,
-                  fillColor: '#b41a1aff',
-                  fillOpacity: 0.3,
-                });
-                const selectedFeatureData = { id, layerName: 'cr_terrenos', idVisor: this.idVisor, entidad: cfg?.entidad };
-                this.dialogService.openRefer(
-                  {
-                    component: ContactCardComponent,
-                    data: selectedFeatureData,
-                  },
-                  key
-                );
-              }
-            });
-          },
-        });
-        //const bounds = geoLayer.getBounds();
-        //this.map.flyToBounds(bounds,{duration: 0.5})
-        this.mapSvc.setGeoJSONLayer(geoLayer);
-        this.mapSvc.setDataToGeoJSONLayer(features);
-        this.mapSvc.setDataCompletaWFS(features);
-        //console.log('Features =>', features)
-      });
-    }
-  }
-
   async centrarMapaEnPoligonos(wSpace: string, centroide: string): Promise<void> {
     const center = await this.geometrySvc.getCenterOfPolygons(
       wSpace,
@@ -589,156 +530,6 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  // ─── Inicialización de Leaflet ───────────────────────────────────────────
-
-  // private loadInteractiveLayers(): void {
-  //   console.log('Cargando capas interactivas...');
-  //   const interactiveLayers = ['cr_terrenos', 'cr_unidadesconstruccion'];
-
-  //   interactiveLayers.forEach((layerName) => {
-  //     this.geometrySvc
-  //       .getLayerWFS_('Geovisor-Zipaquira', layerName)
-  //       .subscribe((data) => {
-  //         if (!data) return;
-
-  //         const geoLayer = L.geoJSON(data, {
-  //           style: {
-  //             color: '#403d3d',
-  //             weight: 1,
-  //             fillColor: '#AAAAAA',
-  //             fillOpacity: 0.7,
-  //           },
-  //           onEachFeature: (feature, layer) => {
-  //             layer.on('click', () => {
-  //               if (this.highlight) {
-  //                 this.map.removeLayer(this.highlight);
-  //               }
-  //               this.highlight = L.geoJSON(feature, {
-  //                 style: {
-  //                   color: '#30fcfc',
-  //                   weight: 1,
-  //                   fillColor: '#30fcfc',
-  //                   fillOpacity: 0.3,
-  //                 },
-  //               }).addTo(this.map);
-
-  //               this.map.fitBounds(this.highlight.getBounds());
-  //               this.mapSvc.setHighlight(this.highlight);
-  //               console.log('datos capa: ', feature)
-
-  //               // extraigo el id de la capa
-  //               const id = feature.properties.cr_terrenos_id || feature.properties.cr_unidadesconstruccion_id;
-  //               console.log('datos capa: ', id)
-  //               const selectedFeatureData = { id, layerName };
-
-  //               // Mostrar datos del feature
-  //               this.dialogService.open({
-  //                 component: ContactCardComponent,
-  //                 data: selectedFeatureData,
-  //               });
-  //             });
-  //           },
-  //         });
-
-  //         console.log(`Capa ${layerName} cargada.`, geoLayer);
-  //         this.mapSvc.setGeoJSONLayer(geoLayer);
-  //         this.mapSvc.setDataToGeoJSONLayer(data);
-  //         this.mapSvc.setDataCompletaWFS(data ?? []);
-
-  //         this.layerControl?.addOverlay(geoLayer, layerName);
-  //         this.mapSvc.registerLayer(layerName, geoLayer, 'interactive');
-  //       });
-  //   });
-  // }
-
-  // private selectedFeatures = new Set<string>();
-  // private loadInteractiveLayers(): void {
-  //   const interactiveLayers = ['cr_terrenos', 'cr_unidadesconstruccion'];
-  //   interactiveLayers.forEach((layerName) => {
-  //     // ya existe en MapService? -> no recrear
-  //     //if (this.mapSvc.getLayerNames().includes(layerName)) {
-  //     //  return;
-  //     //}
-
-  //     this.geometrySvc
-  //       .getLayerWFS_('Geovisor-Zipaquira', layerName)
-  //       .subscribe((features) => {
-  //         if (!features) return;
-
-  //         const geoLayer = L.geoJSON(features, {
-  //           style: {
-  //             color: '#403d3d',
-  //             weight: 1,
-  //             fillColor: '#AAAAAA',
-  //             fillOpacity: 0.7,
-  //           },
-  //           onEachFeature: (feature, layer) => {
-  //             layer.on('click', () => {
-  //               console.log('Feature clicado:', feature);
-  //               const id =
-  //                 feature.properties.predio_id ||
-  //                 feature.properties.cr_unidadesconstruccion_id;
-  //               if (!id) return;
-
-  //               const key = `${layerName}-${id}`;
-
-  //               if (this.layersService.hasLayerId(layerName, id)) {
-  //                 // Deseleccionar
-  //                 this.layersService.removeLayerId(layerName, id);
-  //                 this.removeFromSelection(feature);
-  //                 (layer as any).setStyle({
-  //                   color: '#403d3d',
-  //                   weight: 1,
-  //                   fillColor: '#AAAAAA',
-  //                   fillOpacity: 0.7,
-  //                 });
-  //                 this.dialogService.closeByKey(key);
-  //               } else {
-  //                 // Seleccionar
-  //                 this.layersService.addLayerId(layerName, id);
-  //                 this.addToSelection(feature);
-  //                 (layer as any).setStyle({
-  //                   color: '#b91515ff',
-  //                   weight: 1,
-  //                   fillColor: '#b41a1aff',
-  //                   fillOpacity: 0.3,
-  //                 });
-  //                 const selectedFeatureData = { id, layerName };
-  //                 this.dialogService.openRefer(
-  //                   {
-  //                     component: ContactCardComponent,
-  //                     data: selectedFeatureData,
-  //                   },
-  //                   key
-  //                 );
-  //               }
-  //             });
-  //           },
-  //         });
-
-  //         // registrar en memoria local
-  //         this.interactiveLayerMap.set(layerName, geoLayer);
-
-  //         // registrar en MapService con visible:false (arrancan ocultas)
-  //         this.mapSvc.registerLayer(
-  //           layerName,
-  //           geoLayer,
-  //           'interactive',
-  //           layerName
-  //         );
-
-  //         this.map.addLayer(geoLayer); //-> show-layer decide cuándo mostrar
-  //         this.layerControl?.addOverlay(geoLayer, layerName); //-> no se usa el control visual
-
-  //         if (layerName === 'cr_terrenos') {
-  //           this.mapSvc.setGeoJSONLayer(geoLayer);
-  //           this.mapSvc.setDataToGeoJSONLayer(features);
-  //           this.mapSvc.setDataCompletaWFS(features);
-  //         }
-  //       });
-  //   });
-  // }
-
   private addToSelection(feature: any) {
     this.selectedLayer.addData(feature);
   }
@@ -754,25 +545,6 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
   }
-
-  // private initWmsLayers(wSpace: string): void {
-  //   const configs = this.geometrySvc.getLayersByIdVisor();
-
-  //   // Solo añadir al control los WMS de tipo "masivo"
-  //   configs
-  //     .filter((cfg) =>
-  //       ['cc_limite_municipio', 'Terreno'].includes(cfg.layerName)
-  //     )
-  //     .forEach((cfg) => {
-  //       const layer = L.tileLayer.wms(
-  //         this.geometrySvc.getWMSLayersURL(wSpace),
-  //         //this.geometrySvc.getWMSLayersURL().replace('/wms', '/gwc/service/wms'),
-  //         this.geometrySvc.getWMSLayersParams(cfg)
-  //       );
-  //       this.wmsLayers.push(layer);
-  //       this.mapSvc.registerLayer(cfg.layerName, layer, 'bulk');
-  //     });
-  // }
 
   private initMap(): void {
     const init = this.locationSvc.getLocationInitial();
@@ -798,56 +570,6 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
     }).addTo(this.map);
 
     this.mapSvc.setMap(this.map);
-  }
-
-  private addLayerControl(): void {
-    this.wmsLayers.forEach((layer) => {
-      if (this.map.hasLayer(layer)) {
-        this.map.removeLayer(layer);
-      }
-    });
-
-    const overlays: Record<string, L.Layer> = {};
-    this.wmsLayers.forEach((layer) => {
-      const raw = (layer.options.layers as string) || '';
-      const label = raw
-        .split(':')
-        .pop()!
-        .toLowerCase()
-        .split('_')
-        .map((w) => w[0].toUpperCase() + w.slice(1))
-        .join(' ');
-      overlays[label] = layer;
-    });
-
-    this.layerControl = L.control.layers({}, overlays, { collapsed: false, position: 'bottomright' }).addTo(this.map);
-    this.mapSvc.setLayerControl(this.layerControl);
-
-    this.map.on('overlayadd', (e: L.LayerEvent) => {
-      if (e.layer === this.plainLayer) {
-        this.map.addLayer(this.plainLayer);
-        if (this.map.hasLayer(this.markerCluster)) {
-          this.map.removeLayer(this.markerCluster);
-        }
-      }
-      if (e.layer === this.markerCluster) {
-        this.map.addLayer(this.markerCluster);
-        if (this.map.hasLayer(this.plainLayer)) {
-          this.map.removeLayer(this.plainLayer);
-        }
-      }
-    });
-
-    this.map.on('overlayremove', (e: L.LayerEvent) => {
-      if (e.layer === this.plainLayer) {
-        // Quitar marcadores individuales
-        this.map.removeLayer(this.plainLayer);
-      }
-      if (e.layer === this.markerCluster) {
-        // Quitar cluster
-        this.map.removeLayer(this.markerCluster);
-      }
-    });
   }
 
   /** Suscribe toggle de estadísticas para reposicionar toolbar **/
@@ -989,17 +711,14 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private loadInteractiveLayersWMS(idVisor: string): void {
-    //const interactiveLayers = ['cr_terrenos', 'cr_unidadesconstruccion'];
     const interactiveLayers = this.geometrySvc.getLayersByIdVisor();
     const cfg = this.getConfigByIndex(idVisor);
     if (cfg) {
       interactiveLayers.forEach((layerName) => {
         const layer = L.tileLayer.wms(
           this.geometrySvc.getWMSLayersURL(cfg.workspace),
-          //this.geometrySvc.getWMSLayersURL().replace('/wms', '/gwc/service/wms'),
           this.geometrySvc.getWMSLayersParams(layerName)
         );
-        //this.wmsLayers.push(layer);
         console.log('Capa Importada =>', layer)
         this.interactiveLayerMap.set(layerName.layerName, layer);
         if (layerName.visible) {
@@ -1013,85 +732,6 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
           layerName.labelName);
       });
     }
-
-    //interactiveLayers.forEach((layerName) => {
-    // ya existe en MapService? -> no recrear
-    //if (this.mapSvc.getLayerNames().includes(layerName)) {
-    //  return;
-    //}
-
-    //this.geometrySvc
-    //.getLayerWFS_('Geovisor-Zipaquira', layerName)
-    //.subscribe((features) => {
-    //  if (!features) return;
-
-    // const geoLayer = L.geoJSON(features, {
-    //   style: {
-    //     color: '#403d3d',
-    //     weight: 1,
-    //     fillColor: '#AAAAAA',
-    //     fillOpacity: 0.7,
-    //   },
-    //   onEachFeature: (feature, layer) => {
-    //     layer.on('click', () => {
-    //       console.log('Feature clicado:', feature);
-    //       const id =
-    //         feature.properties.predio_id ||
-    //         feature.properties.cr_unidadesconstruccion_id;
-    //       if (!id) return;
-
-    //       const key = `${layerName}-${id}`;
-
-    //       if (this.layersService.hasLayerId(layerName, id)) {
-    //         // Deseleccionar
-    //         this.layersService.removeLayerId(layerName, id);
-    //         this.removeFromSelection(feature);
-    //         (layer as any).setStyle({
-    //           color: '#403d3d',
-    //           weight: 1,
-    //           fillColor: '#AAAAAA',
-    //           fillOpacity: 0.7,
-    //         });
-    //         this.dialogService.closeByKey(key);
-    //       } else {
-    //         // Seleccionar
-    //         this.layersService.addLayerId(layerName, id);
-    //         this.addToSelection(feature);
-    //         (layer as any).setStyle({
-    //           color: '#b91515ff',
-    //           weight: 1,
-    //           fillColor: '#b41a1aff',
-    //           fillOpacity: 0.3,
-    //         });
-    //         const selectedFeatureData = { id, layerName };
-    //         this.dialogService.openRefer(
-    //           {
-    //             component: ContactCardComponent,
-    //             data: selectedFeatureData,
-    //           },
-    //           key
-    //         );
-    //       }
-    //     });
-    //   },
-    // });
-
-    // registrar en memoria local
-    //this.interactiveLayerMap.set(layerName, geoLayer);
-
-    // registrar en MapService con visible:false (arrancan ocultas)
-    //this.mapSvc.registerLayer(
-    //  layerName,
-    //  geoLayer,
-    //  'interactive',
-    //  layerName
-    //);
-
-    //this.map.addLayer(geoLayer); //-> show-layer decide cuándo mostrar
-    //this.layerControl?.addOverlay(geoLayer, layerName); //-> no se usa el control visual
-
-    //});
-    //});
   }
 
   getConfigByIndex(id: string) {
@@ -1111,6 +751,4 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
         layerName
       }));
   }
-
-
 }

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { delay, Observable, of, tap } from 'rxjs';
 
 @Injectable({
@@ -9,9 +9,11 @@ export class InfoInmuebleService {
 
   private readonly useMock = true;
   private allPropertiesCache: any = null;
+  selectedPropertyId = signal<string | null>(null);
   private readonly apiUrl = 'https://tu-api-real.com/api/properties';
 
   constructor(private readonly http: HttpClient) { }
+
 
   getProperties(filters: any): Observable<any> {
     if (this.allPropertiesCache) {
@@ -42,7 +44,7 @@ export class InfoInmuebleService {
       },
       "results": [
         {
-          "id": "R3092234",
+          "id": 5,
           "solicitado": false,
           "valor_inmueble": 1000000000,
           "tipo_bien": "Casa",
@@ -72,7 +74,7 @@ export class InfoInmuebleService {
           ],
         },
         {
-          "id": "R3092235",
+          "id": 1,
           "solicitado": false,
           "valor_inmueble": 400000,
           "tipo_bien": "Hotel",
@@ -97,7 +99,7 @@ export class InfoInmuebleService {
           ],
         },
         {
-          "id": "R3092236",
+          "id": 2,
           "solicitado": true,
           "valor_inmueble": 1349900,
           "tipo_bien": "Apartamento",
@@ -122,7 +124,7 @@ export class InfoInmuebleService {
           ],
         },
         {
-          "id": "R3092237",
+          "id": 3,
           "solicitado": false,
           "valor_inmueble": 300000000,
           "tipo_bien": "Terreno",
@@ -147,7 +149,7 @@ export class InfoInmuebleService {
           ],
         },
         {
-          "id": "R3092238",
+          "id": 4,
           "solicitado": false,
           "valor_inmueble": 50000000,
           "tipo_bien": "Hotel",
