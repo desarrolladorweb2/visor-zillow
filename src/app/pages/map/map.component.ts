@@ -52,6 +52,26 @@ export class MapComponent implements OnInit {
     this.id = '1';
     this.geometryService.setIdVisor(this.id);
     this.loadProperties();
+
+    this.infoInmuebleService.propertyUpdated$.subscribe((updatedProp) => {
+
+      // 1. Actualizamos la data maestra (this.property())
+      const allData = this.property() || [];
+      const indexMaster = allData.findIndex((p: any) => p.id === updatedProp.id);
+      if (indexMaster !== -1) {
+        allData[indexMaster] = updatedProp;
+        this.property.set([...allData]);
+      }
+
+      // 2. Actualizamos la data visual actual (las cards filtradas)
+      const visibleData = this.filteredProperties();
+      const indexFiltered = visibleData.findIndex((p: any) => p.id === updatedProp.id);
+      if (indexFiltered !== -1) {
+        visibleData[indexFiltered] = updatedProp;
+        this.filteredProperties.set([...visibleData]);
+      }
+
+    });
   }
 
   loadProperties() {

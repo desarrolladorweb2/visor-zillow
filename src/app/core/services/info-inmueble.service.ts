@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { delay, Observable, of, tap } from 'rxjs';
+import { delay, Observable, of, Subject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +10,7 @@ export class InfoInmuebleService {
   private readonly useMock = true;
   private allPropertiesCache: any = null;
   selectedPropertyId = signal<string | null>(null);
+  propertyUpdated$ = new Subject<any>();
   private readonly apiUrl = 'https://tu-api-real.com/api/properties';
 
   constructor(private readonly http: HttpClient) { }
@@ -37,11 +38,6 @@ export class InfoInmuebleService {
 
   private getMockData() {
     return {
-      "metadata": {
-        "total_results": 5,
-        "bbox": [-121.95, 49.12, -121.85, 49.20],
-        "zoom_level": 14
-      },
       "results": [
         {
           "id": 5,
@@ -175,5 +171,40 @@ export class InfoInmuebleService {
         }
       ]
     }
+  }
+
+  solicitarInmueble(idInmueble: number | string, formData: any): Observable<any> {
+    // Aquí iría tu this.http.post(...)
+
+    // Simulamos la respuesta del backend que pides:
+    const mockResponse = {
+      "id": idInmueble,
+      "solicitado": true,
+      "valor_inmueble": 1000000000,
+      "tipo_bien": "Casa",
+      "area_terreno": 100,
+      "area_construida": 200,
+      "tipo_predio": "rural",
+      "clasificacion": "",
+      "departamento": "Valle del Cauca",
+      "municipio": "Cali",
+      "direccion": "carrera 28 # 3-333",
+      "barrio": "Santa Teresa",
+      "estrato": "2",
+      "coordinates": { "lat": 3.45961, "lng": -76.533085 },
+      "solicitado_por": "Martha Pepita",
+      "images": [
+        "/assets/img/bien_id1_1.png",
+        "/assets/img/bien_id1_2.png",
+        "/assets/img/bien_id1_2.png",
+        "/assets/img/bien_id1_1.png",
+        "/assets/img/bien_id1_2.png",
+        "/assets/img/bien_id1_2.png",
+        "/assets/img/bien_id1_1.png",
+        "/assets/img/bien_id1_2.png",
+      ],
+    };
+
+    return of(mockResponse).pipe(delay(2000));
   }
 }

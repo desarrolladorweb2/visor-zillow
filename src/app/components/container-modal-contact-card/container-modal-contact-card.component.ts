@@ -3,6 +3,7 @@ import { ContainerModalCardService } from '../../core/services/container-modal-c
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DialogService } from '../../core/services/shared/dialog.service';
+import { InfoInmuebleService } from '../../core/services/info-inmueble.service';
 
 @Component({
   selector: 'app-container-modal-contact-card',
@@ -15,9 +16,11 @@ export class ContainerModalContactCardComponent implements OnInit {
   public containerModalCardService = inject(ContainerModalCardService);
   private readonly fb = inject(FormBuilder);
   private readonly dialogService = inject(DialogService);
+  private readonly infoInmuebleService = inject(InfoInmuebleService);
 
   contactForm!: FormGroup;
   isSubmitted = signal(false);
+  isLoading = signal(false);
 
   constructor() {
     // Usamos un effect para actualizar el mensaje si la propiedad cambia
@@ -47,13 +50,33 @@ export class ContainerModalContactCardComponent implements OnInit {
   sendForm(): void {
     if (this.contactForm.valid) {
       const formData = this.contactForm.value;
-      const propertyId = this.containerModalCardService.selectedProperty()?.id;
-      this.isSubmitted.set(true);
+      const property = this.containerModalCardService.selectedProperty();
 
-      console.log('Enviando datos de contacto:', { ...formData, propertyId });
-      // Limpiar y cerrar
-      this.contactForm.reset();
-      // this.containerModalCardService.closeContactForm();
+      if (!property) return;
+
+      this.isLoading.set(true); // Opcional: mostrar un loader en el botón
+
+      // 1. Enviamos los datos al servicio
+      this.infoInmuebleService.solicitarInmueble(property.id, formData).subscribe({
+        next: (updatedProperty) => {
+          this.isLoading.set(false);
+          this.isSubmitted.set(true); // Muestra tu HTML del check verde
+
+          // 2. Avisamos a la app que este inmueble cambió
+          this.infoInmuebleService.propertyUpdated$.next(updatedProperty);
+
+          // 3. Cerramos el modal automáticamente después de 3 segundos
+          setTimeout(() => {
+            this.containerModalCardService.closeContactForm();
+            this.isSubmitted.set(false); // Reseteamos para la próxima vez
+            this.contactForm.reset();
+          }, 3000);
+        },
+        error: (err) => {
+          console.error('Error enviando la solicitud', err);
+          this.isLoading.set(false);
+        }
+      });
     }
   }
 }
