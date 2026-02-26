@@ -1,10 +1,10 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, input, signal } from '@angular/core';
 import { ContainerModalCardService } from '../../core/services/container-modal-card.service';
 
 @Component({
   selector: 'app-container-card',
-  imports: [CommonModule, NgOptimizedImage],
+  imports: [CommonModule],
   templateUrl: './container-card.component.html',
   styleUrl: './container-card.component.less'
 })
