@@ -13,7 +13,9 @@
                 <div class="modal-scroll-container">
 
                     <div class="collage-wrapper">
+                        @if (collageImages().length > 0) {
                         <div class="collage-grid">
+
                             <div class="main-photo" (click)="openGallery(0)">
                                 <img [src]="collageImages()[0]">
 
@@ -21,10 +23,12 @@
                                 <span class="status-tag">Solicitado</span>
                                 }
                             </div>
+
                             <div class="side-photos">
                                 @for (img of collageImages().slice(1, 5); track $index) {
                                 <div class="side-item" (click)="openGallery($index + 1)">
                                     <img [src]="img">
+
                                     @if ($index === 3 && totalPhotos() > 5) {
                                     <button class="btn-see-all-overlay"
                                         (click)="$event.stopPropagation(); openGallery(0)">
@@ -36,11 +40,16 @@
                                 }
                             </div>
                         </div>
+                        } @else {
+                        <div class="no-images-placeholder"
+                            style="height: 300px; display: flex; align-items: center; justify-content: center; background: #eee;">
+                            <p>No hay imágenes disponibles</p>
+                        </div>
+                        }
                     </div>
 
                     <div class="info-section-wrapper">
                         <div class="info-flex-container">
-
                             <div class="table-column">
                                 <table class="property-data-table">
                                     <tbody>
@@ -52,8 +61,8 @@
                                         <tr>
                                             <td class="label">Ubicación</td>
                                             <td class="value">{{ containerModalCardService.selectedProperty()?.municipio
-                                                / containerModalCardService.selectedProperty()?.departamento
-                                                || 'N/A' }}</td>
+                                                }} / {{ containerModalCardService.selectedProperty()?.departamento }}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td class="label">Estrato</td>
@@ -76,7 +85,6 @@
                                     Contactar
                                 </button>
                             </div>
-
                         </div>
                     </div>
 
@@ -91,10 +99,25 @@
     <button class="gallery-close" (click)="showFullGallery.set(false)">&times;</button>
     <div class="gallery-content">
         <button class="nav-arrow left" (click)="prevPhoto()">&#10094;</button>
-        <img [src]="containerModalCardService.selectedProperty()?.images?.[activePhotoIdx()]">
+
+        <img [src]="imageList()[activePhotoIdx()]">
+
         <button class="nav-arrow right" (click)="nextPhoto()">&#10095;</button>
     </div>
     <div class="gallery-counter">{{ activePhotoIdx() + 1 }} / {{ totalPhotos() }}</div>
+
+    <div class="thumbnail-strip">
+        <div class="thumbnail-container">
+            @for (img of imageList(); track $index) {
+            @if (img) {
+            <div class="thumbnail-item" [class.active]="activePhotoIdx() === $index"
+                (click)="activePhotoIdx.set($index)">
+                <img [src]="img">
+            </div>
+            }
+            }
+        </div>
+    </div>
 </div>
 }
 }

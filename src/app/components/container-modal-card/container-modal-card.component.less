@@ -123,7 +123,10 @@
 // VISOR PANTALLA COMPLETA
 .full-screen-gallery {
     position: fixed; inset: 0; background: black; z-index: 3000;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
 
     .gallery-content {
         width: 100%; height: 80%; display: flex; align-items: center; justify-content: space-between;
@@ -133,4 +136,107 @@
     }
     .gallery-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 40px; background: none; border: none; }
     .gallery-counter { color: white; margin-top: 20px; font-weight: bold; }
+}
+
+
+
+
+
+
+
+/* Asegúrate de que tu contenedor principal de galería ocupe toda la pantalla y permita flexbox */
+.full-screen-gallery {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 3000; // Asegura que esté por encima de modales
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    // Le damos padding inferior para que la imagen principal no se superponga con las miniaturas
+    padding-bottom: 100px; 
+}
+
+/* Estilos de la imagen principal (ajusta si ya tenías algo similar) */
+.gallery-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 80vh; // Ocupa el 80% de la altura
+    
+    .main-img {
+        max-width: 90%;
+        max-height: 100%;
+        object-fit: contain; // Mantiene la proporción sin recortar
+        border-radius: 8px;
+    }
+}
+
+/* NUEVO: Contenedor principal de la tira (anclado abajo) */
+.thumbnail-strip {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: rgba(0, 0, 0, 0.5); // Fondo semitransparente para que resalte
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Contenedor que hace scroll horizontal si hay demasiadas fotos */
+.thumbnail-container {
+    display: flex;
+    gap: 12px;
+    padding: 0 20px;
+    max-width: 100%;
+    overflow-x: auto;
+    
+    /* Ocultar barra de scroll en navegadores webkit (opcional) */
+    &::-webkit-scrollbar {
+        height: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+}
+
+/* Cada cuadrito de miniatura */
+.thumbnail-item {
+    width: 80px;
+    height: 60px;
+    flex-shrink: 0; // Evita que se aplasten
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid transparent;
+    opacity: 0.5; // Apagadas por defecto
+    transition: all 0.3s ease;
+    
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; // Rellena el cuadrito sin distorsionar
+    }
+    
+    /* Efecto al pasar el mouse */
+    &:hover {
+        opacity: 0.8;
+    }
+    
+    /* Efecto cuando es la foto actual */
+    &.active {
+        opacity: 1;
+        border-color: #fff; // Borde blanco para la foto seleccionada
+        transform: scale(1.05); // Crece un poquito
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
 }

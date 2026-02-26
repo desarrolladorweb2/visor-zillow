@@ -1,7 +1,8 @@
 @if (property()) {
 <div class="property-card shadow-sm" (click)="onCardClick()">
     <div class="image-container">
-        <img [src]="property()?.images?.[0]" alt="Property" class="main-img">
+        <!-- <img [src]="property()?.images?.[0]" alt="Property" class="main-img"> -->
+        <img [src]="'/assets/img/bien_id' + property()?.id + '_1.png'" alt="Property" class="main-img">
 
         @if (property()?.solicitado) {
         <span class="time-badge">Solicitado</span>
