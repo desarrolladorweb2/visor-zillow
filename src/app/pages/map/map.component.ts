@@ -33,10 +33,11 @@ export class MapComponent implements OnInit {
   isLoading = signal(false);
   filters = signal({
     valor_inmueble: '',
-    tipo_bien: '',
-    clasificacion: '',
-    departamento: '',
-    municipio: ''
+    tipo_bien_id: null,
+    tipo_predio_id: null,
+    clasificacion_id: null,
+    departamento_id: null,
+    municipio_id: null
   });
 
   property = signal<any>(null);
@@ -101,8 +102,22 @@ export class MapComponent implements OnInit {
 
   // Se ejecuta cada vez que el mapa se mueve (o cuando llegan datos nuevos)
   updateListFromMap(properties: any[]) {
-    this.filteredProperties.set(properties);
-    this.totalCount.set(properties.length);
+    let newList = [...properties];
+    const currentSelectedId = this.selectedPropertyId();
+
+    // Si hay un elemento seleccionado, garantizamos que se quede de primero
+    if (currentSelectedId) {
+      const selectedIndex = newList.findIndex((item: any) => item.id === currentSelectedId);
+
+      if (selectedIndex > 0) {
+        // Lo cortamos de su posición actual y lo ponemos al inicio
+        const [selectedItem] = newList.splice(selectedIndex, 1);
+        newList.unshift(selectedItem);
+      }
+    }
+
+    this.filteredProperties.set(newList);
+    this.totalCount.set(newList.length);
   }
 
   updateFilter(key: string, event: any) {
@@ -142,10 +157,11 @@ export class MapComponent implements OnInit {
 
     const logicFiltered = allData.filter((item: any) => {
       return this.filterByPrice(item.valor_inmueble, currentFilters.valor_inmueble) &&
-        this.filterByString(item.tipo_bien, currentFilters.tipo_bien) &&
-        this.filterByString(item.clasificacion, currentFilters.clasificacion) &&
-        this.filterByString(item.departamento, currentFilters.departamento) &&
-        this.filterByString(item.municipio, currentFilters.municipio);
+        this.filterByID(Number(item.tipo_bien_id), Number(currentFilters.tipo_bien_id)) &&
+        this.filterByID(Number(item.tipo_predio_id), Number(currentFilters.tipo_predio_id)) &&
+        this.filterByID(Number(item.clasificacion_id), Number(currentFilters.clasificacion_id)) &&
+        this.filterByID(Number(item.departamento_id), Number(currentFilters.departamento_id)) &&
+        this.filterByID(Number(item.municipio_id), Number(currentFilters.municipio_id));
     });
 
     this.filteredProperties.set(logicFiltered);
@@ -169,9 +185,52 @@ export class MapComponent implements OnInit {
     return itemPrice >= min && itemPrice <= max;
   }
 
-  private filterByString(itemValue: string, filterValue: string): boolean {
+  private filterByID(itemValue: number, filterValue: number): boolean {
     if (!filterValue) return true; // Si el select está vacío (""), deja pasar el dato
-    return itemValue?.toLowerCase() === filterValue.toLowerCase();
+    return itemValue === filterValue;
+  }
+
+  // ARREGLOS DE DATOS PARA LOS FILTROS
+  filterOptions = {
+    precios: [
+      { value: '0-500000', label: 'Hasta $500k' },
+      { value: '500000-1000000', label: '$500k - $1M' },
+      { value: '1000000-10000000', label: '$1M-10M' },
+      { value: '10000000-50000000', label: '$10M-50M' },
+      { value: '50000000-100000000', label: '$50M-100M' },
+      { value: '100000000+', label: '$100M+' }
+    ],
+    tiposBien: [
+      { id: 1, label: 'Casa' },
+      { id: 3, label: 'Apartamento' },
+      { id: 2, label: 'Hotel' },
+      { id: 4, label: 'Terreno' },
+      { id: 5, label: 'Oficina' }
+    ],
+    tiposPredio: [
+      { id: 1, label: 'Rural' },
+      { id: 2, label: 'Urbano' }
+    ],
+    clasificaciones: [
+      { id: 1, label: 'clasificacion1' },
+      { id: 2, label: 'Inmueble' }
+    ],
+    departamentos: [
+      { id: 1, label: 'Valle del Cauca' },
+      { id: 2, label: 'Antioquia' },
+      { id: 4, label: 'Meta' },
+      { id: 5, label: 'Bolívar' },
+      { id: 6, label: 'Cundinamarca' },
+      { id: 7, label: 'Nariño' }
+    ],
+    municipios: [
+      { id: 1, label: 'Cali' },
+      { id: 2, label: 'Medellin' },
+      { id: 4, label: 'Villavicencio' },
+      { id: 5, label: 'Barranquilla' },
+      { id: 6, label: 'Bogotá' },
+      { id: 7, label: 'Pasto' }
+    ]
   }
 }
 
