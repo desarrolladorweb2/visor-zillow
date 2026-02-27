@@ -61,18 +61,7 @@ export class InfoInmuebleService {
           "coordinates": {
             "lat": 3.45961,
             "lng": -76.533085
-          },
-          "solicitado_por": "",
-          "images": [
-            "/assets/img/bien_id1_1.png",
-            "/assets/img/bien_id1_2.png",
-            "/assets/img/bien_id1_2.png",
-            "/assets/img/bien_id1_1.png",
-            "/assets/img/bien_id1_2.png",
-            "/assets/img/bien_id1_2.png",
-            "/assets/img/bien_id1_1.png",
-            "/assets/img/bien_id1_2.png",
-          ],
+          }
         },
         {
           "id": 1,
@@ -96,13 +85,7 @@ export class InfoInmuebleService {
           "coordinates": {
             "lat": 6.259036,
             "lng": -75.586827
-          },
-          "solicitado_por": "",
-          "images": [
-            "/assets/img/bien_id2_1.png",
-            "/assets/img/bien_id2_2.png",
-            "/assets/img/bien_id2_2.png",
-          ],
+          }
         },
         {
           "id": 2,
@@ -126,13 +109,7 @@ export class InfoInmuebleService {
           "coordinates": {
             "lat": 6.27882,
             "lng": -75.58078
-          },
-          "solicitado_por": "Maria Juliana, Pepito Perez, Juan Perez",
-          "images": [
-            "/assets/img/bien_id3_1.png",
-            "/assets/img/bien_id3_2.png",
-            "/assets/img/bien_id3_1.png",
-          ],
+          }
         },
         {
           "id": 3,
@@ -156,13 +133,7 @@ export class InfoInmuebleService {
           "coordinates": {
             "lat": 4.131045,
             "lng": -73.566847
-          },
-          "solicitado_por": "",
-          "images": [
-            "/assets/img/bien_id5_1.png",
-            "/assets/img/bien_id5_2.png",
-            "/assets/img/bien_id5_3.png",
-          ],
+          }
         },
         {
           "id": 4,
@@ -186,13 +157,7 @@ export class InfoInmuebleService {
           "coordinates": {
             "lat": 4.131045,
             "lng": -73.566847
-          },
-          "solicitado_por": "",
-          "images": [
-            "/assets/img/bien_id1_1.png",
-            " /assets/img/bien_id1_2.png",
-          ],
-          "status_tag": "New Construction"
+          }
         }
       ]
     }
@@ -224,18 +189,7 @@ export class InfoInmuebleService {
       "coordinates": {
         "lat": 3.45961,
         "lng": -76.533085
-      },
-      "solicitado_por": "",
-      "images": [
-        "/assets/img/bien_id1_1.png",
-        "/assets/img/bien_id1_2.png",
-        "/assets/img/bien_id1_2.png",
-        "/assets/img/bien_id1_1.png",
-        "/assets/img/bien_id1_2.png",
-        "/assets/img/bien_id1_2.png",
-        "/assets/img/bien_id1_1.png",
-        "/assets/img/bien_id1_2.png",
-      ],
+      }
     }
 
     return of(mockResponse).pipe(delay(2000));
