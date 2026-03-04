@@ -1,206 +1,172 @@
-.sidebar-container {
- width: 0dvh;
-}
+.sidebar-container { width: 0dvh; }
 
-// Reseteo necesario para que el 100% signifique algo
 :host {
-  display: block;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
+  display: block; height: 100vh; width: 100vw; overflow: hidden;
 }
 
 .main-layout {
-  display: flex;
-  flex-direction: column;
-  // height: 100%;
-  height: 100dvh;
-  width: 100%;
+  display: flex; flex-direction: column; height: 100dvh; width: 100%;
 
   .content-body {
-    display: flex;
-    flex-direction: row;
-    flex: 1; // Toma todo el espacio entre navbar y footer
-    overflow: hidden; // Vital para que los hijos gestionen su propio scroll
-
-    padding-bottom: 4dvh;
+    display: flex; flex-direction: row; flex: 1; overflow: hidden; padding-bottom: 4dvh;
   }
 }
 
-.sidebar-wrapper {
-  flex: 0 0 auto; // Ajusta al ancho del sidebar
-  height: 100%;
-}
+.sidebar-wrapper { flex: 0 0 auto; height: 100%; }
 
 .viewer-container {
-  display: flex;
-  flex: 1;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
+  display: flex; flex: 1; height: 100%; width: 100%; overflow: hidden;
 
   .map-section {
-    flex: 0 0 60%; // 60% exacto
-    height: 100%;
-    position: relative;
-
-    .map-component {
-      display: block; // Obligatorio para componentes Angular
-      width: 100%;
-      height: 100%;
-    }
+    flex: 0 0 60%; height: 100%; position: relative;
+    .map-component { display: block; width: 100%; height: 100%; }
   }
 
   .results-panel {
-    flex: 0 0 40%; // 40% exacto
-    height: 100%;
-    overflow-y: auto; // AQUÍ SE ACTIVA EL SCROLL
-    background-color: #f7f7f7;
-    padding: 16px;
-    box-sizing: border-box;
-    border-radius: 15px;
+    flex: 0 0 40%; height: 100%; display: flex; flex-direction: column; overflow-y: auto; 
+    background-color: #f7f7f7; padding: 16px; box-sizing: border-box; border-radius: 15px;
 
     .results-header {
-      margin-bottom: 1rem;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 10px;
+      margin-bottom: 1rem; border-bottom: 1px solid #ddd; padding-bottom: 10px;
     }
   }
 }
 
-.results-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-.footer-wrapper {
-  flex: 0 0 auto;
-}
-
-
-.results-panel {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow-y: auto; // El scroll del panel
-  background-color: #ffffff;
-}
+.footer-wrapper { flex: 0 0 auto; }
 
 .filters-bar {
-  position: sticky;
-  top: 0;
-  background: white;
-  z-index: 20;
-  padding: 12px;
-  border: 1px solid #e0e0e0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-  border-radius: 15px;
+  position: sticky; top: 0; background: white; z-index: 20; padding: 12px;
+  border: 1px solid #e0e0e0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-radius: 15px;
 
   .filter-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 8px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px;
   }
 
-  .filter-select {
-    padding: 6px 12px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    font-size: 13px;
-    background-color: #fff;
-    color: #333;
-    cursor: pointer;
-    outline: none;
-    min-width: 120px;
+  // --- DROPDOWN ZILLOW STYLE & DUAL SLIDER ---
+  .custom-dropdown-container {
+    position: relative; display: inline-block;
 
-    &:hover {
-      border-color: #0672b9; // Azul estilo Zillow
+    .dropdown-toggle-btn {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px; font-weight: 500;
+      &.active-btn { border-color: #0672b9; background-color: #f0f7fc; color: #0672b9; }
+      .chevron { font-size: 10px; transition: transform 0.3s; &.open { transform: rotate(180deg); } }
+    }
+
+    .dropdown-menu-custom.zillow-style {
+      position: absolute; top: 100%; left: 0; margin-top: 8px; background: #fff;
+      border-radius: 8px; box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15); padding: 20px;
+      width: 340px; z-index: 1000; border: 1px solid #e0e0e0; cursor: default;
+
+      .dropdown-title { font-size: 15px; font-weight: bold; color: #333; margin-bottom: 15px; }
+
+      .fake-histogram-container {
+        margin-bottom: 25px;
+        
+        // Histograma Inteligente
+        .fake-histogram {
+          display: flex; align-items: flex-end; justify-content: space-between;
+          height: 60px; padding: 0 10px; gap: 2px;
+          
+          .bar {
+            flex: 1; background-color: #c4d9ff; border-radius: 2px 2px 0 0; transition: background 0.2s;
+            &.active { background-color: #0672b9; } // Cambia a azul si está en rango
+          }
+        }
+
+        // --- EL TRUCO DEL SLIDER DOBLE ---
+        .multi-range-slider {
+          position: relative; height: 24px; margin: 10px 0 5px;
+          
+          &::before {
+            content: ''; position: absolute; top: 50%; transform: translateY(-50%);
+            left: 0; right: 0; height: 4px; background: #e0e0e0; border-radius: 2px; z-index: 1;
+          }
+
+          .track-fill {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            height: 4px; background: #0672b9; border-radius: 2px; z-index: 2; pointer-events: none;
+          }
+
+          input[type=range] {
+            position: absolute; width: 100%; top: 50%; transform: translateY(-50%);
+            appearance: none; background: transparent; pointer-events: none; z-index: 3; margin: 0;
+            
+            &::-webkit-slider-thumb {
+              pointer-events: auto; appearance: none; width: 22px; height: 22px;
+              border-radius: 50%; background: #fff; border: 2px solid #0672b9;
+              cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: transform 0.1s;
+              &:hover { transform: scale(1.1); }
+            }
+            &::-moz-range-thumb {
+              pointer-events: auto; width: 20px; height: 20px; border-radius: 50%;
+              background: #fff; border: 2px solid #0672b9; cursor: pointer; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+          }
+        }
+
+        .price-labels { display: flex; justify-content: space-between; font-size: 12px; color: #666; }
+      }
+
+      .inputs-row {
+        display: flex; align-items: flex-end; justify-content: space-between; gap: 15px; margin-bottom: 20px;
+
+        .input-group {
+          display: flex; flex-direction: column; flex: 1;
+          label { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 6px; }
+          input {
+            width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px;
+            outline: none; transition: border-color 0.2s; box-sizing: border-box;
+            &:focus { border-color: #0672b9; }
+            &::-webkit-outer-spin-button, &::-webkit-inner-spin-button { appearance: none; margin: 0; }
+            &[type=number] { -moz-appearance: textfield; }
+          }
+        }
+        .dash { margin-bottom: 12px; color: #888; font-weight: bold; }
+      }
+
+      // BOTÓN APLICAR
+      .btn-apply-filter {
+        width: 100%; padding: 12px; background-color: #0672b9; color: white; border: none;
+        border-radius: 6px; font-weight: bold; font-size: 15px; cursor: pointer; transition: background 0.2s;
+        &:hover { background-color: #0d588f; }
+      }
     }
   }
+  // ---------------------------------------------------
 
-  .results-count {
-    font-size: 14px;
-    font-weight: 700;
-    color: #153658;
+  .filter-select {
+    padding: 6px 12px; border-radius: 4px; border: 1px solid #ccc; font-size: 13px;
+    background-color: #fff; color: #333; cursor: pointer; outline: none; min-width: 120px;
+    &:hover { border-color: #0672b9; }
   }
+
+  .results-count { font-size: 14px; font-weight: 700; color: #153658; }
 }
 
-.results-grid {
-  padding: 12px;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}   
+.results-grid { padding: 12px 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }   
 
-// iluminar card seleccionada
 .card-wrapper {
-  transition: all 0.3s ease;
-  border-radius: 8px; /* Ajusta según el diseño de tu app-container-card */
-  border: 2px solid transparent;
-  cursor: pointer;
-
+  transition: all 0.3s ease; border-radius: 8px; border: 2px solid transparent; cursor: pointer;
   &.highlighted-card {
-    border-color: #0672b9; /* Color primario de tu marca */
-    box-shadow: 0 4px 15px rgba(1, 124, 255, 0.3);
-    transform: scale(1.02);
-    z-index: 10;
+    border-color: #0672b9; box-shadow: 0 4px 15px rgba(0, 106, 255, 0.3); transform: scale(1.02); z-index: 10;
   }
 }
 
-// esqueleto mientras carga
 .skeleton-card {
-  background: #fff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  margin-bottom: 15px;
-
-  .skeleton-img {
-    height: 180px;
-    background: #ececec;
-    position: relative;
-    overflow: hidden;
-    &::after { .shimmer-effect; }
-  }
-
+  background: #fff; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 15px;
+  .skeleton-img { height: 180px; background: #ececec; position: relative; overflow: hidden; &::after { .shimmer-effect; } }
   .skeleton-content {
     padding: 15px;
     .skeleton-line {
-      background: #ececec;
-      margin-bottom: 10px;
-      border-radius: 4px;
-      position: relative;
-      overflow: hidden;
-      &::after { .shimmer-effect; }
-
-      &.price { width: 60%; height: 20px; }
-      &.address { width: 90%; height: 14px; }
-      &.detail { width: 40%; height: 14px; }
+      background: #ececec; margin-bottom: 10px; border-radius: 4px; position: relative; overflow: hidden; &::after { .shimmer-effect; }
+      &.price { width: 60%; height: 20px; } &.address { width: 90%; height: 14px; } &.detail { width: 40%; height: 14px; }
     }
   }
 }
 
-// Mixin para reutilizar el efecto de brillo
 .shimmer-effect() {
-  content: "";
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-  animation: shimmer 1.5s infinite;
+  content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent); animation: shimmer 1.5s infinite;
 }
 
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.empty-state {
-  grid-column: span 2;
-  text-align: center;
-  padding: 50px;
-  color: #888;
-  i { font-size: 3rem; }
-}
+@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }

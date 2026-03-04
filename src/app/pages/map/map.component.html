@@ -9,7 +9,6 @@
         </aside>
 
         <main class="viewer-container">
-
             <section class="map-section">
                 <app-map-main #mapRef (propertiesInView)="updateListFromMap($event)"
                     (propertySelected)="onPropertySelected($event)" [idVisor]="id ?? ''"
@@ -36,12 +35,70 @@
                 <div class="filters-bar">
                     <div class="filter-group">
 
-                        <select class="filter-select" (change)="updateFilter('valor_inmueble', $event)">
-                            <option value="">Rango de Precio</option>
-                            @for (precio of filterOptions.precios; track precio.value) {
-                            <option [value]="precio.value">{{ precio.label }}</option>
+                        <div class="custom-dropdown-container">
+                            <button class="filter-select dropdown-toggle-btn" [class.active-btn]="isPriceDropdownOpen()"
+                                (click)="togglePriceDropdown($event)">
+                                Precio
+                                <i class="bi bi-chevron-down chevron" [class.open]="isPriceDropdownOpen()"></i>
+                            </button>
+
+                            @if (isPriceDropdownOpen()) {
+                            <div class="dropdown-menu-custom zillow-style" (click)="$event.stopPropagation()">
+                                <div class="dropdown-title">Rango de Precio</div>
+
+                                <div class="fake-histogram-container">
+                                    <div class="fake-histogram">
+                                        @for (barHeight of histogramBars; track $index) {
+                                        <div class="bar" [style.height.%]="barHeight"
+                                            [class.active]="isBarActive($index)">
+                                        </div>
+                                        }
+                                    </div>
+
+                                    <div class="multi-range-slider">
+                                        <div class="track-fill" [style.left.%]="sliderMinPercent"
+                                            [style.width.%]="sliderMaxPercent - sliderMinPercent">
+                                        </div>
+
+                                        <input type="range" [min]="minLog" [max]="maxLog" step="0.001"
+                                            [value]="priceToLog(tempPrecioMin(), minPriceLimit())"
+                                            (input)="updateTempPriceFromSlider('min', $event)">
+
+                                        <input type="range" [min]="minLog" [max]="maxLog" step="0.001"
+                                            [value]="priceToLog(tempPrecioMax(), maxPriceLimit())"
+                                            (input)="updateTempPriceFromSlider('max', $event)">
+                                    </div>
+
+                                    <div class="price-labels">
+                                        <span>{{ minPriceLimit() | currency:'COP':'$':'1.0-0' }}</span>
+                                        <span>{{ maxPriceLimit() | currency:'COP':'$':'1.0-0' }}+</span>
+                                    </div>
+                                </div>
+
+                                <div class="inputs-row">
+                                    <div class="input-group">
+                                        <label>Min</label>
+                                        <input type="text" placeholder="Sin mínimo"
+                                            (blur)="updateTempPriceFromInput('min', $event)"
+                                            (keyup.enter)="updateTempPriceFromInput('min', $event)"
+                                            [value]="formatCurrency(tempPrecioMin())">
+                                    </div>
+                                    <span class="dash">-</span>
+                                    <div class="input-group">
+                                        <label>Max</label>
+                                        <input type="text" placeholder="Sin máximo"
+                                            (blur)="updateTempPriceFromInput('max', $event)"
+                                            (keyup.enter)="updateTempPriceFromInput('max', $event)"
+                                            [value]="formatCurrency(tempPrecioMax())">
+                                    </div>
+                                </div>
+
+                                <button class="btn-apply-filter" (click)="applyPriceAction()">
+                                    Aplicar
+                                </button>
+                            </div>
                             }
-                        </select>
+                        </div>
 
                         <select class="filter-select" (change)="updateFilter('tipo_bien_id', $event)">
                             <option value="">Tipo de Bien</option>
@@ -84,6 +141,7 @@
                         {{ filteredProperties().length | number }} resultados
                     </div>
                 </div>
+
                 <div class="results-grid">
                     @for (item of filteredProperties(); track item.id) {
                     <div class="card-wrapper" [class.highlighted-card]="item.id === selectedPropertyId()">
@@ -92,9 +150,7 @@
                     }
                 </div>
                 }
-
             </div>
-
         </main>
         <app-container-modal-card></app-container-modal-card>
         <app-container-modal-contact-card></app-container-modal-contact-card>
