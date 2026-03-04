@@ -10,17 +10,37 @@
         <form [formGroup]="contactForm" (ngSubmit)="sendForm()" class="contact-form">
             <div class="form-group">
                 <label>Nombre completo *</label>
-                <input type="text" formControlName="nombre" placeholder="Tu nombre">
+                <input type="text" formControlName="nombre" placeholder="Tu nombre"
+                    [class.is-invalid]="contactForm.get('nombre')?.touched && contactForm.get('nombre')?.invalid">
+                @if (contactForm.get('nombre')?.touched && contactForm.get('nombre')?.errors) {
+                <small class="error-msg">El nombre es obligatorio (mín. 3 caracteres).</small>
+                }
             </div>
 
             <div class="form-group">
                 <label>Correo electrónico *</label>
-                <input type="email" formControlName="email" placeholder="ejemplo@correo.com">
+                <input type="email" formControlName="email" placeholder="ejemplo@correo.com"
+                    [class.is-invalid]="contactForm.get('email')?.touched && contactForm.get('email')?.invalid">
+                @if (contactForm.get('email')?.touched && contactForm.get('email')?.errors) {
+                <small class="error-msg">Ingresa un correo electrónico válido.</small>
+                }
             </div>
 
             <div class="form-group">
-                <label>Teléfono (Opcional)</label>
-                <input type="tel" formControlName="telefono" placeholder="Número de contacto">
+                <label>Teléfono *</label>
+                <input type="tel" formControlName="telefono" placeholder="Ej: 3101234567"
+                    (keypress)="($event.charCode >= 48 && $event.charCode <= 57)"
+                    [class.is-invalid]="contactForm.get('telefono')?.touched && contactForm.get('telefono')?.invalid">
+                @if (contactForm.get('telefono')?.touched && contactForm.get('telefono')?.errors) {
+                <small class="error-msg">
+                    @if (contactForm.get('telefono')?.errors?.['required']) { El teléfono es obligatorio. }
+                    @if (contactForm.get('telefono')?.errors?.['pattern']) { Solo se permiten números. }
+                    @if (contactForm.get('telefono')?.errors?.['minlength'] ||
+                    contactForm.get('telefono')?.errors?.['maxlength']) {
+                    Debe tener exactamente 10 dígitos.
+                    }
+                </small>
+                }
             </div>
 
             <div class="form-group">

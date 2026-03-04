@@ -42,7 +42,7 @@ export class ContainerModalContactCardComponent implements OnInit {
     this.contactForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      telefono: [''],
+      telefono: ['', [Validators.pattern('^[0-9]*$')]],
       mensaje: ['']
     });
   }
@@ -57,6 +57,8 @@ export class ContainerModalContactCardComponent implements OnInit {
       this.isLoading.set(true); // Opcional: mostrar un loader en el botón
 
       // 1. Enviamos los datos al servicio
+
+      console.log('data enviada: ', formData)
       this.infoInmuebleService.solicitarInmueble(property.id, formData).subscribe({
         next: (updatedProperty) => {
           this.isLoading.set(false);

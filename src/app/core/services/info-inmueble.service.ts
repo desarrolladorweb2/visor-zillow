@@ -1,17 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { delay, Observable, of, Subject, tap } from 'rxjs';
+import { environment } from '../../../environment/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InfoInmuebleService {
 
-  private readonly useMock = true;
+  private readonly useMock = false;
   private allPropertiesCache: any = null;
   selectedPropertyId = signal<string | null>(null);
   propertyUpdated$ = new Subject<any>();
-  private readonly apiUrl = 'https://tu-api-real.com/api/properties';
+  private readonly apiUrl = environment.backendGN;
 
   constructor(private readonly http: HttpClient) { }
 
@@ -30,7 +31,7 @@ export class InfoInmuebleService {
       );
     } else {
       // Cuando lo pongas real, pasas los filtros como params
-      return this.http.get(this.apiUrl, { params: filters }).pipe(
+      return this.http.get(this.apiUrl + '/inmuebles', { params: filters }).pipe(
         tap(data => this.allPropertiesCache = data)
       );
     }
@@ -61,7 +62,10 @@ export class InfoInmuebleService {
           "coordinates": {
             "lat": 3.45961,
             "lng": -76.533085
-          }
+          },
+          "images": [
+            'C:/imagenes-zillow-realtix/img/bien5'
+          ]
         },
         {
           "id": 1,
@@ -85,7 +89,12 @@ export class InfoInmuebleService {
           "coordinates": {
             "lat": 6.259036,
             "lng": -75.586827
-          }
+          },
+          "images": [
+            'C:/imagenes-zillow-realtix/img/bien2',
+            'C:/imagenes-zillow-realtix/img/bien1/bien1_1',
+            'C:/imagenes-zillow-realtix/img/bien1/bien1_2'
+          ]
         },
         {
           "id": 2,
@@ -109,7 +118,10 @@ export class InfoInmuebleService {
           "coordinates": {
             "lat": 6.27882,
             "lng": -75.58078
-          }
+          },
+          "images": [
+            'C:/imagenes-zillow-realtix/img/bien2'
+          ]
         },
         {
           "id": 3,
@@ -133,7 +145,11 @@ export class InfoInmuebleService {
           "coordinates": {
             "lat": 4.131045,
             "lng": -73.566847
-          }
+          },
+          "images": [
+            'C:/imagenes-zillow-realtix/img/bien3',
+            'C:/imagenes-zillow-realtix/img/bien1/bien3_1'
+          ]
         },
         {
           "id": 4,
@@ -157,41 +173,59 @@ export class InfoInmuebleService {
           "coordinates": {
             "lat": 4.131045,
             "lng": -73.566847
-          }
+          },
+          "images": [
+            'C:/imagenes-zillow-realtix/img/bien4',
+            'C:/imagenes-zillow-realtix/img/bien1/bien4_1'
+          ]
         }
       ]
     }
   }
 
   solicitarInmueble(idInmueble: number | string, formData: any): Observable<any> {
-    // Aquí iría tu this.http.post(...)
+    formData.id = idInmueble;
 
-    // Simulamos la respuesta del backend que pides:
-    const mockResponse = {
-      "id": idInmueble,
-      "solicitado": true,
-      "valor_inmueble": 1000000000,
-      "tipo_bien": "Casa",
-      "tipo_bien_id": 1,
-      "area_terreno": 100,
-      "area_construida": 200,
-      "tipo_predio": "rural",
-      "tipo_predio_id": 1,
-      "clasificacion": "clasificacion1",
-      "clasificacion_id": 1,
-      "departamento": "Valle del Cauca",
-      "departamento_id": 1,
-      "municipio": "Cali",
-      "municipio_id": 1,
-      "direccion": "carrera 28 # 3-333",
-      "barrio": "Santa Teresa",
-      "estrato": "2",
-      "coordinates": {
-        "lat": 3.45961,
-        "lng": -76.533085
-      }
+    if (this.useMock) {
+      console.log(`--- Simulando POST para Inmueble ${idInmueble} ---`);
+      console.log('Datos enviados:', formData);
+
+      // Simulamos la respuesta del backend
+      const mockResponse = {
+        "id": idInmueble,
+        "solicitado": true,
+        "valor_inmueble": 1000000000,
+        "tipo_bien": "Casa",
+        "tipo_bien_id": 1,
+        "area_terreno": 100,
+        "area_construida": 200,
+        "tipo_predio": "rural",
+        "tipo_predio_id": 1,
+        "clasificacion": "clasificacion1",
+        "clasificacion_id": 1,
+        "departamento": "Valle del Cauca",
+        "departamento_id": 1,
+        "municipio": "Cali",
+        "municipio_id": 1,
+        "direccion": "carrera 28 # 3-333",
+        "barrio": "Santa Teresa",
+        "estrato": "2",
+        "coordinates": {
+          "lat": 3.45961,
+          "lng": -76.533085
+        }
+      };
+
+      return of(mockResponse).pipe(delay(2000));
+
+    } else {
+      // --- PETICIÓN REAL AL BACKEND ---
+      // Reemplaza esta URL con el endpoint exacto que te proporcione el backend.
+      // Ej: 'https://tu-api-real.com/api/properties/5/solicitar'
+      const postUrl = `${this.apiUrl}/solicitar`;
+
+      // Enviamos el formData como el cuerpo (body) de la petición POST
+      return this.http.post(postUrl, formData);
     }
-
-    return of(mockResponse).pipe(delay(2000));
   }
 }

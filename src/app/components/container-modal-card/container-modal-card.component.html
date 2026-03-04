@@ -70,6 +70,18 @@
                                                 || 'N/A' }}</td>
                                         </tr>
                                         <tr>
+                                            <td class="label">Area Construida</td>
+                                            <td class="value">
+                                                {{ containerModalCardService.selectedProperty()?.area_construida }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="label">Area Total</td>
+                                            <td class="value">
+                                                {{ containerModalCardService.selectedProperty()?.area_total }}
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td class="label">Avalúo</td>
                                             <td class="value price-text">
                                                 {{ containerModalCardService.selectedProperty()?.valor_inmueble |
