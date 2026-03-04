@@ -8,7 +8,7 @@ import { environment } from '../../../environment/environment';
 })
 export class InfoInmuebleService {
 
-  private readonly useMock = false;
+  private readonly useMock: boolean = environment.pruebas;
   private allPropertiesCache: any = null;
   selectedPropertyId = signal<string | null>(null);
   propertyUpdated$ = new Subject<any>();
