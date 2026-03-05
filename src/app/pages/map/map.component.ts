@@ -238,6 +238,12 @@ export class MapComponent implements OnInit {
     });
   }
 
+  onCardHover(id: string | null) {
+    if (this.mapComponent) {
+      this.mapComponent.highlightHoveredProperty(id);
+    }
+  }
+
   loadProperties() {
     this.isLoading.set(true);
 

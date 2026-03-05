@@ -117,6 +117,8 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
   ]);
   featureAux: any | null;
 
+  private hoverGlowLayer: L.CircleMarker | null = null;
+
   private readonly baseMapP = { id: 1, mapa: 'cartografico', label: 'Estándar', url: 'http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}@2x.png', predefinido: true, subdomains: [], maxar: false, atribucion: '© OpenStreetMap contributors' }
 
   constructor(
@@ -526,6 +528,36 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
       this.locationSvc.updateLocation([center.lat, center.lng], 6.5);
     } else {
       console.warn('No se pudo calcular el centro de los polígonos');
+    }
+  }
+
+  public highlightHoveredProperty(id: string | null): void {
+    // 1. Siempre limpiamos el resplandor anterior si existe
+    if (this.hoverGlowLayer) {
+      this.map.removeLayer(this.hoverGlowLayer);
+      this.hoverGlowLayer = null;
+    }
+
+    if (!id || !this.map || this.fullData.length === 0) return;
+
+    // 2. Buscamos la propiedad en nuestra data usando el ID
+    // Usamos == en lugar de === por si el ID viene como número o string
+    const prop = this.fullData.find(p => p.id == id);
+
+    if (prop && prop.coordinates && prop.coordinates.lat) {
+      const latlng = L.latLng(prop.coordinates.lat, prop.coordinates.lng);
+
+      // 3. Dibujamos un círculo de resplandor (puedes ajustar colores y tamaño)
+      this.hoverGlowLayer = L.circleMarker(latlng, {
+        radius: 22,             // Tamaño del círculo (un poco más grande que tu icono de 32px)
+        color: '#36bb02d2',       // Color del borde (Azul estilo Zillow)
+        weight: 3,              // Grosor del borde
+        fillColor: '#36bb02d2',   // Color de relleno
+        fillOpacity: 0.4        // Opacidad del relleno (40% para que se vea como un resplandor)
+      }).addTo(this.map);
+
+      // Opcional: Asegurarnos de que el resplandor quede por debajo del marcador SVG
+      this.hoverGlowLayer.bringToBack();
     }
   }
 

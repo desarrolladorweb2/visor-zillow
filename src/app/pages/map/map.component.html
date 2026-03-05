@@ -144,7 +144,8 @@
 
                 <div class="results-grid">
                     @for (item of filteredProperties(); track item.id) {
-                    <div class="card-wrapper" [class.highlighted-card]="item.id === selectedPropertyId()">
+                    <div class="card-wrapper" [class.highlighted-card]="item.id === selectedPropertyId()"
+                        (mouseenter)="onCardHover(item.id)" (mouseleave)="onCardHover(null)">
                         <app-container-card [property]="item"></app-container-card>
                     </div>
                     }
