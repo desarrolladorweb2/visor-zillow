@@ -1,7 +1,7 @@
 import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { ContainerModalCardService } from '../../core/services/container-modal-card.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogService } from '../../core/services/shared/dialog.service';
 import { InfoInmuebleService } from '../../core/services/info-inmueble.service';
 
@@ -21,6 +21,7 @@ export class ContainerModalContactCardComponent implements OnInit {
   contactForm!: FormGroup;
   isSubmitted = signal(false);
   isLoading = signal(false);
+  mensajeGuardado = signal('')
 
   constructor() {
     // Usamos un effect para actualizar el mensaje si la propiedad cambia
@@ -49,6 +50,7 @@ export class ContainerModalContactCardComponent implements OnInit {
 
   sendForm(): void {
     if (this.contactForm.valid) {
+      this.mensajeGuardado.set('');
       const formData = this.contactForm.value;
       const property = this.containerModalCardService.selectedProperty();
 
@@ -63,9 +65,10 @@ export class ContainerModalContactCardComponent implements OnInit {
         next: (updatedProperty) => {
           this.isLoading.set(false);
           this.isSubmitted.set(true); // Muestra tu HTML del check verde
+          this.mensajeGuardado.set(updatedProperty.mensaje);
 
           // 2. Avisamos a la app que este inmueble cambió
-          this.infoInmuebleService.propertyUpdated$.next(updatedProperty);
+          this.infoInmuebleService.propertyUpdated$.next(property.id);
 
           // 3. Cerramos el modal automáticamente después de 3 segundos
           setTimeout(() => {
@@ -78,6 +81,9 @@ export class ContainerModalContactCardComponent implements OnInit {
         error: (err) => {
           console.error('Error enviando la solicitud', err);
           this.isLoading.set(false);
+          this.isSubmitted.set(true); // Reseteamos para la próxima vez
+          this.mensajeGuardado.set(err.error.detail);
+
         }
       });
     }

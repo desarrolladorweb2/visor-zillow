@@ -9,6 +9,8 @@ import { MapService } from '../../../core/services/home/map/map.service';
 import { ContactCardService } from '../../../core/services/widget/contact-card.service';
 import { LayersService } from '../../../core/services/home/map/layers.service';
 import { InfoInmuebleService } from '../../../core/services/info-inmueble.service';
+import { environment } from '../../../../environment/environment';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-contact-card',
@@ -39,6 +41,7 @@ export class ContactCardComponent implements OnInit {
   ];
 
   currentImage = 0;
+  private readonly urlImagenes = environment.imagenes;
 
   constructor(
     private readonly mapSvc: MapService,
@@ -46,7 +49,8 @@ export class ContactCardComponent implements OnInit {
     private readonly contactCardService: ContactCardService,
     private readonly layersService: LayersService,
     private readonly cd: ChangeDetectorRef,
-    private readonly infoInmuebleService: InfoInmuebleService
+    private readonly infoInmuebleService: InfoInmuebleService,
+    private readonly sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
@@ -152,6 +156,8 @@ export class ContactCardComponent implements OnInit {
     this.infoAsset = null;
     this.mensajeError = '';
     this.formType = null;
+    this.imageList = []; // Limpiamos el carrusel
+    this.currentImage = 0;
 
     this.contactCardService.getInformacionCardAsset(this.data).subscribe({
       next: async (resp) => {
@@ -163,27 +169,18 @@ export class ContactCardComponent implements OnInit {
         this.infoAsset = resp.data;
         this.formType = 'asset';
 
+        const imagesPaths = this.infoAsset?.images || [];
 
-        const file = `bien_id${this.infoAsset.bien_id}.png`;
-        console.log('Imagen Cargada=>', file)
-        //const file = this.infoAsset?.imagen || this.infoAsset?.nombre_imagen; "assets/img/bien_id10.png"
+        // Concatenamos y sanitizamos cada ruta
+        this.imageList = imagesPaths.map((relPath: string) => {
+          const fullWebPath = `${this.urlImagenes}${relPath}`;
+          return this.sanitizer.bypassSecurityTrustUrl(fullWebPath);           // Le decimos a Angular que confíe en esta URL
+        });
 
-        this.imageList = [];
-
-        for (let i = 1; i <= 4; i++) {
-          const file = `bien_id${this.infoAsset.bien_id}_${i}.png`;
-          const fullPath = `assets/img/${file}`;
-
-          const exists = await this.checkImageExists(fullPath);
-
-          if (exists) {
-            this.imageList.push(fullPath);
-          }
-        }
+        console.log('URLs de imágenes listas para carrusel:', this.imageList);
 
         this.cd.detectChanges();
       },
-
       error: (err) => {
         console.error('Error fetching data', err);
         this.cd.detectChanges();

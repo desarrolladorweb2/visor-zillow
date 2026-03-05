@@ -1,6 +1,7 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ContainerModalCardService } from '../../core/services/container-modal-card.service';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environment/environment';
 
 @Component({
   selector: 'app-container-modal-card',
@@ -13,38 +14,27 @@ export class ContainerModalCardComponent {
 
   // Arreglo local reactivo de imágenes
   public imageList = signal<string[]>([]);
-
   showFullGallery = signal(false);
   activePhotoIdx = signal(0);
+
+  // URL Base de tu servidor de imágenes
+  private readonly publicUrl = environment.imagenes;
 
   constructor() {
     effect(() => {
       const property = this.containerModalCardService.selectedProperty();
 
-      if (property && property.id) {
-        this.loadImages(property.id);
+      if (property && property.images) {
+        // Procesamos las imágenes que vienen del backend
+        this.processImages(property.images);
       } else {
         this.imageList.set([]);
       }
     });
   }
 
-  async loadImages(id: string | number) {
-    this.imageList.set([]); // Limpiamos el arreglo
-    const validImages: string[] = [];
-
-    for (let i = 1; i <= 15; i++) {
-      const path = `assets/img/bien_id${id}_${i}.png`;
-      const exists = await this.checkImageExists(path);
-
-      if (exists) {
-        validImages.push(path);
-      } else {
-        break;
-      }
-    }
-
-    this.imageList.set(validImages);
+  processImages(backendImages: string[]) {
+    this.imageList.set(backendImages);
   }
 
   checkImageExists(path: string): Promise<boolean> {

@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  pruebas: true,
+  pruebas: false,
   //geoserverURL: 'https://calidad.realidad5.com/geovisorgeo/',//'http://44.204.223.163:8080/geovisorgeo/', //'https://calidad.realidad5.com/geovisorgeo/' 
   //backendGN: 'https://calidad.realidad5.com/geovisorms/observatorio',//'http://44.204.223.163:8000/observatorio', //https://calidad.realidad5.com/geovisorms/observatorio'
 
@@ -11,7 +11,6 @@ export const environment = {
   //production: true,
   geoserverURL: 'http://54.165.183.118:8080/geoserver/',
   // backendGN: 'http://54.165.183.118:8000/poc'
-  backendGN: 'http://34.196.171.243:8006/poc'
-
-
+  backendGN: 'http://34.196.171.243:8006/poc',
+  imagenes: 'http://54.165.183.118:8080/stcinmuebles',
 };

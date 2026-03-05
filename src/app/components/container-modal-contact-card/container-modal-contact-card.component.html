@@ -27,13 +27,12 @@
             </div>
 
             <div class="form-group">
-                <label>Teléfono *</label>
+                <label>Teléfono</label>
                 <input type="tel" formControlName="telefono" placeholder="Ej: 3101234567"
                     (keypress)="($event.charCode >= 48 && $event.charCode <= 57)"
                     [class.is-invalid]="contactForm.get('telefono')?.touched && contactForm.get('telefono')?.invalid">
                 @if (contactForm.get('telefono')?.touched && contactForm.get('telefono')?.errors) {
                 <small class="error-msg">
-                    @if (contactForm.get('telefono')?.errors?.['required']) { El teléfono es obligatorio. }
                     @if (contactForm.get('telefono')?.errors?.['pattern']) { Solo se permiten números. }
                     @if (contactForm.get('telefono')?.errors?.['minlength'] ||
                     contactForm.get('telefono')?.errors?.['maxlength']) {
@@ -44,7 +43,7 @@
             </div>
 
             <div class="form-group">
-                <label>Mensaje (Opcional)</label>
+                <label>Mensaje</label>
                 <textarea formControlName="mensaje" rows="4"></textarea>
             </div>
 
@@ -56,7 +55,7 @@
         </form>
         } @else {
         <div class="success-message fade-in">
-            <h3 class="mensaje-enviado">¡Solicitud enviada con éxito!</h3>
+            <h3 class="mensaje-enviado">{{ mensajeGuardado() }}</h3>
             <div class="auto-close-bar"></div>
         </div>
         }

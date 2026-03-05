@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
-import { delay, Observable, of, Subject, tap } from 'rxjs';
+import { delay, map, Observable, of, Subject, tap } from 'rxjs';
 import { environment } from '../../../environment/environment';
 
 @Injectable({
@@ -13,28 +13,33 @@ export class InfoInmuebleService {
   selectedPropertyId = signal<string | null>(null);
   propertyUpdated$ = new Subject<any>();
   private readonly apiUrl = environment.backendGN;
+  private readonly urlImagenes = environment.imagenes;
 
   constructor(private readonly http: HttpClient) { }
 
 
   getProperties(filters: any): Observable<any> {
     if (this.allPropertiesCache) {
-      // Si ya tenemos los datos, los devolvemos sin delay
       return of(this.allPropertiesCache);
     }
 
-    if (this.useMock) {
-      console.log('--- Cargando Mock Data (5s delay) ---');
-      return of(this.getMockData()).pipe(
-        delay(3000),
-        tap(data => this.allPropertiesCache = data)
-      );
-    } else {
-      // Cuando lo pongas real, pasas los filtros como params
-      return this.http.get(this.apiUrl + '/inmuebles', { params: filters }).pipe(
-        tap(data => this.allPropertiesCache = data)
-      );
-    }
+    const request$ = this.useMock
+      ? of(this.getMockData()).pipe(delay(3000))
+      : this.http.get<any>(this.apiUrl + '/inmuebles', { params: filters });
+
+    return request$.pipe(
+      // Transformamos los resultados para concatenar la URL de las imágenes
+      map(data => {
+        if (data && data.results) {
+          data.results = data.results.map((prop: any) => ({
+            ...prop,
+            images: prop.images ? prop.images.map((img: string) => `${this.urlImagenes}${img}`) : []
+          }));
+        }
+        return data;
+      }),
+      tap(data => this.allPropertiesCache = data)
+    );
   }
 
   private getMockData() {
@@ -64,7 +69,8 @@ export class InfoInmuebleService {
             "lng": -76.533085
           },
           "images": [
-            'C:/imagenes-zillow-realtix/img/bien5'
+            '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
+            '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
           ]
         },
         {
@@ -91,9 +97,7 @@ export class InfoInmuebleService {
             "lng": -75.586827
           },
           "images": [
-            'C:/imagenes-zillow-realtix/img/bien2',
-            'C:/imagenes-zillow-realtix/img/bien1/bien1_1',
-            'C:/imagenes-zillow-realtix/img/bien1/bien1_2'
+            '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
           ]
         },
         {
@@ -120,7 +124,14 @@ export class InfoInmuebleService {
             "lng": -75.58078
           },
           "images": [
-            'C:/imagenes-zillow-realtix/img/bien2'
+            '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
+            '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
+            '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
+            '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
+            '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
+            '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
+            '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
+            '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
           ]
         },
         {
@@ -147,8 +158,6 @@ export class InfoInmuebleService {
             "lng": -73.566847
           },
           "images": [
-            'C:/imagenes-zillow-realtix/img/bien3',
-            'C:/imagenes-zillow-realtix/img/bien1/bien3_1'
           ]
         },
         {
@@ -175,8 +184,6 @@ export class InfoInmuebleService {
             "lng": -73.566847
           },
           "images": [
-            'C:/imagenes-zillow-realtix/img/bien4',
-            'C:/imagenes-zillow-realtix/img/bien1/bien4_1'
           ]
         }
       ]
@@ -192,39 +199,13 @@ export class InfoInmuebleService {
 
       // Simulamos la respuesta del backend
       const mockResponse = {
-        "id": idInmueble,
-        "solicitado": true,
-        "valor_inmueble": 1000000000,
-        "tipo_bien": "Casa",
-        "tipo_bien_id": 1,
-        "area_terreno": 100,
-        "area_construida": 200,
-        "tipo_predio": "rural",
-        "tipo_predio_id": 1,
-        "clasificacion": "clasificacion1",
-        "clasificacion_id": 1,
-        "departamento": "Valle del Cauca",
-        "departamento_id": 1,
-        "municipio": "Cali",
-        "municipio_id": 1,
-        "direccion": "carrera 28 # 3-333",
-        "barrio": "Santa Teresa",
-        "estrato": "2",
-        "coordinates": {
-          "lat": 3.45961,
-          "lng": -76.533085
-        }
-      };
+        "mensaje": "Solicitud creada correctamente"
+      }
 
       return of(mockResponse).pipe(delay(2000));
 
     } else {
-      // --- PETICIÓN REAL AL BACKEND ---
-      // Reemplaza esta URL con el endpoint exacto que te proporcione el backend.
-      // Ej: 'https://tu-api-real.com/api/properties/5/solicitar'
-      const postUrl = `${this.apiUrl}/solicitar`;
-
-      // Enviamos el formData como el cuerpo (body) de la petición POST
+      const postUrl = `${this.apiUrl}/solicitudes`;
       return this.http.post(postUrl, formData);
     }
   }

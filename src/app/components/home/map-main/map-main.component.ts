@@ -517,13 +517,13 @@ export class MapMainComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     if (center && this.map) {
-      this.map.flyTo(center, 8, {
+      this.map.flyTo(center, 6.5, {
         animate: true,
         duration: 0.5
       });
       //this.map.setView(center, 14); 
       //console.log('Cetro del mapa: ', center)
-      this.locationSvc.updateLocation([center.lat, center.lng], 8);
+      this.locationSvc.updateLocation([center.lat, center.lng], 6.5);
     } else {
       console.warn('No se pudo calcular el centro de los polígonos');
     }

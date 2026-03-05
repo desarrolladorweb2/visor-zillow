@@ -208,19 +208,32 @@ export class MapComponent implements OnInit {
     this.geometryService.setIdVisor(this.id);
     this.loadProperties();
 
-    this.infoInmuebleService.propertyUpdated$.subscribe((updatedProp) => {
-      const allData = this.property() || [];
-      const indexMaster = allData.findIndex((p: any) => p.id === updatedProp.id);
-      if (indexMaster !== -1) {
-        allData[indexMaster] = updatedProp;
-        this.property.set([...allData]);
+    this.infoInmuebleService.propertyUpdated$.subscribe((response) => {
+      // 1. Normalizamos la entrada: ¿Es un ID (string/number) o un objeto con .id?
+      const idToUpdate = typeof response === 'object' ? response.id : response;
+
+      // Función auxiliar para actualizar el estado en un arreglo
+      const updateList = (list: any[]) => {
+        return list.map(prop => {
+          if (prop.id === idToUpdate) {
+            // Si el response es un objeto completo, lo usamos. 
+            // Si es solo el ID, solo cambiamos solicitado a true.
+            return typeof response === 'object'
+              ? { ...prop, ...response, solicitado: true }
+              : { ...prop, solicitado: true };
+          }
+          return prop;
+        });
+      };
+
+      // 2. Actualizamos la data maestra
+      if (this.property()) {
+        this.property.set(updateList([...this.property()]));
       }
 
-      const visibleData = this.filteredProperties();
-      const indexFiltered = visibleData.findIndex((p: any) => p.id === updatedProp.id);
-      if (indexFiltered !== -1) {
-        visibleData[indexFiltered] = updatedProp;
-        this.filteredProperties.set([...visibleData]);
+      // 3. Actualizamos la data visual actual (cards filtradas)
+      if (this.filteredProperties()) {
+        this.filteredProperties.set(updateList([...this.filteredProperties()]));
       }
     });
   }
