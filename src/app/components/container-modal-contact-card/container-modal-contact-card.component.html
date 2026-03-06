@@ -54,9 +54,15 @@
             </div>
         </form>
         } @else {
-        <div class="success-message fade-in">
-            <h3 class="mensaje-enviado">{{ mensajeGuardado() }}</h3>
-            <div class="auto-close-bar"></div>
+        <div class="success-message">
+            <div class="icon-container">
+                <i class="bi bi-check-circle-fill success-icon"></i>
+            </div>
+            <p class="mensaje-enviado">{{ mensajeGuardado() }}</p>
+
+            <div class="auto-close-wrapper">
+                <div class="auto-close-bar"></div>
+            </div>
         </div>
         }
     </div>

@@ -75,7 +75,7 @@ export class ContainerModalContactCardComponent implements OnInit {
             this.containerModalCardService.closeContactForm();
             this.isSubmitted.set(false); // Reseteamos para la próxima vez
             this.contactForm.reset();
-            this.containerModalCardService.close();
+            // this.containerModalCardService.close(); //cierra el modal de galeria
           }, 3000);
         },
         error: (err) => {

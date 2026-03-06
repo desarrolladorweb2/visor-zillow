@@ -23,8 +23,8 @@
   }
 
   .results-panel {
-    flex: 0 0 40%; height: 100%; display: flex; flex-direction: column; overflow-y: auto; 
-    background-color: #f7f7f7; padding: 16px; box-sizing: border-box; border-radius: 15px;
+    flex: 0 0 40%; height: 100%; display: flex; flex-direction: column; overflow-y: hidden; gap: 15px; 
+    background-color: #f1f1f1; padding:  16px; box-sizing: border-box; border-radius: 15px;
 
     .results-header {
       margin-bottom: 1rem; border-bottom: 1px solid #ddd; padding-bottom: 10px;
@@ -35,8 +35,14 @@
 .footer-wrapper { flex: 0 0 auto; }
 
 .filters-bar {
-  position: sticky; top: 0; background: white; z-index: 20; padding: 12px;
-  border: 1px solid #e0e0e0; box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-radius: 15px;
+ flex-shrink: 0; 
+  
+  background: white; 
+  z-index: 20; 
+  padding: 12px;
+  border: 1px solid #153658; 
+  box-shadow: 0 2px 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05); border-radius: 15px;
 
   .filter-group {
     display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px;
@@ -143,7 +149,31 @@
   .results-count { font-size: 14px; font-weight: 700; color: #153658; }
 }
 
-.results-grid { padding: 12px 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }   
+.results-grid { 
+  padding-right: 8px; /* Un pequeño margen para que la barra de scroll no pegue con las cards */
+  padding-bottom: 12px;
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; 
+  flex: 1;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 10px;               // Ancho de la barra vertical
+    background: #f1f1f1;   // Asegura que no haya fondos raros
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: white;              
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #cccccc;            
+    border: 2px solid #cccccc; 
+
+    // &:hover {
+    //   background-color: gray;
+    // }
+  }
+}   
 
 .card-wrapper {
   transition: all 0.3s ease; border-radius: 8px; border: 2px solid transparent; cursor: pointer;
