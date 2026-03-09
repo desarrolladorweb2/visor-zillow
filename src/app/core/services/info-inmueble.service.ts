@@ -25,7 +25,7 @@ export class InfoInmuebleService {
 
     const request$ = this.useMock
       ? of(this.getMockData()).pipe(delay(3000))
-      : this.http.get<any>(this.apiUrl + '/inmuebles', { params: filters });
+      : this.http.get<any>(this.apiUrl + '/inmuebles');
 
     return request$.pipe(
       // Transformamos los resultados para concatenar la URL de las imágenes

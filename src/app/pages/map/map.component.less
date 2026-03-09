@@ -153,7 +153,7 @@
   padding-right: 8px; /* Un pequeño margen para que la barra de scroll no pegue con las cards */
   padding-bottom: 12px;
   display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; 
-  flex: 1;
+  // flex: 1;
   overflow-y: auto;
 
   &::-webkit-scrollbar {
@@ -178,7 +178,9 @@
 .card-wrapper {
   transition: all 0.3s ease; border-radius: 8px; border: 2px solid transparent; cursor: pointer;
   &.highlighted-card {
-    border-color: #0672b9; box-shadow: 0 4px 15px rgba(0, 106, 255, 0.3); transform: scale(1.02); z-index: 10;
+    border-color: #0672b9; box-shadow: 0 4px 15px rgba(0, 106, 255, 0.3); 
+    // transform: scale(1.02); 
+    z-index: 10;
   }
 }
 

@@ -12,5 +12,5 @@ export const environment = {
   geoserverURL: 'http://54.165.183.118:8080/geoserver/',
   backendGN: 'http://54.165.183.118:8000/poc',
   // backendGN: 'http://34.196.171.243:8006/poc', //pruebas
-  imagenes: 'http://54.165.183.118:8080/stcinmuebles',
+  imagenes: 'http://54.165.183.118:8080/stcinmuebles/',
 };
