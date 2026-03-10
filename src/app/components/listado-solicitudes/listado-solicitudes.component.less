@@ -1,0 +1,210 @@
+@primary-blue: #0672b9;
+@bg-light: #f8f9fa;
+@border-color: #eaeaea;
+@primary-color: #153658; 
+
+// --- CONTENEDOR PRINCIPAL ---
+.admin-table-container {
+  background: #f1f1f1;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  padding: 20px;
+  margin: 20px;
+  
+  // Lógica Flexbox para altura máxima y scroll interno
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 40px);
+
+  @media (max-width: 768px) {
+    margin: 10px;
+    padding: 15px;
+    max-height: calc(100vh - 20px);
+  }
+
+  // --- CABECERA Y BUSCADOR ---
+  .table-header {
+    flex-shrink: 0; // Evita que se aplaste al hacer scroll
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;
+    flex-wrap: wrap; gap: 15px; 
+    
+    .title-area { 
+      display: flex; align-items: center; gap: 15px; flex-wrap: wrap;
+      h2 { margin: 0; font-size: 1.5rem; color: @primary-color; font-weight: bold;}
+      .badge-total { background: #ffffff; color: @primary-blue; padding: 5px 12px; border-radius: 20px; font-weight: bold; font-size: 13px; }
+    }
+
+    .search-box {
+      display: flex; align-items: center; background: #f4f6f8; border-radius: 8px;
+      padding: 8px 15px; border: 1px solid #e0e0e0; transition: all 0.3s;
+      width: 100%; max-width: 350px; 
+      
+      @media (max-width: 768px) {
+        max-width: 100%;
+      }
+      
+      &:focus-within { border-color: @primary-blue; box-shadow: 0 0 0 3px rgba(6, 114, 185, 0.1); background: white; }
+      i.bi-search { color: #888; margin-right: 10px; font-size: 14px; }
+      input { border: none; background: transparent; outline: none; width: 100%; font-size: 14px; color: #333; }
+      .btn-clear { background: none; border: none; padding: 0; color: #aaa; cursor: pointer; &:hover { color: #dc3545; } }
+    }
+  }
+}
+
+// --- CONTENEDOR DE LA LISTA (El que hace la magia del scroll) ---
+.property-list-container {
+  display: flex; 
+  flex-direction: column; 
+  margin: 0px 8px 0px;
+  flex: 1; 
+  min-height: 0; // Obligatorio para que funcione el overflow hijo
+}
+
+.property-list {
+  display: flex; 
+  flex-direction: column; 
+  gap: 12px; 
+  margin-bottom: 15px;
+  flex: 1; 
+  overflow-y: auto; // Habilita el scroll vertical
+  padding-right: 5px; 
+  
+  // Estilo sutil para la barra de scroll
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  &::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+}
+
+// --- DISEÑO TIPO CARDS RESPONSIVE ---
+.property-list-card {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: white;
+  border: 1.3px solid #aaaaaa;
+  border-radius: 8px;
+  padding: 12px 16px;
+  gap: 20px;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  flex-shrink: 0; // Evita que la tarjeta se encoja dentro de la lista
+
+  &:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); border-color: #d1d5db; }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  // Foto
+  .card-img-container {
+    width: 150px; height: 100px; border-radius: 6px; overflow: hidden; flex-shrink: 0; cursor: pointer;
+    @media (max-width: 768px) { width: 100%; height: 180px; }
+    img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+    &:hover img { transform: scale(1.05); }
+  }
+
+  // Información
+  .card-info {
+    flex-grow: 1; cursor: pointer;
+    .card-title { margin: 0 0 6px 0; font-size: 15px; color: #6a6e77; font-weight: 600; background-color: transparent !important; }
+    .card-price-row {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 14px; flex-wrap: wrap;
+      .price { color: @primary-blue; font-weight: 700; font-size: 16px; }
+      .divider { color: #ccc; }
+      .address { color: #555; }
+    }
+    .card-location { font-size: 12px; color: #888; font-weight: 500; }
+  }
+
+  // Botón Interesados
+  .card-action {
+    flex-shrink: 0;
+    .btn-interesados {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background-color: @primary-blue; color: white; border: none; border-radius: 6px;
+      width: 100px; height: 75px; cursor: pointer; transition: background-color 0.2s;
+
+      @media (max-width: 768px) {
+        width: 100%; height: 48px; flex-direction: row; gap: 8px;
+      }
+
+      &:hover:not(:disabled) { background-color: #055a93; }
+      &:disabled { background-color: #d1d5db; color: #9ca3af; cursor: not-allowed; }
+
+      .number { 
+        font-size: 26px; font-weight: 700; line-height: 1; margin-bottom: 4px; 
+        @media (max-width: 768px) { font-size: 18px; margin-bottom: 0; }
+      }
+      .text { 
+        font-size: 11px; font-weight: 500; 
+        @media (max-width: 768px) { font-size: 14px; }
+      }
+    }
+  }
+}
+
+.no-results-card {
+  text-align: center; padding: 40px; background: #f9fafb; border: 1px dashed #d1d5db; border-radius: 8px; color: #6b7280; font-style: italic;
+}
+
+// --- ESTILOS DE PAGINACIÓN ---
+.pagination-container {
+  flex-shrink: 0; // Evita que la paginación desaparezca
+  display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: white; border-top: 1px solid #eaeaea; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;
+  
+  @media (max-width: 576px) {
+    flex-direction: column; gap: 15px;
+  }
+
+  .pagination-info { font-size: 13px; color: #777; font-weight: 500; }
+  .pagination-actions {
+    display: flex; gap: 5px; flex-wrap: wrap; justify-content: center;
+    .btn-page {
+      display: flex; align-items: center; justify-content: center; min-width: 32px; height: 32px; padding: 0 5px; border: 1px solid #dee2e6; background: white; color: @primary-blue; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
+      &:hover:not(:disabled):not(.active) { background: #f0f7fc; }
+      &.active { background: @primary-blue; color: white; border-color: @primary-blue; }
+      &:disabled { color: #ccc; cursor: not-allowed; background: #fdfdfd; }
+    }
+  }
+}
+
+// --- ESTILOS DEL MODAL DE INTERESADOS ---
+.modal-overlay-solicitudes {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 4000;
+  padding: 15px; 
+}
+
+.modal-panel {
+  background: white; width: 100%; max-width: 650px; border-radius: 12px; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden;
+  
+  .modal-header {
+    display: flex; justify-content: space-between; align-items: flex-start; padding: 20px 25px; border-bottom: 1px solid @border-color; background: @bg-light;
+    .header-titles h4 { margin: 0 0 5px; color: @primary-blue; font-size: 1.1rem; }
+    .header-titles p { margin: 0; color: #666; font-size: 13px; }
+    .btn-close-modal { background: none; border: none; font-size: 24px; cursor: pointer; color: #888; padding: 0; line-height: 1; &:hover { color: #333; } }
+  }
+  
+  .modal-body { padding: 20px; overflow-y: auto; background: #fdfdfd; }
+}
+
+.solicitudes-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+
+.solicitud-card {
+  border: 1px solid @border-color; border-radius: 10px; padding: 15px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  .user-info { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px; font-weight: bold; color: #333;}
+  .contact-details {
+    p { margin: 0 0 8px; font-size: 13px; color: #555; display: flex; align-items: center; gap: 8px; i { color: @primary-blue; } }
+    .mensaje-box { background: @bg-light; padding: 10px; border-radius: 6px; margin-top: 10px; font-size: 13px; color: #444; strong { display: block; margin-bottom: 5px; } p { margin: 0; } }
+  }
+}
+
+.empty-state {
+  text-align: center; color: #999; padding: 40px 0;
+  i { font-size: 40px; margin-bottom: 10px; display: block; color: #ddd; }
+}
+
+.animate-slide-up { animation: slideUp 0.3s ease-out forwards; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }

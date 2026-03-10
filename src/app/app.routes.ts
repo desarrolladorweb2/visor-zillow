@@ -16,10 +16,11 @@ import { Routes } from '@angular/router';
 import { MapComponent } from './pages/map/map.component';
 import { IdParamsErrorComponent } from './components/errors/id-params-error/id-params-error.component';
 import { sessionIdGuard } from './core/guards/session-id.guard';
+import { ListadoSolicitudesComponent } from './components/listado-solicitudes/listado-solicitudes.component';
 
 export const routes: Routes = [
-  // { path: '', component: MapComponent, canActivate: [sessionIdGuard] }, // producción
   { path: '', component: MapComponent }, // pruebas
+  { path: 'listado-solicitudes', component: ListadoSolicitudesComponent },
   { path: 'error', component: IdParamsErrorComponent },
   { path: '**', redirectTo: '' },
 ];

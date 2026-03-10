@@ -19,8 +19,10 @@
                             <div class="main-photo" (click)="openGallery(0)">
                                 <img [src]="collageImages()[0]">
 
+                                @if (!containerModalCardService.isGalleryOnly()) {
                                 @if (containerModalCardService.selectedProperty()?.solicitado) {
                                 <span class="status-tag">Solicitado</span>
+                                }
                                 }
                             </div>
 
@@ -48,6 +50,7 @@
                         }
                     </div>
 
+                    @if (!containerModalCardService.isGalleryOnly()) {
                     <div class="info-section-wrapper">
                         <div class="info-flex-container">
                             <div class="table-column">
@@ -99,6 +102,7 @@
                             </div>
                         </div>
                     </div>
+                    }
 
                 </div>
             </div>

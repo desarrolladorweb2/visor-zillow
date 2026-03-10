@@ -1,0 +1,179 @@
+<div class="detalle-admin-container animate-fade-in">
+    <header class="detalle-header">
+        <div class="title-group">
+            <button class="btn-back" (click)="onVolver()">
+                Volver a la lista
+            </button>
+            <!-- <h2>Detalles del Inmueble #{{ property().id }}</h2> -->
+            <div class="solicitudes-header">
+                <h2>Solicitudes Bien No. {{ property().id }}</h2>
+            </div>
+        </div>
+    </header>
+
+    <div class="detalle-content">
+        <div class="info-section">
+            <h3>Ficha Técnica</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Tipo de Bien</label>
+                    <p>{{ property().tipo_bien }}</p>
+                </div>
+                <div class="info-item">
+                    <label>Valor</label>
+                    <p class="precio">{{ property().valor_inmueble | currency:'COP':'$':'1.0-0' }}</p>
+                </div>
+                <div class="info-item">
+                    <label>Ubicación</label>
+                    <p>{{ property().municipio }}, {{ property().departamento }}</p>
+                </div>
+                <div class="info-item">
+                    <label>Dirección</label>
+                    <p>{{ property().direccion }} (Barrio: {{ property().barrio }})</p>
+                </div>
+                <div class="info-item">
+                    <label>Área Construida</label>
+                    <p>{{ property().area_construida }} m²</p>
+                </div>
+                <div class="info-item">
+                    <label>Área Terreno</label>
+                    <p>{{ property().area_terreno }} m²</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="galeria-section">
+            <h3>Fotografías</h3>
+            @if (property().images && property().images.length > 0) {
+            <div class="galeria-resumen">
+                <div class="miniatura-preview">
+                    <img [src]="property().images[0]" alt="Vista previa">
+                </div>
+                <div class="galeria-acciones">
+                    <p>Este inmueble cuenta con <strong>{{ property().images.length }}</strong> fotografías adjuntas.
+                    </p>
+                    <button class="btn-abrir-galeria" (click)="abrirGaleria()">
+                        <i class="bi bi-images"></i> Abrir Galería Completa
+                    </button>
+                </div>
+            </div>
+            } @else {
+            <div class="no-fotos">No hay fotografías disponibles para este inmueble.</div>
+            }
+        </div>
+
+        <div class="solicitudes-section">
+            <div class="solicitudes-header">
+                <h3>Solicitudes</h3>
+            </div>
+
+            <div class="master-detail-layout">
+                <div class="table-column" [class.shrinked]="solicitudSeleccionada() !== null">
+                    <table class="solicitudes-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Teléfono</th>
+                                <th>Correo</th>
+                                <th>Estado</th>
+                                <th>Fecha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (sol of property().solicitudes; track sol.id) {
+                            <tr (click)="seleccionarSolicitud(sol)"
+                                [class.active-row]="solicitudSeleccionada()?.id === sol.id">
+                                <td>{{ sol.nombre }}</td>
+                                <td>{{ sol.telefono }}</td>
+                                <td>{{ sol.correo || sol.email }}</td>
+                                <td>
+                                    <span class="status-badge" [ngClass]="getEstadoClass(sol.estado)">
+                                        {{ sol.estado || 'Nuevo' }}
+                                    </span>
+                                </td>
+                                <td>{{ sol.fecha || '22/04/2024' }}</td>
+                            </tr>
+                            }
+
+                            @if (!property().solicitudes || property().solicitudes.length === 0) {
+                            <tr>
+                                <td colspan="5" class="empty-table">No hay solicitudes registradas para este inmueble.
+                                </td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                @if (solicitudSeleccionada(); as detalle) {
+                <div class="detail-column animate-slide-left">
+                    <header class="detail-header">
+                        <h4>Detalle de Solicitud</h4>
+                        <button class="btn-close-detail" (click)="cerrarDetalleSolicitud()">&times;</button>
+                    </header>
+
+                    <div class="detail-body">
+                        <div class="user-header">
+                            <h5>{{ detalle.nombre }}</h5>
+
+                            <div class="dropdown-container">
+                                <button class="btn-acciones" (click)="toggleDropdown()">
+                                    Acciones <i class="bi bi-caret-down-fill"></i>
+                                </button>
+
+                                @if (dropdownOpen()) {
+                                <ul class="dropdown-menu-custom">
+                                    <li><a href="#"><i class="bi bi-telephone"></i> Contactar</a></li>
+                                    <li><a href="#"><i class="bi bi-calendar-event"></i> Programar visita</a></li>
+                                    <li><a href="#"><i class="bi bi-currency-dollar"></i> Generar venta</a></li>
+                                </ul>
+                                }
+                            </div>
+                        </div>
+
+                        <div class="user-info-list">
+                            <p><strong>Teléfono:</strong> {{ detalle.telefono }}</p>
+                            <p><strong>Correo:</strong> {{ detalle.correo || detalle.email }}</p>
+                            <p><strong>Fecha de registro:</strong> {{ detalle.fecha || '22/04/2024' }}</p>
+                            <p class="estado-row">
+                                <strong>Estado:</strong>
+                                <span class="status-badge" [ngClass]="getEstadoClass(detalle.estado)">
+                                    {{ detalle.estado || 'Nuevo' }}
+                                </span>
+                            </p>
+                        </div>
+
+                        <div class="detail-section-block">
+                            <h6>Mensaje Enviado</h6>
+                            <p class="mensaje-texto">{{ detalle.mensaje || 'El usuario no adjuntó un mensaje adicional.'
+                                }}</p>
+                        </div>
+
+                        <div class="detail-section-block">
+                            <h6>Historial de Gestión Comercial</h6>
+                            <table class="historial-table">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Usuario</th>
+                                        <th>Gestión</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{ detalle.fecha || '22/04/2024' }}</td>
+                                        <td>Sistema</td>
+                                        <td>Registro de solicitud</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>
+<app-container-modal-card></app-container-modal-card>

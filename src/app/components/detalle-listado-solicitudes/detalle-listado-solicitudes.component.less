@@ -1,0 +1,180 @@
+@primary-blue: #0672b9;
+
+// --- 1. SCROLL GENERAL DE LA PANTALLA ---
+.detalle-admin-container {
+  background: white; border-radius: 12px; padding: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin: 20px;
+  
+  // Convertimos el contenedor en Flex para controlar la altura
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 40px); // Evita que se salga de la pantalla
+
+  @media (max-width: 768px) {
+    margin: 10px; padding: 15px;
+    max-height: calc(100vh - 20px);
+  }
+}
+
+.detalle-header {
+  flex-shrink: 0; // Evita que el header se aplaste al hacer scroll
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 25px;
+
+  .title-group {
+    display: flex; align-items: center; gap: 20px;
+    h2 { margin: 0; font-size: 1.4rem; color: #333; }
+    .btn-back { 
+      background: none; border: none; color: #666; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px;
+      &:hover { color: @primary-blue; }
+    }
+  }
+  .btn-solicitudes {
+    background: @primary-blue; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px;
+    &:disabled { background: #ccc; cursor: not-allowed; }
+    .badge { background: white; color: @primary-blue; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
+  }
+}
+
+// AQUÍ HABILITAMOS EL SCROLL GENERAL PARA EL CONTENIDO
+.detalle-content {
+  flex: 1; // Toma todo el espacio sobrante
+  overflow-y: auto; // Activa el scroll vertical
+  display: flex; flex-direction: column; gap: 30px;
+  padding-right: 10px; // Espacio para que la barra de scroll no pegue al texto
+
+  // Estilo de barra de scroll general
+  &::-webkit-scrollbar { width: 8px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  &::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+  h3 { font-size: 1.1rem; color: #444; margin-bottom: 15px; border-left: 4px solid @primary-blue; padding-left: 10px; }
+}
+
+
+// --- 2. SECCIONES: FICHA Y GALERÍA ---
+.info-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; background: #fdfdfd; padding: 20px; border-radius: 8px; border: 1px solid #f0f0f0;
+  .info-item {
+    label { display: block; font-size: 12px; color: #777; font-weight: 600; margin-bottom: 4px; text-transform: uppercase; }
+    p { margin: 0; font-size: 15px; color: #222; font-weight: 500; }
+    .precio { color: @primary-blue; font-size: 18px; font-weight: bold; }
+  }
+}
+
+.galeria-resumen {
+  display: flex; align-items: center; gap: 20px; background: #fdfdfd; padding: 20px; border-radius: 8px; border: 1px solid #f0f0f0;
+  .miniatura-preview { width: 120px; height: 80px; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 5px rgba(0,0,0,0.1); img { width: 100%; height: 100%; object-fit: cover; } }
+  .galeria-acciones {
+    p { margin: 0 0 10px 0; color: #555; }
+    .btn-abrir-galeria {
+      background-color: @primary-blue; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.2s;
+      &:hover { background-color: #055a93; }
+    }
+  }
+}
+.no-fotos { background: #f9f9f9; padding: 20px; text-align: center; color: #888; border-radius: 8px; font-style: italic; }
+
+
+// --- 3. SCROLL INTERNO PARA SOLICITUDES (MASTER-DETAIL) ---
+.solicitudes-section {
+  background: #fafbfc; border-radius: 12px; padding: 25px; border: 1px solid #f0f0f0; margin-bottom: 20px;
+  .solicitudes-header {
+    margin-bottom: 20px;
+    h3 { margin: 0 0 5px 0; font-size: 1.2rem; color: #333; font-weight: 700; border: none; padding: 0;}
+    .subtitle { margin: 0; font-size: 0.9rem; color: #666; }
+  }
+}
+
+.master-detail-layout {
+  display: flex; gap: 20px; align-items: flex-start;
+  
+  // Le damos una altura fija a esta sección para que active el scroll interno
+  height: 450px; 
+  
+  @media (max-width: 992px) {
+    flex-direction: column; 
+    height: auto; // En móviles dejamos que crezca, o le ponemos un max-height
+  }
+}
+
+// TABLA DE SOLICITUDES (COLUMNA IZQUIERDA)
+.table-column {
+  flex: 1; background: white; border-radius: 8px; border: 1px solid #eaeaea; transition: all 0.3s ease;
+  
+  // HABILITAMOS SCROLL PARA LA TABLA
+  height: 100%; 
+  overflow-y: auto; 
+  
+  // Scrollbar delgada para la tabla
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+
+  .solicitudes-table {
+    width: 100%; border-collapse: collapse; text-align: left;
+    th { position: sticky; top: 0; background: #f8f9fa; padding: 12px 15px; font-size: 13px; color: #555; font-weight: 600; border-bottom: 2px solid #eee; z-index: 2; box-shadow: 0 1px 0 #eee;} // Cabecera fija
+    td { padding: 12px 15px; font-size: 13px; color: #333; border-bottom: 1px solid #f5f5f5; vertical-align: middle; }
+    tr { cursor: pointer; transition: background 0.2s; &:hover { background: #f4f6f8; } &.active-row { background: #eef5fb; border-left: 3px solid #0672b9; } }
+    .empty-table { text-align: center; color: #888; padding: 30px; font-style: italic; }
+  }
+}
+
+// ETIQUETAS DE ESTADO (PILLS)
+.status-badge {
+  padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block;
+  &.badge-nuevo { background: #e0f0ff; color: #0066cc; }
+  &.badge-contactado { background: #e6f4ea; color: #1e8e3e; }
+  &.badge-default { background: #f1f3f4; color: #5f6368; }
+}
+
+// DETALLE DE LA SOLICITUD (COLUMNA DERECHA)
+.detail-column {
+  width: 380px; background: white; border: 1px solid #eaeaea; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  display: flex; flex-direction: column;
+  
+  // HABILITAMOS SCROLL PARA EL DETALLE
+  height: 100%; 
+
+  @media (max-width: 992px) { width: 100%; height: 400px; }
+
+  .detail-header {
+    flex-shrink: 0; // Header fijo
+    display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #eaeaea;
+    h4 { margin: 0; font-size: 14px; font-weight: 700; color: #333; }
+    .btn-close-detail { background: none; border: none; font-size: 20px; color: #999; cursor: pointer; &:hover { color: #333; } }
+  }
+
+  .detail-body {
+    flex: 1; 
+    overflow-y: auto; // El cuerpo del detalle hace scroll si hay mucho historial o mensaje largo
+    padding: 20px;
+    
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+    .user-header {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;
+      h5 { margin: 0; font-size: 16px; font-weight: 600; color: #333; }
+      .dropdown-container {
+        position: relative;
+        .btn-acciones { background: @primary-blue; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; &:hover { background: #055a93; } }
+        .dropdown-menu-custom { position: absolute; right: 0; top: 110%; background: white; border: 1px solid #eee; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); list-style: none; padding: 5px 0; margin: 0; min-width: 160px; z-index: 10;
+          li a { display: flex; align-items: center; gap: 8px; padding: 8px 15px; font-size: 13px; color: #444; text-decoration: none; &:hover { background: #f8f9fa; color: @primary-blue; } } }
+      }
+    }
+    .user-info-list { margin-bottom: 25px; p { margin: 0 0 8px 0; font-size: 13px; color: #555; } strong { color: #333; margin-right: 5px; font-weight: 600; } .estado-row { display: flex; align-items: center; } }
+    .detail-section-block {
+      margin-bottom: 25px;
+      h6 { margin: 0 0 10px 0; font-size: 13px; font-weight: 700; color: #333; }
+      .mensaje-texto { font-size: 13px; color: #555; line-height: 1.5; background: #fdfdfd; padding: 10px; border-radius: 6px; border: 1px solid #f0f0f0; margin: 0; }
+      .historial-table { width: 100%; border-collapse: collapse; text-align: left; th { background: #f8f9fa; padding: 8px; font-size: 11px; color: #666; border-radius: 4px 4px 0 0; } td { padding: 8px; font-size: 12px; color: #444; border-bottom: 1px solid #f0f0f0; } }
+    }
+  }
+}
+
+.animate-fade-in { animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.animate-slide-left { animation: slideLeft 0.3s ease-out forwards; }
+@keyframes slideLeft { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }

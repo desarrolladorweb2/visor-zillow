@@ -47,7 +47,7 @@ export class InfoInmuebleService {
       "results": [
         {
           "id": 5,
-          "solicitado": false,
+          "solicitado": true,
           "valor_inmueble": 1000000000,
           "tipo_bien": "Casa",
           "tipo_bien_id": 1,
@@ -71,6 +71,24 @@ export class InfoInmuebleService {
           "images": [
             '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
             '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
+          ],
+          "solicitudes": [
+            {
+              "id": 1,
+              "nombre": "Arnulfo Gutierrez",
+              "email": "arnulfo.gutierrez@realtix.com",
+              "telefono": "3123456789",
+              "mensaje": "En proceso",
+              "fecha": "2026-03-06 17:34:20.589"
+            },
+            {
+              "id": 2,
+              "nombre": "Arnold Zambra",
+              "email": "arnold.zambra@realtix.com",
+              "telefono": "3123456789",
+              "mensaje": "En proceso",
+              "fecha": "2026-03-06 17:34:20.589"
+            }
           ]
         },
         {
@@ -98,7 +116,8 @@ export class InfoInmuebleService {
           },
           "images": [
             '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
-          ]
+          ],
+          "solicitudes": []
         },
         {
           "id": 2,
@@ -132,7 +151,8 @@ export class InfoInmuebleService {
             '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
             '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
             '/0038-2025/Fotos del Bien/POC_Medellin.jpg',
-          ]
+          ],
+          "solicitudes": []
         },
         {
           "id": 3,
@@ -158,11 +178,12 @@ export class InfoInmuebleService {
             "lng": -73.566847
           },
           "images": [
-          ]
+          ],
+          "solicitudes": []
         },
         {
           "id": 4,
-          "solicitado": false,
+          "solicitado": true,
           "valor_inmueble": 50000000,
           "tipo_bien": "Hotel",
           "tipo_bien_id": 2,
@@ -184,6 +205,71 @@ export class InfoInmuebleService {
             "lng": -73.566847
           },
           "images": [
+          ],
+          "solicitudes": [
+            {
+              "id": 3,
+              "nombre": "Maria Gutierrez",
+              "email": "maria.gutierrez@realtix.com",
+              "telefono": "3113456781",
+              "mensaje": "Conocer 1"
+            },
+            {
+              "id": 4,
+              "nombre": "Felipe Miranda",
+              "email": "felipe.miranda@realtix.com",
+              "telefono": "3103456780",
+              "mensaje": "Conocer 2",
+              "fecha": "2026-03-06 17:34:20.589"
+            },
+            {
+              "id": 3,
+              "nombre": "Maria Gutierrez",
+              "email": "maria.gutierrez@realtix.com",
+              "telefono": "3113456781",
+              "mensaje": "Conocer 1",
+              "fecha": "2026-03-06 17:34:20.589"
+            },
+            {
+              "id": 4,
+              "nombre": "Felipe Miranda",
+              "email": "felipe.miranda@realtix.com",
+              "telefono": "3103456780",
+              "mensaje": "Conocer 2",
+              "fecha": "2026-03-06 17:34:20.589"
+            },
+            {
+              "id": 3,
+              "nombre": "Maria Gutierrez",
+              "email": "maria.gutierrez@realtix.com",
+              "telefono": "3113456781",
+              "mensaje": "Conocer 1",
+              "fecha": "2026-03-06 17:34:20.589"
+            },
+            {
+              "id": 4,
+              "nombre": "Felipe Miranda",
+              "email": "felipe.miranda@realtix.com",
+              "telefono": "3103456780",
+              "mensaje": "Conocer 2",
+              "fecha": "2026-03-06 17:34:20.589"
+            },
+            {
+              "id": 3,
+              "nombre": "Maria Gutierrez",
+              "email": "maria.gutierrez@realtix.com",
+              "telefono": "3113456781",
+              "mensaje": "Conocer 1",
+              "fecha": "2026-03-06 17:34:20.589"
+            },
+            {
+              "id": 4,
+              "nombre": "Felipe Miranda",
+              "email": "felipe.miranda@realtix.com",
+              "telefono": "3103456780",
+              "mensaje": "Conocer 2",
+              "fecha": "2026-03-06 17:34:20.589"
+            }
           ]
         }
       ]

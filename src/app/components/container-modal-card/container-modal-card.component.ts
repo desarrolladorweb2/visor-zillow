@@ -58,6 +58,7 @@ export class ContainerModalCardComponent {
   closeModal() {
     this.showFullGallery.set(false);
     this.containerModalCardService.close();
+    this.containerModalCardService.isGalleryOnly.set(false);
   }
 
   openGallery(index: number = 0) {

@@ -8,11 +8,13 @@ export class ContainerModalCardService {
   selectedProperty = signal<any | null>(null);
   isOpen = signal(false);
   isContactFormOpen = signal(false);
+  public isGalleryOnly = signal<boolean>(false);
 
   open(property: any) {
     console.log('property', property);
     this.selectedProperty.set(property);
     this.isOpen.set(true);
+    // this.isGalleryOnly.set(false);
     document.body.style.overflow = 'hidden'; // Bloquea scroll del fondo
   }
 
