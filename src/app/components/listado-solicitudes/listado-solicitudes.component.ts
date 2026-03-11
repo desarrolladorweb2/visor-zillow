@@ -57,6 +57,13 @@ export class ListadoSolicitudesComponent implements OnInit {
 
   ngOnInit() {
     this.cargarDatos();
+
+    this.infoInmuebleService.propertyUpdated$.subscribe(() => {
+      // Al clonar el arreglo [...props], forzamos a la Signal de Angular 
+      // a detectar el cambio y re-dibujar la tabla inmediatamente
+      this.properties.update(props => [...props]);
+      console.log('cambio en la data: ', this.properties());
+    });
   }
 
   cargarDatos() {

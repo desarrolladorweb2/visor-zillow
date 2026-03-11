@@ -397,4 +397,62 @@ export class InfoInmuebleService {
       return this.http.post(postUrl, formData);
     }
   }
+
+  cambiarEstadoSolicitud(idInmueble: number | string, formData: any): Observable<any> {
+    if (this.useMock) {
+      console.log(`--- Simulando cambio de estado para el Inmueble ${idInmueble}, Solicitud ${formData} ---`);
+
+      // 1. Armamos SOLO el nuevo registro para el historial de gestión
+      const nuevoHistorialEstado = {
+        id_bien: Number(idInmueble),
+        id_solicitud: formData.solicitudId,
+        id: Math.floor(Math.random() * 10000), // ID aleatorio para el registro del historial
+        estado: formData.estadoId,             // El ID de la acción (ej. 2 para contactado)
+        usuario: "asesor_inmobiliario",        // Simulamos el usuario logueado
+        fecha: new Date().toISOString().replace('T', ' ').substring(0, 23),
+        observacion: formData.observacion
+      };
+
+      const mockResponse = {
+        mensaje: "Gestión registrada correctamente",
+        nuevo_estado: nuevoHistorialEstado
+      };
+
+      return of(mockResponse).pipe(
+        delay(1500),
+        tap((res) => {
+          // --- AQUÍ HACEMOS LA MAGIA EN EL CACHÉ ---
+          if (this.allPropertiesCache && this.allPropertiesCache.results) {
+
+            // 1. Buscamos el bien por su ID
+            const inmueble = this.allPropertiesCache.results.find((p: any) => p.id === Number(idInmueble));
+            console.log('Inmueble encontrado:', inmueble);
+
+            if (inmueble && inmueble.solicitudes) {
+
+              // 2. Buscamos a la persona específica (la solicitud) dentro del inmueble
+              const solicitudTarget = inmueble.solicitudes.find((s: any) => s.id === formData.solicitudId);
+
+              console.log('Solicitud encontrada:', solicitudTarget);
+              if (solicitudTarget) {
+                // 3. Si por alguna razón no tiene arreglo de estado, lo creamos
+                if (!solicitudTarget.estado) solicitudTarget.estado = [];
+
+                // 4. Agregamos EL NUEVO ESTADO DE PRIMERO en su historial
+                solicitudTarget.estado.unshift(res.nuevo_estado);
+
+                // 5. Disparamos tu Subject para avisarle a toda la app que este inmueble cambió
+                this.propertyUpdated$.next(inmueble);
+              }
+            }
+          }
+        })
+      );
+
+    } else {
+      // Petición real al backend
+      const postUrl = `${this.apiUrl}/inmuebles/${idInmueble}/solicitudes/${formData.solicitudId}/estado`;
+      return this.http.post(postUrl, formData);
+    }
+  }
 }

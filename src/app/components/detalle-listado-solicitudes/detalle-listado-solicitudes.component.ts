@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { ContainerModalCardService } from '../../core/services/container-modal-card.service';
 import { ContainerModalCardComponent } from "../container-modal-card/container-modal-card.component";
+import { InfoInmuebleService } from '../../core/services/info-inmueble.service';
 
 @Component({
   selector: 'app-detalle-listado-solicitudes',
@@ -11,15 +12,15 @@ import { ContainerModalCardComponent } from "../container-modal-card/container-m
 })
 export class DetalleListadoSolicitudesComponent {
 
-  private readonly ESTADOS_MAP: Record<number, string> = {
-    1: 'Nuevo',
-    2: 'Contactado',
-    3: 'Visita programada',
-    4: 'Proceso de Venta',
-    5: 'Desistido'
+  private readonly ESTADOS_MAP: Record<string, number> = {
+    'Contactar': 2,
+    'Programar visita': 3,
+    'Generar venta': 4,
+    'Desistir': 5
   };
 
   public containerModalCardService = inject(ContainerModalCardService);
+  public infoInmuebleService = inject(InfoInmuebleService);
   property = input.required<any>();
 
   // Emisores para comunicarse con el componente padre (la tabla)
@@ -96,6 +97,21 @@ export class DetalleListadoSolicitudesComponent {
     console.log('Observación:', this.actionObservation());
     console.log('Usuario afectado:', this.solicitudSeleccionada());
     console.log('Solicitud id:', this.solicitudSeleccionada().id);
+
+    const payload = {
+      idInmueble: this.property().id,
+      solicitudId: this.solicitudSeleccionada().id,
+      estadoId: this.ESTADOS_MAP[this.selectedAction()] || 1,
+      observacion: this.actionObservation()
+    }
+
+    this.infoInmuebleService.cambiarEstadoSolicitud(this.property().id, payload).subscribe({
+      next: (res) => {
+        this.closeActionModal();
+        console.log('Solicitud actualizada:', res);
+      },
+      error: (err) => console.error('Error actualizando solicitud:', err)
+    });
 
     // Opcional: podrías agregar la lógica aquí para actualizar el estado visualmente en la tabla
 
