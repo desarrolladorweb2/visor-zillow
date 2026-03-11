@@ -62,7 +62,8 @@ export class ListadoSolicitudesComponent implements OnInit {
   cargarDatos() {
     this.infoInmuebleService.getProperties({}).subscribe({
       next: (res) => {
-        this.properties.set(res.results || []);
+        const data = res.results.filter((item: any) => item.solicitado);
+        this.properties.set(data);
       },
       error: (err) => console.error('Error cargando tabla:', err)
     });

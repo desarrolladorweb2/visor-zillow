@@ -11,6 +11,14 @@ import { ContainerModalCardComponent } from "../container-modal-card/container-m
 })
 export class DetalleListadoSolicitudesComponent {
 
+  private readonly ESTADOS_MAP: Record<number, string> = {
+    1: 'Nuevo',
+    2: 'Contactado',
+    3: 'Visita programada',
+    4: 'Proceso de Venta',
+    5: 'Desistido'
+  };
+
   public containerModalCardService = inject(ContainerModalCardService);
   property = input.required<any>();
 
@@ -20,6 +28,11 @@ export class DetalleListadoSolicitudesComponent {
   // --- VARIABLES PARA EL PANEL DE SOLICITUDES ---
   solicitudSeleccionada = signal<any | null>(null);
   dropdownOpen = signal<boolean>(false);
+
+  // --- VARIABLES PARA EL MODAL DE ACCIONES ---
+  isActionModalOpen = signal<boolean>(false);
+  selectedAction = signal<string>('');
+  actionObservation = signal<string>('');
 
   onVolver() {
     this.volver.emit();
@@ -45,10 +58,54 @@ export class DetalleListadoSolicitudesComponent {
   }
 
   // Método auxiliar para dar color a los estados (Nuevo, Contactado, etc.)
-  getEstadoClass(estado: string | undefined): string {
-    const est = (estado || 'Nuevo').toLowerCase();
-    if (est === 'nuevo') return 'badge-nuevo';
-    if (est === 'contactado') return 'badge-contactado';
+  getEstadoClass(estado: number | undefined): string {
+    if (estado === 1) return 'badge-nuevo';
+    if (estado === 2) return 'badge-contactado';
+    if (estado === 3) return 'badge-default';
+    if (estado === 4) return 'badge-default';
+    if (estado === 5) return 'badge-desistido';
     return 'badge-default';
+  }
+
+  getEstadoNombre(estado: number | undefined): string {
+    if (estado === 1) return 'Nuevo';
+    if (estado === 2) return 'Contactado';
+    if (estado === 3) return 'Visita programada';
+    if (estado === 4) return 'Proceso de Venta';
+    if (estado === 5) return 'Desistido';
+    return 'N/A';
+  }
+
+  // MÉTODOS DEL MODAL DE ACCIONES
+  openActionModal(actionName: string, event: Event) {
+    event.preventDefault(); // Evita que el enlace recargue la página
+    this.selectedAction.set(actionName);
+    this.actionObservation.set(''); // Limpiamos la observación anterior
+    this.isActionModalOpen.set(true);
+    this.dropdownOpen.set(false); // Cerramos el menú desplegable
+  }
+
+  closeActionModal() {
+    this.isActionModalOpen.set(false);
+    this.selectedAction.set('');
+  }
+
+  saveAction() {
+    // Aquí es donde llamarías a tu servicio (ej. this.http.post(...))
+    console.log('Guardando acción:', this.selectedAction());
+    console.log('Observación:', this.actionObservation());
+    console.log('Usuario afectado:', this.solicitudSeleccionada());
+    console.log('Solicitud id:', this.solicitudSeleccionada().id);
+
+    // Opcional: podrías agregar la lógica aquí para actualizar el estado visualmente en la tabla
+
+    // Al terminar, cerramos el modal
+    this.closeActionModal();
+  }
+
+  // Método auxiliar para capturar lo que el usuario escribe en el textarea sin usar FormsModule
+  updateObservation(event: Event) {
+    const textarea = event.target as HTMLTextAreaElement;
+    this.actionObservation.set(textarea.value);
   }
 }

@@ -125,6 +125,7 @@
   padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; display: inline-block;
   &.badge-nuevo { background: #e0f0ff; color: #0066cc; }
   &.badge-contactado { background: #e6f4ea; color: #1e8e3e; }
+  &.badge-desistido { background: #ffdede; color: #8e1e1e; }
   &.badge-default { background: #f1f3f4; color: #5f6368; }
 }
 
@@ -178,3 +179,99 @@
 
 .animate-slide-left { animation: slideLeft 0.3s ease-out forwards; }
 @keyframes slideLeft { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+
+
+// --- MODAL DE ACCIONES Y OBSERVACIONES ---
+.modal-overlay-action {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; 
+  z-index: 5000; padding: 15px;
+}
+
+.modal-panel-action {
+  background: white; width: 100%; max-width: 500px; border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow: hidden; display: flex; flex-direction: column;
+
+  .modal-header-action {
+    display: flex; justify-content: space-between; align-items: center; padding: 18px 25px;
+    background: #f8f9fa; border-bottom: 1px solid #eaeaea;
+    h4 { margin: 0; font-size: 16px; color: @primary-blue; font-weight: 700; }
+    .btn-close-modal { background: none; border: none; font-size: 22px; color: #888; cursor: pointer; padding: 0; line-height: 1; &:hover { color: #333; } }
+  }
+
+  .modal-body-action {
+    padding: 25px;
+    
+    .aviso-usuario { margin: 0 0 20px 0; font-size: 14px; color: #555; background: #eef5fb; padding: 10px 15px; border-radius: 6px; border-left: 4px solid @primary-blue; strong { color: #333; } }
+    
+    .form-group {
+      display: flex; flex-direction: column; gap: 8px;
+      label { font-size: 13px; font-weight: 600; color: #333; .text-danger { color: #dc3545; } }
+      textarea { 
+        width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 14px;
+        resize: vertical; outline: none; transition: border-color 0.2s; box-sizing: border-box; font-family: inherit;
+        &:focus { border-color: @primary-blue; box-shadow: 0 0 0 3px rgba(6, 114, 185, 0.1); }
+      }
+    }
+  }
+
+  .modal-footer-action {
+    padding: 15px 25px; background: #fdfdfd; border-top: 1px solid #eaeaea;
+    display: flex; justify-content: center; gap: 12px;
+    
+    .btn-cancel { background: white; border: 1px solid #ccc; padding: 8px 16px; border-radius: 6px; color: #555; font-weight: 600; cursor: pointer; transition: all 0.2s; &:hover { background: #f5f5f5; color: #333; } }
+    .btn-save { background: @primary-blue; border: none; padding: 8px 16px; border-radius: 6px; color: white; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: background 0.2s; &:hover:not(:disabled) { background: #055a93; } &:disabled { background: #ccc; cursor: not-allowed; } }
+  }
+}
+
+.animate-slide-down { animation: slideDown 0.3s ease-out forwards; }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+
+// --- ESTILOS PARA LA NUBE (TOOLTIP) ---
+.celda-tooltip {
+  position: relative;
+  cursor: pointer;
+
+  // La Nube (El cuadro de texto)
+  &:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 120%; // Lo pone justo arriba de la celda
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333; // Color oscuro
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: normal;
+    text-transform: none;
+    white-space: normal;
+    width: max-content;
+    max-width: 250px; // Evita que sea infinitamente ancho si el texto es muy largo
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 100;
+    pointer-events: none; // Evita que parpadee al pasar el mouse
+    animation: fadeInTooltip 0.2s ease-in-out forwards;
+  }
+
+  // El piquito (triángulo) debajo de la nube
+  &:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+    z-index: 100;
+    pointer-events: none;
+  }
+}
+
+@keyframes fadeInTooltip {
+  from { opacity: 0; margin-bottom: -5px; }
+  to { opacity: 1; margin-bottom: 0; }
+}

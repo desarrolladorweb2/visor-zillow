@@ -78,8 +78,24 @@ export class InfoInmuebleService {
               "nombre": "Arnulfo Gutierrez",
               "email": "arnulfo.gutierrez@realtix.com",
               "telefono": "3123456789",
-              "mensaje": "En proceso",
-              "fecha": "2026-03-06 17:34:20.589"
+              "mensaje": "quiero este inmueble para verlo",
+              "fecha": "2026-03-06 17:34:20.589",
+              "estado": [
+                {
+                  "id": 1,
+                  "estado": "desistido",
+                  "usuario": "sistema",
+                  "fecha": "2026-03-06 17:34:20.589",
+                  "observacion": "bla bla bla"
+                },
+                {
+                  "id": 2,
+                  "estado": "contactado",
+                  "usuario": "sistema",
+                  "fecha": "2026-03-06 17:34:20.589",
+                  "observacion": "bla bla bla"
+                }
+              ]
             },
             {
               "id": 2,
@@ -121,7 +137,7 @@ export class InfoInmuebleService {
         },
         {
           "id": 2,
-          "solicitado": true,
+          "solicitado": false,
           "valor_inmueble": 1349900,
           "tipo_bien": "Apartamento",
           "tipo_bien_id": 3,
@@ -208,67 +224,153 @@ export class InfoInmuebleService {
           ],
           "solicitudes": [
             {
-              "id": 3,
-              "nombre": "Maria Gutierrez",
-              "email": "maria.gutierrez@realtix.com",
-              "telefono": "3113456781",
-              "mensaje": "Conocer 1"
-            },
-            {
-              "id": 4,
-              "nombre": "Felipe Miranda",
-              "email": "felipe.miranda@realtix.com",
-              "telefono": "3103456780",
-              "mensaje": "Conocer 2",
-              "fecha": "2026-03-06 17:34:20.589"
-            },
-            {
-              "id": 3,
-              "nombre": "Maria Gutierrez",
-              "email": "maria.gutierrez@realtix.com",
+              "id": 1,
+              "nombre": "Luisa Gutierrez",
+              "email": "luisa.gutierrez@realtix.com",
               "telefono": "3113456781",
               "mensaje": "Conocer 1",
-              "fecha": "2026-03-06 17:34:20.589"
+              "estado": [
+                {
+                  "id": 1,
+                  "estado": 1,
+                  "usuario": "sistema",
+                  "fecha": "2026-03-06 17:34:20.589",
+                  "observacion": "bla bla bla"
+                }
+              ]
             },
             {
-              "id": 4,
+              "id": 2,
               "nombre": "Felipe Miranda",
               "email": "felipe.miranda@realtix.com",
               "telefono": "3103456780",
               "mensaje": "Conocer 2",
-              "fecha": "2026-03-06 17:34:20.589"
+              "fecha": "2026-03-06 17:34:20.589",
+              "estado": [
+                {
+                  "id": 3,
+                  "estado": 5,
+                  "usuario": "sistema",
+                  "fecha": "2026-03-06 17:34:20.589",
+                  "observacion": "bla bla bla"
+                },
+                {
+                  "id": 4,
+                  "estado": 1,
+                  "usuario": "sistema",
+                  "fecha": "2026-03-06 17:34:20.589",
+                  "observacion": "bla bla bla"
+                }
+              ]
             },
             {
               "id": 3,
-              "nombre": "Maria Gutierrez",
-              "email": "maria.gutierrez@realtix.com",
+              "nombre": "Juliana Gutierrez",
+              "email": "juliana.gutierrez@realtix.com",
               "telefono": "3113456781",
               "mensaje": "Conocer 1",
-              "fecha": "2026-03-06 17:34:20.589"
+              "fecha": "2026-03-06 17:34:20.589",
+              "estado": [
+                {
+                  "id": 6,
+                  "estado": 3,
+                  "usuario": "sistema",
+                  "fecha": "2026-03-06 17:34:20.589",
+                  "observacion": "bla bla bla"
+                },
+                {
+                  "id": 5,
+                  "estado": 1,
+                  "usuario": "sistema",
+                  "fecha": "2026-03-06 17:34:20.589",
+                  "observacion": "bla bla bla"
+                }
+              ]
             },
             {
               "id": 4,
-              "nombre": "Felipe Miranda",
-              "email": "felipe.miranda@realtix.com",
+              "nombre": "Pedro Miranda",
+              "email": "pedro.miranda@realtix.com",
               "telefono": "3103456780",
               "mensaje": "Conocer 2",
-              "fecha": "2026-03-06 17:34:20.589"
+              "fecha": "2026-03-06 17:34:20.589",
+              "estado": [
+                {
+                  "id": 7,
+                  "estado": 1,
+                  "usuario": "sistema",
+                  "fecha": "2026-03-06 17:34:20.589",
+                  "observacion": "bla bla bla"
+                }
+              ]
             },
             {
-              "id": 3,
-              "nombre": "Maria Gutierrez",
-              "email": "maria.gutierrez@realtix.com",
+              "id": 6,
+              "nombre": "samuel Gutierrez",
+              "email": "samuel.gutierrez@realtix.com",
               "telefono": "3113456781",
               "mensaje": "Conocer 1",
-              "fecha": "2026-03-06 17:34:20.589"
+              "fecha": "2026-03-06 17:34:20.589",
+              "estado": [
+                {
+                  "id": 8,
+                  "estado": 1,
+                  "usuario": "sistema",
+                  "fecha": "2026-03-06 17:34:20.589",
+                  "observacion": "bla bla bla"
+                }
+              ]
             },
             {
-              "id": 4,
-              "nombre": "Felipe Miranda",
-              "email": "felipe.miranda@realtix.com",
+              "id": 7,
+              "nombre": "Oscar Miranda",
+              "email": "oscar.miranda@realtix.com",
               "telefono": "3103456780",
               "mensaje": "Conocer 2",
-              "fecha": "2026-03-06 17:34:20.589"
+              "fecha": "2026-03-06 17:34:20.589",
+              "estado": [
+                {
+                  "id": 9,
+                  "estado": 1,
+                  "usuario": "sistema",
+                  "fecha": "2026-03-06 17:34:20.589",
+                  "observacion": "bla bla bla"
+                }
+              ]
+            },
+            {
+              "id": 8,
+              "nombre": "Mery Gutierrez",
+              "email": "mery.gutierrez@realtix.com",
+              "telefono": "3113456781",
+              "mensaje": "Conocer 1",
+              "fecha": "2026-03-06 17:34:20.589",
+              "estado": [
+                {
+                  "id": 10,
+                  "estado": 2,
+                  "usuario": "sistema",
+                  "fecha": "2026-03-06 17:34:20.589",
+                  "observacion": "bla bla bla"
+                }
+              ]
+            },
+            {
+              "id": 9,
+              "nombre": "Flor Miranda",
+              "email": "flor.miranda@realtix.com",
+              "telefono": "3103456780",
+              "mensaje": "Conocer 2",
+              "fecha": "2026-03-06 17:34:20.589",
+              "estado": [
+                {
+                  "id": 11,
+                  "estado": 2,
+                  "usuario": "sistema",
+                  "fecha": "2026-03-06 17:34:20.589",
+                  "observacion": "bla bla bla"
+                }
+              ]
             }
           ]
         }
