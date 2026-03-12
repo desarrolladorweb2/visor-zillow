@@ -23,6 +23,9 @@ export class DetalleListadoSolicitudesComponent {
   public infoInmuebleService = inject(InfoInmuebleService);
   property = input.required<any>();
 
+  isSubmitted = signal(false);
+  mensajeGuardado = signal('')
+
   // Emisores para comunicarse con el componente padre (la tabla)
   volver = output<void>();
 
@@ -92,6 +95,8 @@ export class DetalleListadoSolicitudesComponent {
   }
 
   saveAction() {
+    this.mensajeGuardado.set('');
+
     // Aquí es donde llamarías a tu servicio (ej. this.http.post(...))
     console.log('Guardando acción:', this.selectedAction());
     console.log('Observación:', this.actionObservation());
@@ -99,24 +104,34 @@ export class DetalleListadoSolicitudesComponent {
     console.log('Solicitud id:', this.solicitudSeleccionada().id);
 
     const payload = {
-      idInmueble: this.property().id,
-      solicitudId: this.solicitudSeleccionada().id,
-      estadoId: this.ESTADOS_MAP[this.selectedAction()] || 1,
+      id_inmueble: this.property().id,
+      id_solicitud: this.solicitudSeleccionada().id,
+      id_estado: this.ESTADOS_MAP[this.selectedAction()] || 1,
       observacion: this.actionObservation()
     }
+
+    console.log('payload de guardado: ', payload)
 
     this.infoInmuebleService.cambiarEstadoSolicitud(this.property().id, payload).subscribe({
       next: (res) => {
         this.closeActionModal();
+        this.isSubmitted.set(true);
+        this.mensajeGuardado.set(res.mensaje);
         console.log('Solicitud actualizada:', res);
+
+        setTimeout(() => {
+          console.log('entra a carga')
+          this.isSubmitted.set(false);
+
+        }, 3000);
       },
-      error: (err) => console.error('Error actualizando solicitud:', err)
+      error: (err) => {
+        this.mensajeGuardado.set(err.error);
+        console.error('Error actualizando solicitud:', err)
+      }
     });
-
-    // Opcional: podrías agregar la lógica aquí para actualizar el estado visualmente en la tabla
-
-    // Al terminar, cerramos el modal
     this.closeActionModal();
+
   }
 
   // Método auxiliar para capturar lo que el usuario escribe en el textarea sin usar FormsModule

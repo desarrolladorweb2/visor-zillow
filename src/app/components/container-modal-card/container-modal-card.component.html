@@ -52,6 +52,17 @@
 
                     @if (!containerModalCardService.isGalleryOnly()) {
                     <div class="info-section-wrapper">
+                        <button class="btn btn-pdf btn-sm button-column" (click)="descargarPDF()"
+                            [disabled]="isGeneratingPDF()">
+
+                            @if (isGeneratingPDF()) {
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Generando...
+                            } @else {
+                            <i class="bi bi-file-earmark-pdf"></i> Descargar Ficha
+                            }
+
+                        </button>
                         <div class="info-flex-container">
                             <div class="table-column">
                                 <table class="property-data-table">
@@ -100,6 +111,7 @@
                                     Contactar
                                 </button>
                             </div>
+
                         </div>
                     </div>
                     }
@@ -137,3 +149,87 @@
 </div>
 }
 }
+
+
+<!-- pdf -->
+<div style="position: absolute; top: -10000px; left: 0; z-index: -1;">
+    <div id="pdf-inmueble-template">
+
+        <div class="pdf-page-wrapper">
+            <div class="pdf-top-bar">
+                <div class="pdf-id-box">
+                    No. de Bien <strong>{{ containerModalCardService.selectedProperty()?.id }}</strong>
+                </div>
+            </div>
+
+            <h2 class="pdf-main-title">Ficha Técnica</h2>
+
+            <div class="table-watermark-wrapper">
+                <div class="watermark-image">
+                    <img src="assets/img/marca-agua-logo-Realidad.png" crossorigin="anonymous" alt="Marca de agua">
+                </div>
+                <table class="pdf-data-table">
+                    <tbody>
+                        <tr>
+                            <td class="pdf-label">No. de Bien:</td>
+                            <td class="pdf-value">{{ containerModalCardService.selectedProperty()?.id }}</td>
+                        </tr>
+                        <tr>
+                            <td class="pdf-label">Dirección:</td>
+                            <td class="pdf-value">{{ containerModalCardService.selectedProperty()?.direccion }}</td>
+                        </tr>
+                        <tr>
+                            <td class="pdf-label">Ubicación:</td>
+                            <td class="pdf-value">{{ containerModalCardService.selectedProperty()?.municipio }} / {{
+                                containerModalCardService.selectedProperty()?.departamento }}</td>
+                        </tr>
+                        <tr>
+                            <td class="pdf-label">Estrato:</td>
+                            <td class="pdf-value">{{ containerModalCardService.selectedProperty()?.estrato || 'N/A' }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="pdf-label">Área Construida:</td>
+                            <td class="pdf-value">{{ containerModalCardService.selectedProperty()?.area_construida }} m²
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="pdf-label">Área Total:</td>
+                            <td class="pdf-value">{{ containerModalCardService.selectedProperty()?.area_total }} m²</td>
+                        </tr>
+                        <tr>
+                            <td class="pdf-label">Avalúo:</td>
+                            <td class="pdf-value">{{ containerModalCardService.selectedProperty()?.valor_inmueble |
+                                currency:'COP':'$':'1.0-0' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            @if (!imageList() || imageList().length === 0) {
+            <div class="pdf-section-title"><span>Fotografías del Bien</span>
+                <div class="pdf-line"></div>
+            </div>
+            <p style="color: #888; font-size: 14px; font-style: italic;">No hay fotografías registradas.</p>
+            }
+        </div>
+
+        @for (chunk of getPhotoChunks(); track $index) {
+        <div class="pdf-page-wrapper">
+            <div class="pdf-section-title">
+                <span>Registro Fotográfico (Pág. {{ $index + 1 }})</span>
+                <div class="pdf-line"></div>
+            </div>
+
+            <div class="pdf-gallery-grid">
+                @for (img of chunk; track $index) {
+                <div class="pdf-gallery-item">
+                    <img [src]="img" crossorigin="anonymous">
+                </div>
+                }
+            </div>
+        </div>
+        }
+
+    </div>
+</div>

@@ -47,7 +47,7 @@
                     <button class="btn-interesados" [disabled]="!prop.solicitudes || prop.solicitudes.length === 0"
                         (click)="abrirSolicitudes(prop)" title="Ver listado de interesados">
                         <span class="number">{{ prop.solicitudes?.length || 0 }}</span>
-                        <span class="text">Interesados</span>
+                        <span class="text">Solicitudes</span>
                     </button>
                 </div>
 
@@ -69,7 +69,7 @@
 
             <div class="pagination-actions">
                 <button class="btn-page" [disabled]="currentPage() === 1" (click)="cambiarPagina(currentPage() - 1)">
-                    <i class="bi bi-chevron-left"></i>
+                    Inicio
                 </button>
 
                 @for (page of pagesArray; track page) {
@@ -80,7 +80,7 @@
 
                 <button class="btn-page" [disabled]="currentPage() === totalPages()"
                     (click)="cambiarPagina(currentPage() + 1)">
-                    <i class="bi bi-chevron-right"></i>
+                    Fin
                 </button>
             </div>
         </div>

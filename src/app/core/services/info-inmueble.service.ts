@@ -229,6 +229,7 @@ export class InfoInmuebleService {
               "email": "luisa.gutierrez@realtix.com",
               "telefono": "3113456781",
               "mensaje": "Conocer 1",
+              "fecha": "",
               "estado": [
                 {
                   "id": 1,
@@ -405,9 +406,9 @@ export class InfoInmuebleService {
       // 1. Armamos SOLO el nuevo registro para el historial de gestión
       const nuevoHistorialEstado = {
         id_bien: Number(idInmueble),
-        id_solicitud: formData.solicitudId,
+        id_solicitud: formData.id_solicitud,
         id: Math.floor(Math.random() * 10000), // ID aleatorio para el registro del historial
-        estado: formData.estadoId,             // El ID de la acción (ej. 2 para contactado)
+        estado: formData.id_estado,             // El ID de la acción (ej. 2 para contactado)
         usuario: "asesor_inmobiliario",        // Simulamos el usuario logueado
         fecha: new Date().toISOString().replace('T', ' ').substring(0, 23),
         observacion: formData.observacion
@@ -431,7 +432,7 @@ export class InfoInmuebleService {
             if (inmueble && inmueble.solicitudes) {
 
               // 2. Buscamos a la persona específica (la solicitud) dentro del inmueble
-              const solicitudTarget = inmueble.solicitudes.find((s: any) => s.id === formData.solicitudId);
+              const solicitudTarget = inmueble.solicitudes.find((s: any) => s.id === formData.id_solicitud);
 
               console.log('Solicitud encontrada:', solicitudTarget);
               if (solicitudTarget) {

@@ -1,4 +1,5 @@
 @primary-blue: #0672b9;
+@primary-color: #153658; 
 
 .custom-backdrop {
     position: fixed;
@@ -239,4 +240,124 @@
         transform: scale(1.05); // Crece un poquito
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     }
+}
+
+// pdf
+.btn-pdf {
+    background-color: @primary-blue;
+    color: white;
+}
+
+// --- ESTILOS EXCLUSIVOS PARA EL PDF (DISEÑO FICHA TÉCNICA) ---
+
+.pdf-page-wrapper {
+  /* Dimensiones exactas de hoja Carta a 96 DPI */
+  width: 816px; 
+  height: 1056px; 
+  
+  /* El padding actúa como la margen blanca de la hoja */
+  padding: 50px; 
+  background-color: white;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333;
+  
+  /* Evita que los fondos blancos transparenten en el render */
+  position: relative; 
+
+  .pdf-top-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    .pdf-id-box {
+      background-color: #eef5fb; color: #0672b9; padding: 8px 16px; font-size: 14px; border-radius: 4px;
+      strong { font-weight: bold; }
+    }
+  }
+
+  .pdf-main-title {
+    text-align: center; color: #0672b9; font-size: 26px; font-weight: bold; margin: 0 0 30px 0;
+  }
+
+  /* =========================================
+     NUEVA ZONA DE TABLA + MARCA DE AGUA
+     ========================================= */
+  .table-watermark-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 25px;
+
+    /* Configuración de la imagen de fondo */
+    .watermark-image {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 85%; /* Tamaño de la marca de agua respecto a la tabla */
+      z-index: 1; /* Al fondo */
+      pointer-events: none;
+
+      img {
+        object-fit: cover;
+        width: 100%;
+        height: auto;
+        object-fit: contain;
+      }
+    }
+
+    /* Tu tabla adaptada con transparencias */
+    .pdf-data-table {
+      position: relative;
+      z-index: 2; /* Por encima de la imagen */
+      width: 100%; 
+      border-collapse: collapse;
+      background-color: transparent;
+
+      td { 
+        padding: 15px 12px; 
+        border-bottom: 1px solid @primary-blue; 
+        font-size: 15px; 
+      }
+
+      /* Label: #b6e2ff convertido a RGBA al 85% */
+      .pdf-label { 
+        width: 30%; 
+        font-weight: bold; 
+        color: #000; 
+        background-color: rgba(182, 226, 255, 0.35); 
+      }
+      
+      /* Value: Blanco convertido a RGBA al 85% */
+      .pdf-value { 
+        width: 70%; 
+        color: #333; 
+        background-color: rgba(255, 255, 255, 0);
+      }
+    }
+  }
+  /* ========================================= */
+
+  .pdf-section-title {
+    display: flex; align-items: center; margin-bottom: 25px;
+    span { font-weight: bold; font-size: 16px; color: @primary-color; margin-right: 15px; }
+    .pdf-line { flex-grow: 1; height: 1px; background-color: #dee2e6; }
+  }
+
+  /* ¡Volvemos a usar Flexbox porque html2canvas ya no se confunde! */
+  .pdf-gallery-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-content: flex-start;
+
+    .pdf-gallery-item {
+      width: calc(50% - 10px); 
+      height: 275px; 
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #eaeaea;
+
+      img { width: 100%; height: 100%; object-fit: cover; }
+    }
+  }
 }

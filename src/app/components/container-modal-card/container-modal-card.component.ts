@@ -2,6 +2,8 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { ContainerModalCardService } from '../../core/services/container-modal-card.service';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../environment/environment';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-container-modal-card',
@@ -16,6 +18,8 @@ export class ContainerModalCardComponent {
   public imageList = signal<string[]>([]);
   showFullGallery = signal(false);
   activePhotoIdx = signal(0);
+
+  isGeneratingPDF = signal(false);
 
   // URL Base de tu servidor de imágenes
   private readonly publicUrl = environment.imagenes;
@@ -81,5 +85,59 @@ export class ContainerModalCardComponent {
 
   openContact() {
     this.containerModalCardService.openContactForm();
+  }
+
+  getPhotoChunks() {
+    const photos = this.imageList() || [];
+    const chunkSize = 6; // 6 fotos caben perfecto en una hoja Carta (3 filas x 2 columnas)
+    const chunks = [];
+    for (let i = 0; i < photos.length; i += chunkSize) {
+      chunks.push(photos.slice(i, i + chunkSize));
+    }
+    return chunks;
+  }
+
+  // 2. FUNCIÓN DEFINITIVA DE DESCARGA
+  async descargarPDF() {
+    this.isGeneratingPDF.set(true);
+
+    try {
+      const pdf = new jsPDF('p', 'mm', 'letter');
+      // Capturamos todos los contenedores que actúan como "Hojas Carta"
+      const pages = document.querySelectorAll('.pdf-page-wrapper');
+
+      for (let i = 0; i < pages.length; i++) {
+        const pageEl = pages[i] as HTMLElement;
+
+        // Tomamos la foto exacta del nodo (sin que jsPDF intente escalar nada)
+        const canvas = await html2canvas(pageEl, {
+          scale: 2, // Alta definición
+          useCORS: true,
+          logging: false
+        });
+
+        const imgData = canvas.toDataURL('image/jpeg', 0.98);
+
+        // Medidas exactas de la hoja Carta en mm
+        const pdfWidth = 215.9;
+        const pdfHeight = 279.4;
+
+        // Si no es la primera iteración, agregamos una nueva hoja al PDF
+        if (i > 0) {
+          pdf.addPage();
+        }
+
+        // Pegamos la imagen ocupando el 100% de la hoja (los márgenes ya vienen pintados de blanco desde el CSS)
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      }
+
+      const fileName = `Ficha_Inmueble_${this.containerModalCardService.selectedProperty()?.id}.pdf`;
+      pdf.save(fileName);
+
+    } catch (error) {
+      console.error('Error generando PDF:', error);
+    } finally {
+      this.isGeneratingPDF.set(false);
+    }
   }
 }

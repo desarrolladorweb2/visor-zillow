@@ -1,23 +1,29 @@
 <div class="detalle-admin-container animate-fade-in">
     <header class="detalle-header">
-        <div class="title-group">
-            <button class="btn-back" (click)="onVolver()">
-                Volver a la lista
-            </button>
-            <!-- <h2>Detalles del Inmueble #{{ property().id }}</h2> -->
-            <div class="solicitudes-header">
-                <h2>Solicitudes Bien No. {{ property().id }}</h2>
+        <div class="title-group w-100">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <div class="solicitudes-header">
+                    <h2 class="m-0" style="color: #153658; font-weight: bold;">Bien No. {{ property().id }}
+                    </h2>
+                </div>
+                <button class="btn-back" (click)="onVolver()">
+                    <i class="bi bi-arrow-left"></i> Volver a la lista
+                </button>
             </div>
         </div>
     </header>
 
     <div class="detalle-content">
         <div class="info-section">
-            <h3>Ficha Técnica</h3>
+            <h3>Información del Bien</h3>
             <div class="info-grid">
                 <div class="info-item">
                     <label>Tipo de Bien</label>
                     <p>{{ property().tipo_bien }}</p>
+                </div>
+                <div class="info-item">
+                    <label>Tipo Predio</label>
+                    <p>{{ property().tipo_predio }}</p>
                 </div>
                 <div class="info-item">
                     <label>Valor</label>
@@ -71,7 +77,7 @@
                                         {{ getEstadoNombre(sol.estado[0].estado) | uppercase }}
                                     </span>
                                 </td>
-                                <td>{{ sol.estado[0].fecha }}</td>
+                                <td>{{ sol.fecha | date:'yyyy/MM/dd' }}</td>
                             </tr>
                             }
 
@@ -98,7 +104,10 @@
 
                             <div class="dropdown-container">
                                 <button class="btn-acciones" (click)="toggleDropdown()">
-                                    Acciones <i class="bi bi-caret-down-fill"></i>
+                                    Acciones
+                                    <!-- <i class="bi bi-caret-down-fill"></i> -->
+                                    <img class="search-icon" src="assets/icon/display_white_down.svg"
+                                        alt="icono desplegar">
                                 </button>
 
                                 @if (dropdownOpen()) {
@@ -119,7 +128,7 @@
                         <div class="user-info-list">
                             <p><strong>Teléfono:</strong> {{ detalle.telefono }}</p>
                             <p><strong>Correo:</strong> {{ detalle.correo || detalle.email }}</p>
-                            <p><strong>Fecha de registro:</strong> {{ detalle.fecha || '22/04/2024' }}</p>
+                            <p><strong>Fecha de registro:</strong> {{ detalle.fecha | date:'yyyy/MM/dd' }}</p>
                             <p class="estado-row">
                                 <strong>Estado:</strong>
                                 <span class="status-badge" [ngClass]="getEstadoClass(detalle.estado[0].estado)">
@@ -147,7 +156,7 @@
                                 <tbody>
                                     @for (dte of detalle.estado; track dte.id) {
                                     <tr>
-                                        <td>{{ dte.fecha || '' }}</td>
+                                        <td>{{ dte.fecha | date:'yyyy/MM/dd' }}</td>
                                         <td>Sistema</td>
                                         <td class="celda-tooltip"
                                             [attr.data-tooltip]="dte.observacion || 'Sin observaciones'">
@@ -165,7 +174,7 @@
         </div>
 
         <div class="galeria-section">
-            <h3>Fotografías</h3>
+            <h3>Galería</h3>
             @if (property().images && property().images.length > 0) {
             <div class="galeria-resumen">
                 <div class="miniatura-preview">
@@ -217,6 +226,22 @@
 
     </div>
 </div>
+
 }
+@if (isSubmitted()) {
+<div class="modal-overlay-action">
+    <div class="modal-panel-action success-message" style="max-width: 400px; padding: 30px 20px;">
+        <div class="icon-container">
+            <i class="bi bi-check-circle-fill success-icon"></i>
+        </div>
+        <p class="mensaje-enviado">{{ mensajeGuardado() }}</p>
+
+        <div class="auto-close-wrapper">
+            <div class="auto-close-bar"></div>
+        </div>
+    </div>
+</div>
+}
+
 
 <app-container-modal-card></app-container-modal-card>
