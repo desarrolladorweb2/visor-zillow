@@ -1,26 +1,12 @@
-// import { Routes } from '@angular/router';
-// import { MapComponent } from './pages/map/map.component';
-// import { IdParamsErrorComponent } from './components/errors/id-params-error/id-params-error.component';
-// import { sessionIdGuard } from './core/guards/session-id.guard';
-
-// export const routes: Routes = [
-
-//     // { path: '', component:  MapComponent, canActivate: [sessionIdGuard]}, //produccion
-//     { path: '', component:  IdParamsErrorComponent}, //pruebas
-//     { path: 'error', component:  IdParamsErrorComponent},
-//     { path: ':id', component:  MapComponent},
-
-// ];
-
 import { Routes } from '@angular/router';
 import { MapComponent } from './pages/map/map.component';
 import { IdParamsErrorComponent } from './components/errors/id-params-error/id-params-error.component';
-import { sessionIdGuard } from './core/guards/session-id.guard';
 import { ListadoSolicitudesComponent } from './components/listado-solicitudes/listado-solicitudes.component';
 
+
 export const routes: Routes = [
-  { path: '', component: MapComponent }, // pruebas
-  { path: 'listado-solicitudes', component: ListadoSolicitudesComponent },
+  { path: '', component: MapComponent }, // para geovisor
+  { path: 'listado-solicitudes', component: ListadoSolicitudesComponent }, // para listado de solicitudes del geovisor
   { path: 'error', component: IdParamsErrorComponent },
-  { path: '**', redirectTo: '' },
+  // { path: '**', redirectTo: '' },
 ];
