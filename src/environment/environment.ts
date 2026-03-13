@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  pruebas: true,
+  pruebas: false,
   //geoserverURL: 'https://calidad.realidad5.com/geovisorgeo/',//'http://44.204.223.163:8080/geovisorgeo/', //'https://calidad.realidad5.com/geovisorgeo/' 
   //backendGN: 'https://calidad.realidad5.com/geovisorms/observatorio',//'http://44.204.223.163:8000/observatorio', //https://calidad.realidad5.com/geovisorms/observatorio'
 

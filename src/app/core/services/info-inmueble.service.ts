@@ -452,8 +452,44 @@ export class InfoInmuebleService {
 
     } else {
       // Petición real al backend
-      const postUrl = `${this.apiUrl}/inmuebles/${idInmueble}/solicitudes/${formData.solicitudId}/estado`;
-      return this.http.post(postUrl, formData);
+      const postUrl = `${this.apiUrl}/historico/crear`;
+
+      return this.http.post(postUrl, formData).pipe(
+        tap((res: any) => {
+          // --- AQUÍ HACEMOS LA MAGIA EN EL CACHÉ ---
+          if (this.allPropertiesCache && this.allPropertiesCache.results) {
+
+            const inmueble = this.allPropertiesCache.results.find((p: any) => p.id === Number(idInmueble));
+
+            if (inmueble && inmueble.solicitudes) {
+              const solicitudTarget = inmueble.solicitudes.find((s: any) => s.id === formData.id_solicitud);
+
+              if (solicitudTarget) {
+                if (!solicitudTarget.estado) solicitudTarget.estado = [];
+
+                // 1. Armamos el nuevo registro usando el formData (Igual que en el mock)
+                // Si el backend te devuelve el ID real del nuevo registro en 'res.id', lo usamos. 
+                // Si no, generamos uno temporal para que Angular no llore con el trackBy.
+                const nuevoHistorialEstado = {
+                  id_bien: Number(idInmueble),
+                  id_solicitud: formData.id_solicitud,
+                  id: res?.id || Math.floor(Math.random() * 10000),
+                  estado: formData.id_estado,
+                  usuario: "asesor_inmobiliario", // Idealmente aquí sacas el nombre de tu servicio de Auth
+                  fecha: new Date().toISOString().replace('T', ' ').substring(0, 23),
+                  observacion: formData.observacion
+                };
+
+                // 2. Insertamos el objeto reconstruido (ya no dependemos de res.nuevo_estado)
+                solicitudTarget.estado.unshift(nuevoHistorialEstado);
+
+                // 3. Disparamos la actualización
+                this.propertyUpdated$.next(inmueble);
+              }
+            }
+          }
+        })
+      );
     }
   }
 }
