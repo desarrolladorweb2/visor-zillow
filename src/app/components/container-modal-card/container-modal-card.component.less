@@ -96,20 +96,50 @@
         }
     }
 
-    .button-column {
-        flex: 0.8;
-        .btn-contact-main {
-            width: 100%;
-            background-color: @primary-blue;
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 16px;
-            &:hover { background: darken(@primary-blue, 10%); }
+//  CONTENEDOR DE BOTONES
+.actions-wrapper {
+    flex: 1; 
+    display: flex;
+    flex-direction: row; 
+    gap: 15px; 
+    
+    .btn-action {
+        flex: 1; 
+        border: none;
+        padding: 12px 10px; 
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 14px; 
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center; // Centra el conjunto imagen+texto
+        gap: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+
+        // Estilo para la imagen PNG dentro del botón
+        .btn-icon {
+            height: 18px; // Tamaño ideal para que no rompa el botón
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* BOTÓN GRIS (PDF) */
+        &.btn-pdf {
+            color: #6c757d;
+            background-color: #ebebeb; 
+            &:hover { background-color: darken(#c2c2c2, 10%); }
+            &:disabled { opacity: 0.7; cursor: not-allowed; }
+        }
+
+        /* BOTÓN AZUL (CONTACTAR) */
+        &.btn-blue {
+            background-color: @primary-blue; 
+            &:hover { background-color: darken(@primary-blue, 10%); }
         }
     }
+}
 }
 
 // Botón cerrar modal
@@ -285,7 +315,7 @@
   .table-watermark-wrapper {
     position: relative;
     width: 100%;
-    margin-bottom: 25px;
+    margin-bottom: 40px;
 
     /* Configuración de la imagen de fondo */
     .watermark-image {
@@ -312,6 +342,8 @@
       width: 100%; 
       border-collapse: collapse;
       background-color: transparent;
+
+      border-top: 1px solid @primary-blue;
 
       td { 
         padding: 15px 12px; 

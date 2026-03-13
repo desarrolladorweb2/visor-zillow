@@ -87,12 +87,21 @@ export class ContainerModalCardComponent {
     this.containerModalCardService.openContactForm();
   }
 
-  getPhotoChunks() {
+  // 1. Obtiene MÁXIMO las primeras 2 fotos para rellenar la Hoja 1
+  getFirstPagePhotos() {
     const photos = this.imageList() || [];
-    const chunkSize = 6; // 6 fotos caben perfecto en una hoja Carta (3 filas x 2 columnas)
+    return photos.slice(0, 2);
+  }
+
+  // 2. Toma todas las fotos sobrantes (de la 3 en adelante) y las agrupa de 6 en 6
+  getRemainingPhotoChunks() {
+    const photos = this.imageList() || [];
+    const remaining = photos.slice(2); // Cortamos las 2 que ya usamos
+
+    const chunkSize = 6;
     const chunks = [];
-    for (let i = 0; i < photos.length; i += chunkSize) {
-      chunks.push(photos.slice(i, i + chunkSize));
+    for (let i = 0; i < remaining.length; i += chunkSize) {
+      chunks.push(remaining.slice(i, i + chunkSize));
     }
     return chunks;
   }

@@ -70,8 +70,8 @@
                             <tr (click)="seleccionarSolicitud(sol)"
                                 [class.active-row]="solicitudSeleccionada()?.id === sol.id">
                                 <td>{{ sol.nombre }}</td>
-                                <td>{{ sol.telefono }}</td>
-                                <td>{{ sol.correo || sol.email }}</td>
+                                <td>{{ sol.telefono || 'Sin registro' }}</td>
+                                <td>{{ sol.correo || sol.email || 'Sin registro' }}</td>
                                 <td>
                                     <span class="status-badge" [ngClass]="getEstadoClass(sol.estado[0].estado)">
                                         {{ getEstadoNombre(sol.estado[0].estado) | uppercase }}

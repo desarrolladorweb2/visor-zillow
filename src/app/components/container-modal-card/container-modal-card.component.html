@@ -52,17 +52,6 @@
 
                     @if (!containerModalCardService.isGalleryOnly()) {
                     <div class="info-section-wrapper">
-                        <button class="btn btn-pdf btn-sm button-column" (click)="descargarPDF()"
-                            [disabled]="isGeneratingPDF()">
-
-                            @if (isGeneratingPDF()) {
-                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            Generando...
-                            } @else {
-                            <i class="bi bi-file-earmark-pdf"></i> Descargar Ficha
-                            }
-
-                        </button>
                         <div class="info-flex-container">
                             <div class="table-column">
                                 <table class="property-data-table">
@@ -106,8 +95,20 @@
                                 </table>
                             </div>
 
-                            <div class="button-column">
-                                <button class="btn-contact-main" (click)="openContact()">
+                            <div class="actions-wrapper">
+                                <button class="btn-action btn-pdf" (click)="descargarPDF()"
+                                    [disabled]="isGeneratingPDF()">
+                                    @if (isGeneratingPDF()) {
+                                    <span class="spinner-border spinner-border-sm" role="status"
+                                        aria-hidden="true"></span>
+                                    Generando...
+                                    } @else {
+                                    <img src="assets/img/descargar.png" class="btn-icon" alt="pdf icon">
+                                    Descargar Ficha
+                                    }
+                                </button>
+
+                                <button class="btn-action btn-blue" (click)="openContact()">
                                     Contactar
                                 </button>
                             </div>
@@ -206,18 +207,28 @@
                 </table>
             </div>
 
-            @if (!imageList() || imageList().length === 0) {
-            <div class="pdf-section-title"><span>Fotografías del Bien</span>
+            <div class="pdf-section-title">
+                <span>Fotografías del Bien</span>
                 <div class="pdf-line"></div>
             </div>
+
+            @if (!imageList() || imageList().length === 0) {
             <p style="color: #888; font-size: 14px; font-style: italic;">No hay fotografías registradas.</p>
+            } @else {
+            <div class="pdf-gallery-grid">
+                @for (img of getFirstPagePhotos(); track $index) {
+                <div class="pdf-gallery-item">
+                    <img [src]="img" crossorigin="anonymous">
+                </div>
+                }
+            </div>
             }
         </div>
 
-        @for (chunk of getPhotoChunks(); track $index) {
+        @for (chunk of getRemainingPhotoChunks(); track $index) {
         <div class="pdf-page-wrapper">
             <div class="pdf-section-title">
-                <span>Registro Fotográfico (Pág. {{ $index + 1 }})</span>
+                <span>Fotografías del Bien (Pág. {{ $index + 2 }})</span>
                 <div class="pdf-line"></div>
             </div>
 
