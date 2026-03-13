@@ -66,7 +66,7 @@ export class DetalleListadoSolicitudesComponent {
     if (estado === 1) return 'badge-nuevo';
     if (estado === 2) return 'badge-contactado';
     if (estado === 3) return 'badge-default';
-    if (estado === 4) return 'badge-default';
+    if (estado === 4) return 'badge-proceso-venta';
     if (estado === 5) return 'badge-desistido';
     return 'badge-default';
   }
